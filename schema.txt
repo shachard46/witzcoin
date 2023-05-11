@@ -1,0 +1,22 @@
+server -
+    - rest api
+    - has an expandable set of commands
+    - has username and password
+    - whitelist of ips
+    - outputs the value to the client
+
+client - 
+ - if not in whitelist 404
+ - /commands
+ - /commands/id
+ - /output
+ - /index - could be sign up page
+
+
+
+
+rsg - 
+ - in schedualer / a c file
+ - checks if there are files in a certain folder
+ - runs files in certain folder
+ - delete them right after
