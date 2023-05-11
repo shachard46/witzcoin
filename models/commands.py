@@ -1,16 +1,15 @@
+from unicodedata import name
+
 from scheduale_task import SchedualerTask
 import subprocess
 import sys
+from command import Command
+
 sys.path.append('..\\')
 
 
-class Command:
-    def __init__(self, name, args) -> None:
-        self.name = name
-        self.arg1, self.arg2 = args
+class commands
 
-    def execute(self):
-        pass
 
 
 class RunInCMD(Command):
