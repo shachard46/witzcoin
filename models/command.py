@@ -2,16 +2,9 @@ import fastapi
 
 
 class Command:
-    def __init__(self, name, code: str | callable) -> None:
-        self.name = name
+    def __init__(self, code='') -> None:
         self.code = code
 
-    def execute(self, app: fastapi.FastAPI):
-        route = f'/commands/{self.name}'
-
-        @app.get(route)
-        async def commands(**args):
-            if type(self.code) is str:
-                exec(self.code)
-            else:
-                self.code()
+    def execute(self, params):
+        if self.code:
+            exec(self.code)

@@ -1,57 +1,49 @@
 from typing import List, Dict
 
 import fastapi
+from pydantic import BaseModel
 
-from scheduale_task import SchedualerTask
+from models.scheduale_task import SchedualerTask
 import subprocess
 import sys
-from command import Command
+from models.command import Command
 
 sys.path.append('..\\')
 
 
 class Commands:
-    def __init__(self, app):
-        self.app: fastapi.FastAPI = app
-        self.commands: Dict[str, Command] = {'cmd': RunInCMD, 'upload': UploadFile, 'schedule': AddToScheduler}
+    def __init__(self):
+        self.commands: Dict[str, Command] = {'cmd': RunInCMD(), 'upload': UploadFile(),
+                                             'schedule': AddToScheduler()}
 
-    def add_command(self, name, code):
-        command = Command(name, code)
-        self.commands[name] = command
-        self.run_command(name)
+    def run_command(self, name, params: Dict):
+        if name == 'add':
+            return AddCommand(self.commands).execute(params)
+        return self.commands[name].execute(params)
 
-    def run_command(self, name):
-        self.commands[name].execute(self.app)
 
-    def run_commands(self):
-        for command in self.commands:
-            self.run_command(command)
+class AddCommand(Command):
+    def __init__(self, commands: Dict):
+        super().__init__()
+        self.commands = commands
+
+    def execute(self, params):
+        self.commands[params['name']] = Command(params['code'])
 
 
 class RunInCMD(Command):
-    def __init__(self):
-        self.name = 'cmd'
-        self.code = self.command
-
-    def command(*args):
-        subprocess.run([args[0], args[1]], shell=True)
+    def execute(self, params):
+        print(params)
+        return subprocess.check_output([params['command'], params['arg']], shell=True)
 
 
 class UploadFile(Command):
-    def __init__(self):
-        self.name = 'upload'
-        self.code = self.command
-
-    def command(*args):
-        with open(args[0], 'w') as f:
-            f.write(args[0])
+    def execute(self, params):
+        with open(params['path'], 'w') as f:
+            f.write(params['content'])
 
 
 class AddToScheduler(Command):
-    def __init__(self):
-        self.name = 'schedule'
-        self.code = self.command
-
-    def command(*args):
-        task = SchedualerTask(args[0], args[1])
+    def execute(self, params):
+        task = SchedualerTask(params['name'], params['arg'])
         task.create_task()
