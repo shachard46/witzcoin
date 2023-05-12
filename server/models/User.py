@@ -1,7 +1,5 @@
-import hashlib
-
 from typing import List
-from utils import sha1
+from server.utils import sha1
 
 
 class User:
@@ -17,7 +15,6 @@ class Users:
 
     def is_valid(self, username):
         names = [user.username for user in self.users]
-        print(names, username)
         return username in names
 
     def get_user(self, username) -> User:

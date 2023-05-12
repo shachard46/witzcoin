@@ -1,14 +1,11 @@
-from typing import List, Dict
+from typing import Dict
 
-import fastapi
-from pydantic import BaseModel
-
-from models.scheduale_task import SchedualerTask
+from server.models.scheduale_task import SchedualerTask
 import subprocess
 import sys
-from models.command import Command
+from server.models.command import Command
 
-sys.path.append('..\\')
+sys.path.append('../..\\')
 
 
 class Commands:
