@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException, Depends, dependencies, Path, Request
+from fastapi import FastAPI, HTTPException, Depends, Path, Request
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from typing import Annotated
 import uvicorn
 from models.commands import Commands
 from models.permissions import Permissions
-import string
+from models.User import reg_user, admin_user, User
 
 app = FastAPI()
 
@@ -39,6 +40,6 @@ async def get_commands():
 async def run_command(name: Annotated[str, Path(title="the name of the command to run")], params):
     return commands.run_command(name, eval(params))
 
-#
-# if __name__ == '__main__':
-#     uvicorn.run(host='127.0.0.1', port=5461, reload=True, app='server:app')
+
+if __name__ == '__main__':
+    uvicorn.run(host='127.0.0.1', port=5461, reload=True, app='server:app')
