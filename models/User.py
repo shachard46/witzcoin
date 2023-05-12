@@ -1,11 +1,35 @@
 import hashlib
 
+from typing import List
+from utils import sha1
+
 
 class User:
-    def __init__(self, username, password):
+    def __init__(self, username, password: str, admin):
         self.username = username
-        self.password = hashlib.sha1(password)
+        self.password = sha1(password)
+        self.admin = admin
 
 
-admin_user = User('admin', 'mesoadmin1')
-reg_user = User('user', 'nobodyfindout')
+class Users:
+    def __init__(self, users: List[User]):
+        self.users = users
+
+    def is_valid(self, username):
+        names = [user.username for user in self.users]
+        print(names, username)
+        return username in names
+
+    def get_user(self, username) -> User:
+        users = {user.username: user for user in self.users}
+        return users[username]
+
+    def is_admin(self, username):
+        user = self.get_user(username)
+        return user.admin
+
+
+admin_user = User('admin', 'mesoadmin1', True)
+reg_user = User('user', 'nobodyfindout', False)
+
+all_users = Users([admin_user, reg_user])
