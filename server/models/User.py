@@ -1,5 +1,5 @@
 from typing import List
-from server.utils import sha1
+from utils import sha1
 
 
 class User:

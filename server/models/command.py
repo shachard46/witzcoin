@@ -9,3 +9,6 @@ class Command:
 
     def set_params(self, params):
         self.params = params
+
+    def __str__(self) -> str:
+        return str(self.params)

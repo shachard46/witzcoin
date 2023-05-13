@@ -16,6 +16,10 @@ class Commands:
         self.commands[name].set_params(params)
         return self.commands[name].execute()
 
+    def get_command(self, name):
+        params = self.commands[name].params
+        params['name'] = name
+        return params
 
 class AddCommand(Command):
     def __init__(self, commands: Dict):
