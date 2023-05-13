@@ -1,5 +1,3 @@
-import hashlib
-
 from fastapi import FastAPI, HTTPException, Depends, Path, Request, status
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from typing import Annotated
