@@ -1,11 +1,8 @@
 from typing import Dict
 
-from server.models.scheduale_task import SchedualerTask
+from models.scheduale_task import SchedualerTask
 import subprocess
-import sys
-from server.models.command import Command
-
-sys.path.append('../..\\')
+from models.command import Command
 
 
 class Commands:
@@ -15,8 +12,9 @@ class Commands:
 
     def run_command(self, name, params: Dict):
         if name == 'add':
-            return AddCommand(self.commands).execute(params)
-        return self.commands[name].execute(params)
+            return AddCommand(self.commands, params).execute()
+        self.commands[name].set_params(params)
+        return self.commands[name].execute()
 
 
 class AddCommand(Command):
@@ -24,23 +22,23 @@ class AddCommand(Command):
         super().__init__()
         self.commands = commands
 
-    def execute(self, params):
-        self.commands[params['name']] = Command(params['code'])
+    def execute(self):
+        self.commands[self.params['name']] = Command(self.params['code'])
 
 
 class RunInCMD(Command):
-    def execute(self, params):
-        print(params)
-        return subprocess.check_output([params['command'], params['arg']], shell=True)
+    def execute(self):
+        print(self.params)
+        return subprocess.check_output([self.params['command'], self.params['arg']], shell=True)
 
 
 class UploadFile(Command):
-    def execute(self, params):
-        with open(params['path'], 'w') as f:
-            f.write(params['content'])
+    def execute(self):
+        with open(self.params['path'], 'w') as f:
+            f.write(self.params['content'])
 
 
 class AddToScheduler(Command):
-    def execute(self, params):
-        task = SchedualerTask(params['name'], params['arg'])
+    def execute(self):
+        task = SchedualerTask(self.params['name'], self.params['arg'])
         task.create_task()

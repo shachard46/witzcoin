@@ -83,6 +83,11 @@ async def get_commands():
 
 
 @app.get('/commands/{name}', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
+async def get_command(name: Annotated[str, Path(title="the name of the command to run")]):
+    return commands.commands[name]
+
+
+@app.get('/commands/{name}/run', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
 async def run_command(name: Annotated[str, Path(title="the name of the command to run")], params):
     return commands.run_command(name, eval(params))
 
