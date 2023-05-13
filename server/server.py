@@ -19,7 +19,8 @@ oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
 async def ip_permissions(request: Request):
     headers = request.headers
     path = request.url.path
-    ip_address = headers.get("X-Forwarded-For") or headers.get("X-Real-IP") or request.client.host
+    ip_address = headers.get(
+        "X-Forwarded-For") or headers.get("X-Real-IP") or request.client.host
     if not permissions.is_allowed(ip_address):
         raise HTTPException(status_code=404)
     if '/admin' in path and not permissions.is_admin(ip_address):
@@ -50,18 +51,25 @@ async def is_admin(user: Annotated[User, Depends(get_current_user)]):
 @app.post('/login', dependencies=[Depends(ip_permissions)])
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     if not all_users.is_valid(form_data.username):
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(
+            status_code=400, detail="Incorrect username or password")
     user = all_users.get_user(form_data.username)
     if sha1(form_data.password) != user.password:
-        raise HTTPException(status_code=400, detail="Incorrect username or password")
+        raise HTTPException(
+            status_code=400, detail="Incorrect username or password")
     res = {"access_token": user.username, "token_type": "bearer"}
     if user.admin:
         res["admin"] = True
     return res
 
 
-@app.get('/admin', dependencies=[Depends(ip_permissions), Depends(is_admin)])
-async def admin_page(allow_ip='', block_ip=''):
+@app.get('/admin')
+async def get_admin(user: Annotated[User, Depends(is_admin)]):
+    return user.admin
+
+
+@app.get('/perms', dependencies=[Depends(ip_permissions), Depends(is_admin)])
+async def change_ip_permissions(allow_ip='', block_ip=''):
     if allow_ip:
         permissions.allow_ip(allow_ip)
     if block_ip:
