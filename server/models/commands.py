@@ -1,7 +1,7 @@
 from typing import Dict
 
 from models.scheduale_task import SchedualerTask
-import subprocess
+import os
 from models.command import Command
 
 
@@ -17,23 +17,28 @@ class Commands:
         return self.commands[name].execute()
 
     def get_command(self, name):
-        params = self.commands[name].params
-        params['name'] = name
+        try:
+            params = {'params': self.commands[name].params, 'name': name}
+        except KeyError:
+            params = {}
         return params
 
+
 class AddCommand(Command):
-    def __init__(self, commands: Dict):
+    def __init__(self, commands: Dict, params):
         super().__init__()
         self.commands = commands
+        self.params = params
 
     def execute(self):
-        self.commands[self.params['name']] = Command(self.params['code'])
+        self.commands[self.params['name']] = Command({}, self.params['code'])
 
 
 class RunInCMD(Command):
     def execute(self):
-        print(self.params)
-        return subprocess.check_output([self.params['command'], self.params['arg']], shell=True)
+        print(self.params['command'].split(' '), 'dsdfsd')
+        process = os.popen(self.params['command'])
+        return process.read()
 
 
 class UploadFile(Command):

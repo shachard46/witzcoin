@@ -1,14 +1,15 @@
 class Command:
-    def __init__(self, params: list, code='') -> None:
+    def __init__(self, params: dict = {}, code='') -> None:
         self.code = code
         self.params = params
 
     def execute(self):
+        print('executing', self.code)
         if self.code:
             exec(self.code)
 
     def set_params(self, params):
         self.params = params
 
-    def __str__(self) -> str:
-        return str(self.params)
+
+{'name': 'print', 'code': 'print(params["print"])\nreturn 7'}
