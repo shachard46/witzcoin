@@ -7,7 +7,8 @@ import AdminPage from './admin-page';
 function App() {
   return (
     <div>
-      <LoginForm/>
+      <LoginForm />
+      <AdminPage/>
     </div>
   );
 }

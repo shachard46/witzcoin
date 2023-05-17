@@ -9,49 +9,51 @@ import {
   FormControl,
 } from "@material-ui/core";
 
+interface Command {
+  name: string;
+  params: Params;
+}
+
+interface Params {
+  [key: string]: string;
+}
+
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(15),
-    width: 'wrap-content',
+    width: "wrap-content",
     paddingTop: theme.spacing(15),
     paddingBottom: theme.spacing(15),
-    backgroundColor: '#e0e0e0', 
-    borderRadius: theme.spacing(1)
+    backgroundColor: "#e0e0e0",
+    borderRadius: theme.spacing(1),
   },
   form: {
     width: "100%",
     marginTop: theme.spacing(2),
   },
   textField: {
-    backgroundColor: 'white',
-    borderRadius: theme.spacing(1)
+    backgroundColor: "white",
+    borderRadius: theme.spacing(1),
   },
   submit: {
     margin: theme.spacing(3, 0, 2),
   },
 }));
 
-const AdminPage: React.FC = () => {
+const CommandPage: React.FC<Command> = (params: Command) => {
   const classes = useStyles();
-  const [allowIp, setAllowIp] = useState("");
-  const [blockIp, setBlockIp] = useState("");
-
-  const handleAllowIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setAllowIp(event.target.value);
+  const [values, setValues] = useState(params.params);
+  const handleValuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    let temp: Params = values
+    temp[event.target.name] = event.target.value;
+    setValues(temp);
   };
 
-  const handleBlockIPChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setBlockIp(event.target.value);
-  };
 
   return (
     <Container component="main" maxWidth="xs" className={classes.root}>
       <form>
-        <Typography
-          align="center"
-          component="h1"
-          variant="h5"
-        >
+        <Typography align="center" component="h1" variant="h5">
           IP Managment
         </Typography>
         <FormControl className={classes.form}>
@@ -104,4 +106,4 @@ const AdminPage: React.FC = () => {
   );
 };
 
-export default AdminPage;
+export default CommandPage;

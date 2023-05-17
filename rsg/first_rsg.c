@@ -2,7 +2,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-int concat_files(char *path, char *buffer, int start);
+int concat_files(char *path, char *buffer);
 void write_and_run_file(char *path, char *buffer);
 
 int main()
@@ -11,22 +11,20 @@ int main()
     // system("python example.py");
     char buffer[1024];
     memset(buffer, '\0', sizeof(buffer));
-    FILE *file = fopen("example.txt", "r");
-    int end = 0;
     char *paths[] = {"example.txt", "example1.txt", "example2.txt"};
     int path_index = 0;
     while (path_index < 3)
     {
-        end = concat_files(paths[path_index], buffer, end);
+        concat_files(paths[path_index], buffer);
         path_index++;
     }
     write_and_run_file("expample.py", buffer);
     return 0;
 }
 
-int concat_files(char *path, char *buffer, int start)
+int concat_files(char *path, char *buffer)
 {
-    FILE *file = fopen(path, "r");
+    FILE *file = fopen(path, "rb");
     if (file != NULL)
     {
         char temp[1024];
