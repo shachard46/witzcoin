@@ -1,35 +1,35 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Typography, Button, FormControl } from "@material-ui/core";
 import CommandParamsFields, { Params } from "./command_params";
-import { json } from "stream/consumers";
 import { FormEvent, useState } from "react";
+import axios from "axios";
 
 export interface Command {
   name: string;
   params: Params;
 }
 
-const runCommand = async (command: Command) => {
-  const url: URL = new URL(
-    `/commands/${command.name}/run`,
-    "http://localhost:3000",
-  );
-  const response = await fetch(url, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(command.params),
-  });
-  return await response.json();
+const runCommand = (command: Command) => {
+  axios({
+    method: "post",
+    url: `/commands/${command.name}/run`,
+    data: {},
+  })
+    .then((res) => {
+      return JSON.stringify(res.data);
+    })
+    .catch((err) => {
+      return err;
+    });
+  return "";
 };
 
 const useStyles = makeStyles((theme) => ({
   root: {
     marginTop: theme.spacing(15),
     width: "wrap-content",
-    paddingTop: theme.spacing(15),
-    paddingBottom: theme.spacing(15),
+    paddingTop: theme.spacing(5),
+    paddingBottom: theme.spacing(20),
     backgroundColor: "#e0e0e0",
     borderRadius: theme.spacing(1),
   },
@@ -50,9 +50,7 @@ const CommandPage: React.FC<Command> = (command: Command) => {
   const classes = useStyles();
   const [output, setOutput] = useState("");
   const handleSubmit = (event: FormEvent) => {
-    runCommand(command).then((out) => {
-      setOutput(out);
-    });
+    setOutput(runCommand(command));
   };
   return (
     <Container component="main" maxWidth="xs" className={classes.root}>
