@@ -11,3 +11,64 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+:root {
+  --primary: #bc4123;
+  --secondary: #2b3452;
+}
+
+body {
+  margin: 0;
+  padding: 20px;
+  font-family: "Roboto" !important;
+  background: var(--secondary);
+}
+
+* {
+  color: #fff;
+  margin: 0;
+}
+
+p {
+  margin: 20px 0;
+}
+
+button {
+  border: 0;
+  padding: 8px;
+  border-radius: 4px;
+  color: white;
+  background: var(--primary);
+  cursor: pointer;
+}
+
+/* navbar */
+header nav {
+  display: flex;
+  gap: 30px;
+  justify-content: end;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+header nav h1 {
+  font-size: 50px;
+  margin-right: auto;
+  border-bottom: 5px solid var(--primary);
+}
+
+header nav a {
+  text-decoration: none;
+  font-size: 40px;
+  padding: 20px;
+  border-radius: 8px;
+}
+
+header nav a.active {
+  background: var(--primary);
+}
+
+/* page content */
+main {
+  max-width: 1200px;
+  margin: 40px auto;
+}
