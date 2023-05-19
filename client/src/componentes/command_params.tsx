@@ -1,13 +1,5 @@
 import React, { useState } from "react";
-import { makeStyles } from "@material-ui/core/styles";
-import {
-  Container,
-  Typography,
-  TextField,
-  Button,
-  Grid,
-  FormControl,
-} from "@material-ui/core";
+import { TextField } from "@material-ui/core";
 
 export interface Params {
   [key: string]: string;
@@ -41,4 +33,4 @@ const CommandParamsFields: React.FC<Params> = (params: Params) => {
   return <div>{fields}</div>;
 };
 
-export default CommandParamsFields
+export default CommandParamsFields;

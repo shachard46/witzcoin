@@ -1,4 +1,5 @@
 import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import LoginForm from "./componentes/login-form";
 import AdminPage from "./componentes/admin-page";
@@ -17,7 +18,13 @@ function App() {
   };
   return (
     <div>
-      <CommandPage {...command} />
+      <Router>
+        <Routes>
+          <Route path="/login" element={<LoginForm />} />
+          <Route path="/perms" element={<AdminPage />} />
+          <Route path="/commands/name" element={<CommandPage {...command} />} />
+        </Routes>
+      </Router>
     </div>
   );
 }
