@@ -13,7 +13,7 @@ export interface Params {
   [key: string]: string;
 }
 
-const CommandParamsFields: React.FC = (params: Params) => {
+const CommandParamsFields: React.FC<Params> = (params: Params) => {
   const [values, setValues] = useState(params);
   const handleValuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     let temp: Params = values;

@@ -1,16 +1,13 @@
-import React, { useState } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import {
   Container,
   Typography,
-  TextField,
   Button,
-  Grid,
   FormControl,
 } from "@material-ui/core";
 import CommandParamsFields, { Params } from "./command_params";
 
-interface Command {
+export interface Command {
   name: string;
   params: Params;
 }
@@ -44,10 +41,10 @@ const CommandPage: React.FC<Command> = (params: Command) => {
     <Container component="main" maxWidth="xs" className={classes.root}>
       <form>
         <Typography align="center" component="h1" variant="h5">
-          IP Managment
+          {params.name}
         </Typography>
         <FormControl className={classes.form}>
-          <CommandParamsFields params={params.params} />
+          <CommandParamsFields {...(params.params)} />
           <Button
             type="submit"
             fullWidth
@@ -55,7 +52,7 @@ const CommandPage: React.FC<Command> = (params: Command) => {
             color="primary"
             className={classes.submit}
           >
-            Change IP Permissions
+            Run Command
           </Button>
         </FormControl>
       </form>
