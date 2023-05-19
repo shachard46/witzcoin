@@ -20,9 +20,13 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginForm />} />
-          <Route path="/perms" element={<AdminPage />} />
-          <Route path="/commands/name" element={<CommandPage {...command} />} />
+          <Route key="login" path="/login" element={<LoginForm />} />
+          <Route key="perms" path="/perms" element={<AdminPage />} />
+          <Route
+            key="command"
+            path="/commands/name"
+            element={<CommandPage {...command} />}
+          />
         </Routes>
       </Router>
     </div>
