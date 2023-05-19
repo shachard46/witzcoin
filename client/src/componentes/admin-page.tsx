@@ -11,7 +11,7 @@ import {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(15),
+    marginTop: theme.spacing(7),
     width: 'wrap-content',
     paddingTop: theme.spacing(15),
     paddingBottom: theme.spacing(15),

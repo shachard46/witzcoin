@@ -26,7 +26,7 @@ const runCommand = (command: Command) => {
 
 const useStyles = makeStyles((theme) => ({
   root: {
-    marginTop: theme.spacing(15),
+    marginTop: theme.spacing(7),
     width: "wrap-content",
     paddingTop: theme.spacing(5),
     paddingBottom: theme.spacing(20),

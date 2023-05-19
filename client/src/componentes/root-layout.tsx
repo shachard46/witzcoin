@@ -3,13 +3,20 @@ import { NavLink, Outlet } from "react-router-dom";
 
 const RootLayout: React.FC = () => {
   return (
-    <div className="root-layout">
-      <header>
+    <div className="container">
+      <header className="header">
         <nav>
-          <h1>CLI</h1>
-          <NavLink to="/commands">Commands</NavLink>
-          <NavLink to="/login">Login</NavLink>
-          <NavLink to="admin">Admin</NavLink>
+          <ul className="nav-links">
+            <li>
+              <NavLink to="/commands">Commands</NavLink>
+            </li>
+            <li>
+              <NavLink to="/admin">Admin</NavLink>
+            </li>
+            <li>
+              <NavLink to="/login">Login</NavLink>
+            </li>
+          </ul>
         </nav>
       </header>
       <main>

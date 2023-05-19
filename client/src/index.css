@@ -1,74 +1,68 @@
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto", "Oxygen",
+    "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
 code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, "Courier New",
     monospace;
 }
-:root {
-  --primary: #bc4123;
-  --secondary: #2b3452;
-}
 
-body {
-  margin: 0;
+.container {
+  max-width: 800px;
+  margin: 5% auto;
+  height: 100%;
   padding: 20px;
-  font-family: "Roboto" !important;
-  background: var(--secondary);
+  padding-bottom: 50px;
+  border-radius: 10px;
+  background-color: #ebeaea;
 }
 
-* {
-  color: #fff;
-  margin: 0;
+.header {
+  background-color: #333;
+  padding: 10px;
+  margin-bottom: 20px;
+  border-radius: 10px;
 }
 
-p {
-  margin: 20px 0;
-}
-
-button {
-  border: 0;
-  padding: 8px;
-  border-radius: 4px;
-  color: white;
-  background: var(--primary);
-  cursor: pointer;
-}
-
-/* navbar */
-header nav {
+.nav-links {
   display: flex;
-  gap: 30px;
-  justify-content: end;
-  max-width: 1200px;
-  margin: 0 auto;
+  justify-content: center;
+  list-style: none;
+  padding: 0;
 }
 
-header nav h1 {
-  font-size: 50px;
-  margin-right: auto;
-  border-bottom: 5px solid var(--primary);
-}
-
-header nav a {
-  text-decoration: none;
-  font-size: 40px;
-  padding: 20px;
+.nav-links li {
+  margin: 0 40px;
+  background-color: #505050;
+  width: 15%;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  padding-left: 30px;
+  padding-right: 30px;
   border-radius: 8px;
 }
 
-header nav a.active {
-  background: var(--primary);
+.nav-links a {
+  color: #fff;
+  text-decoration: none;
+  font-size: 18px;
 }
 
-/* page content */
-main {
-  max-width: 1200px;
-  margin: 40px auto;
+.nav-links a:hover {
+  color: #eaeaea;
+  font-weight: bold;
+}
+
+
+.content {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
