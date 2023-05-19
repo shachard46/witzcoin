@@ -32,7 +32,7 @@ function App() {
     <div>
       <Router>
         <Routes>
-          <Route path="/login" element={<LoginForm />} />
+          <Route path="/" element={<LoginForm />} />
           <Route path="/perms" element={<AdminPage />} />
           <Route
             path="/commands"

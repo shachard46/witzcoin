@@ -47,22 +47,25 @@ const login = (user: User) => {
     method: "post",
     url: "/login",
     data: { ...user },
-  }).then(() => {});
+  });
 };
 
 const LoginForm: React.FC = () => {
   const classes = useStyles();
   const navigate = useNavigate();
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
+  const [user, setUser] = useState<User>({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value);
+    const temp = user;
+    temp.username = event.target.name;
+    setUser(temp);
   };
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value);
+    const temp = user;
+    temp.password = event.target.name;
+    setUser(temp);
   };
 
   const handleShowPasswordToggle = () => {
@@ -71,6 +74,7 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault();
+    login(user);
     navigate("/commands");
   };
 
@@ -91,7 +95,7 @@ const LoginForm: React.FC = () => {
           name="username"
           autoComplete="username"
           autoFocus
-          value={username}
+          value={user.username}
           onChange={handleUsernameChange}
         />
         <FormControl variant="outlined" margin="normal" required fullWidth>
@@ -101,7 +105,7 @@ const LoginForm: React.FC = () => {
             name="password"
             className={classes.textField}
             type={showPassword ? "text" : "password"}
-            value={password}
+            value={user.password}
             onChange={handlePasswordChange}
             endAdornment={
               <InputAdornment position="end">
