@@ -21,7 +21,7 @@ async def ip_permissions(request: Request):
         "X-Forwarded-For") or headers.get("X-Real-IP") or request.client.host
     if not permissions.is_allowed(ip_address):
         raise HTTPException(status_code=404)
-    if '/admin' in path and not permissions.is_admin(ip_address):
+    if '/api/admin' in path and not permissions.is_admin(ip_address):
         raise HTTPException(status_code=404)
 
 
@@ -46,7 +46,7 @@ async def is_admin(user: Annotated[User, Depends(get_current_user)]):
     return user
 
 
-@app.post('/login', dependencies=[Depends(ip_permissions)])
+@app.post('/api/login', dependencies=[Depends(ip_permissions)])
 async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     if not all_users.is_valid(form_data.username):
         raise HTTPException(
@@ -61,12 +61,12 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
     return res
 
 
-@app.get('/admin')
+@app.get('/api/admin')
 async def get_admin(user: Annotated[User, Depends(is_admin)]):
     return user.admin
 
 
-@app.get('/perms', dependencies=[Depends(ip_permissions), Depends(is_admin)])
+@app.get('/api/perms', dependencies=[Depends(ip_permissions), Depends(is_admin)])
 async def change_ip_permissions(allow_ip='', block_ip=''):
     if allow_ip:
         permissions.allow_ip(allow_ip)
@@ -75,17 +75,17 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
     return allow_ip or block_ip
 
 
-@app.get('/commands', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
+@app.get('/api/commands', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
 async def get_commands():
     return commands.get_all_commands()
 
 
-@app.get('/commands/{name}', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
+@app.get('/api/commands/{name}', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
 async def get_command(name: Annotated[str, Path(title="the name of the command to run")]):
     return commands.get_command(name)
 
 
-@app.get('/commands/{name}/run', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
+@app.get('/api/commands/{name}/run', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
 async def run_command(name: Annotated[str, Path(title="the name of the command to run")], params):
     return commands.run_command(name, eval(params))
 
