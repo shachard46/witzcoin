@@ -13,9 +13,7 @@ const CommandParamsFields: React.FC<Params> = (params: Params) => {
     setValues(temp);
   };
   let fields: JSX.Element[] = [];
-  for (const param in params) {
-    console.log(param);
-    
+  for (const param in params) {  
     fields.push(
       <TextField
         variant="outlined"

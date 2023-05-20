@@ -66,7 +66,7 @@ async def get_admin(user: Annotated[User, Depends(is_admin)]):
     return user.admin
 
 
-@app.get('/api/perms', dependencies=[Depends(ip_permissions), Depends(is_admin)])
+@app.post('/api/perms', dependencies=[Depends(ip_permissions), Depends(is_admin)])
 async def change_ip_permissions(allow_ip='', block_ip=''):
     if allow_ip:
         permissions.allow_ip(allow_ip)

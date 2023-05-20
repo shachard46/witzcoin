@@ -1,94 +1,93 @@
-import React, { useContext, useState } from "react";
-import { useNavigate } from "react-router-dom";
 import {
-  Container,
-  Typography,
-  TextField,
   Button,
+  Container,
   FormControl,
-  InputLabel,
-  InputAdornment,
   IconButton,
+  InputAdornment,
+  InputLabel,
   OutlinedInput,
-} from "@material-ui/core";
-import { Visibility, VisibilityOff } from "@material-ui/icons";
-import axios from "axios";
-import { ThemeContext } from "./root-layout";
+  TextField,
+  Typography,
+} from '@material-ui/core'
+import { Visibility, VisibilityOff } from '@material-ui/icons'
+import axios from 'axios'
+import React, { useContext, useState } from 'react'
+import { useNavigate } from 'react-router-dom'
+import { ThemeContext } from './root-layout'
 
 interface User {
-  username: string;
-  password: string;
+  username: string
+  password: string
 }
-
 
 const login = (user: User) => {
   axios({
-    method: "post",
-    url: "/login",
+    method: 'post',
+    url: '/api/login',
     data: { ...user },
-  });
-};
+  }).catch(err => {})
+}
 
 const LoginForm: React.FC = () => {
-  const classes = useContext(ThemeContext);
-  const navigate = useNavigate();
-  const [user, setUser] = useState<User>({ username: "", password: "" });
-  const [showPassword, setShowPassword] = useState(false);
+  const classes = useContext(ThemeContext)
+  const navigate = useNavigate()
+  const [user, setUser] = useState<User>({ username: '', password: '' })
+  const [showPassword, setShowPassword] = useState(false)
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const temp = user;
-    temp.username = event.target.name;
-    setUser(temp);
-  };
+    const temp = user
+    temp.username = event.target.name
+    setUser(temp)
+  }
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const temp = user;
-    temp.password = event.target.name;
-    setUser(temp);
-  };
+    const temp = user
+    temp.password = event.target.name
+    setUser(temp)
+  }
 
   const handleShowPasswordToggle = () => {
-    setShowPassword(!showPassword);
-  };
+    setShowPassword(!showPassword)
+  }
 
   const handleSubmit = (event: React.FormEvent) => {
-    event.preventDefault();
-    login(user);
-    navigate("/commands");
-  };
+    event.preventDefault()
+    login(user)
+    navigate('/commands')
+  }
 
   return (
-    <Container component="main" maxWidth="xs" className={classes.root}>
+    <Container component='main' maxWidth='xs' className={classes.root}>
       <div>
-        <Typography component="h1" variant="h5" align="center">
+        <Typography component='h1' variant='h5' align='center'>
           Log In
         </Typography>
         <TextField
-          variant="outlined"
-          margin="normal"
+          variant='outlined'
+          margin='normal'
           required
           className={classes.textField}
           fullWidth
-          id="username"
-          label="Username"
-          name="username"
-          autoComplete="username"
+          id='username'
+          label='Username'
+          name='username'
+          autoComplete='username'
           autoFocus
           value={user.username}
           onChange={handleUsernameChange}
         />
-        <FormControl variant="outlined" margin="normal" required fullWidth>
-          <InputLabel htmlFor="password">Password</InputLabel>
+        <FormControl variant='outlined' margin='normal' required fullWidth>
+          <InputLabel htmlFor='password'>Password</InputLabel>
           <OutlinedInput
-            id="password"
-            name="password"
+            id='password'
+            name='password'
             className={classes.textField}
-            type={showPassword ? "text" : "password"}
+            type={showPassword ? 'text' : 'password'}
             value={user.password}
             onChange={handlePasswordChange}
             endAdornment={
-              <InputAdornment position="end">
-                <IconButton onClick={handleShowPasswordToggle} edge="end">
+              <InputAdornment position='end'>
+                <IconButton onClick={handleShowPasswordToggle} edge='end'>
                   {showPassword ? <Visibility /> : <VisibilityOff />}
                 </IconButton>
               </InputAdornment>
@@ -97,10 +96,10 @@ const LoginForm: React.FC = () => {
           />
         </FormControl>
         <Button
-          type="submit"
+          type='submit'
           fullWidth
-          variant="contained"
-          color="primary"
+          variant='contained'
+          color='primary'
           className={classes.submit}
           onClick={handleSubmit}
         >
@@ -108,7 +107,7 @@ const LoginForm: React.FC = () => {
         </Button>
       </div>
     </Container>
-  );
-};
+  )
+}
 
-export default LoginForm;
+export default LoginForm

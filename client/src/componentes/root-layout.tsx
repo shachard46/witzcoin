@@ -39,7 +39,7 @@ const RootLayout: React.FC = () => {
               <NavLink to="/commands">Commands</NavLink>
             </li>
             <li>
-              <NavLink to="/admin">Admin</NavLink>
+              <NavLink to="/perms">Admin</NavLink>
             </li>
             <li>
               <NavLink to="/login">Login</NavLink>
