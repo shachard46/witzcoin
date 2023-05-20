@@ -23,6 +23,9 @@ class Commands:
             params = {}
         return params
 
+    def get_all_commands(self):
+        return [self.get_command(name) for name in self.commands]
+
 
 class AddCommand(Command):
     def __init__(self, commands: Dict, params):

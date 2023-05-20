@@ -77,7 +77,7 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
 
 @app.get('/commands', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
 async def get_commands():
-    return commands.commands
+    return commands.get_all_commands()
 
 
 @app.get('/commands/{name}', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
