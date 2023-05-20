@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException, Depends, Path, Request, status
+from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
 from typing import Annotated
 import uvicorn
@@ -11,7 +12,18 @@ app = FastAPI()
 
 commands = Commands()
 permissions = Permissions(['127.0.0.1'], [], '1227.0.0.1')
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login")
+origins = [
+    "*"
+]
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=origins,
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 async def ip_permissions(request: Request):
@@ -28,21 +40,25 @@ async def ip_permissions(request: Request):
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     user = all_users.get_user(token)
     if not user:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        print(token)
+        return {'token': token}
+        # raise HTTPException(
+        #     status_code=status.HTTP_401_UNAUTHORIZED,
+        #     detail="Invalid authentication credentials",
+        #     headers={"WWW-Authenticate": "Bearer"},
+        # )
+    print(token)
     return user
 
 
 async def is_admin(user: Annotated[User, Depends(get_current_user)]):
     if not user.admin:
-        raise HTTPException(
-            status_code=status.HTTP_401_UNAUTHORIZED,
-            detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
-        )
+        return user.username
+        # raise HTTPException(
+        #     status_code=status.HTTP_401_UNAUTHORIZED,
+        #     detail="Invalid authentication credentials",
+        #     headers={"WWW-Authenticate": "Bearer"},
+        # )
     return user
 
 

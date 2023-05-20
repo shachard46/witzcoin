@@ -14,7 +14,7 @@ export interface Command {
 const runCommand = (command: Command) => {
   axios({
     method: 'GET',
-    url: `/commands/${command.name}/run`,
+    url: `http://localhost:5461/api/commands/${command.name}/run`,
   })
     .then(res => {
       return JSON.stringify(res.data)

@@ -26,7 +26,7 @@ const AdminPage: React.FC = () => {
   const handleSubmit = (event: React.FormEvent): void => {
     axios({
       method: 'POST',
-      url: '/api/perms',
+      url: 'http://localhost:5461/api/perms',
       data: { allow_ip: allowIp, block_ip: blockIp },
     })
       .then(res => {})

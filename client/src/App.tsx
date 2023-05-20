@@ -1,3 +1,4 @@
+import axios from 'axios'
 import { createContext, useState } from 'react'
 import {
   createBrowserRouter,
@@ -14,13 +15,12 @@ import RootLayout from './componentes/root-layout'
 
 export const CommandsContext = createContext<Command[]>([])
 const loadCommands = async (setCommands: Function) => {
-  // const res = await axios<Command[]>({
-  //   method: "GET",
-  //   url: "/commands",
-  // });
-  // setCommands(res.data);
-  // return res.data;
-  return 'nana'
+  const res = await axios<Command[]>({
+    method: 'GET',
+    url: 'http://localhost:5461/api/commands',
+  })
+  setCommands(res.data)
+  return res.data
 }
 function App() {
   const command: Command = {

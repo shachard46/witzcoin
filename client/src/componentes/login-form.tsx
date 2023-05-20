@@ -15,35 +15,30 @@ import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { ThemeContext } from './root-layout'
 
-interface User {
-  username: string
-  password: string
-}
-
-const login = (user: User) => {
+const login = (username: string, password: string) => {
+  const form = new FormData()
+  form.append('username', username)
+  form.append('password', password)
   axios({
     method: 'post',
-    url: '/api/login',
-    data: { ...user },
+    url: 'http://localhost:5461/api/login',
+    data: form,
   }).catch(err => {})
 }
 
 const LoginForm: React.FC = () => {
   const classes = useContext(ThemeContext)
   const navigate = useNavigate()
-  const [user, setUser] = useState<User>({ username: '', password: '' })
+  const [username, setUsername] = useState('')
+  const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
   const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const temp = user
-    temp.username = event.target.name
-    setUser(temp)
+    setUsername(event.target.value)
   }
 
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const temp = user
-    temp.password = event.target.name
-    setUser(temp)
+    setPassword(event.target.value)
   }
 
   const handleShowPasswordToggle = () => {
@@ -52,7 +47,7 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    login(user)
+    login(username, password)
     navigate('/commands')
   }
 
@@ -73,7 +68,7 @@ const LoginForm: React.FC = () => {
           name='username'
           autoComplete='username'
           autoFocus
-          value={user.username}
+          value={username}
           onChange={handleUsernameChange}
         />
         <FormControl variant='outlined' margin='normal' required fullWidth>
@@ -83,7 +78,7 @@ const LoginForm: React.FC = () => {
             name='password'
             className={classes.textField}
             type={showPassword ? 'text' : 'password'}
-            value={user.password}
+            value={password}
             onChange={handlePasswordChange}
             endAdornment={
               <InputAdornment position='end'>

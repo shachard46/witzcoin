@@ -18,23 +18,23 @@ const CommandList: React.FC = () => {
       </Typography>
       <Paper className='paper'>
         <List className='command-links'>
-            {/* <ul > */}
-              {commands.map(command => (
-                <li key={'li' + commands.indexOf(command)}>
-                  <NavLink
-                    to={`/command/?name=${command.name}`}
-                    color='primary'
-                    key={'link' + commands.indexOf(command)}
-                    className={classes.submit}
-                    onClick={() => {
-                      handleCommand(command.name)
-                    }}
-                  >
-                    {command.name}
-                  </NavLink>
-                </li>
-              ))}
-            {/* </ul> */}
+          {/* <ul > */}
+          {commands.map(command => (
+            <li key={'li' + commands.indexOf(command)}>
+              <NavLink
+                to={`/command/?name=${command.name}`}
+                color='primary'
+                key={'link' + commands.indexOf(command)}
+                className={classes.submit}
+                onClick={() => {
+                  handleCommand(command.name)
+                }}
+              >
+                {command.name}
+              </NavLink>
+            </li>
+          ))}
+          {/* </ul> */}
         </List>
       </Paper>
     </Container>
