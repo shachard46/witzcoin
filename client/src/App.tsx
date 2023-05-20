@@ -1,4 +1,4 @@
-import React from "react";
+import React, { createContext, useState } from "react";
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -11,6 +11,8 @@ import AdminPage from "./componentes/admin-page";
 import CommandPage, { Command } from "./componentes/command";
 import CommandList from "./componentes/command-list";
 import RootLayout from "./componentes/root-layout";
+
+const CommandsContext = createContext<Command[]>([]);
 
 function App() {
   const command: Command = {
@@ -33,7 +35,7 @@ function App() {
       arg3: "arg2",
     },
   };
-  const commands: Command[] = [command, command2, command];
+  const [commands, setCommands] = useState([command, command2, command]);
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path="/" element={<RootLayout />}>
@@ -41,10 +43,13 @@ function App() {
         <Route path="perms" element={<AdminPage />} />
         <Route path="commands" element={<CommandList commands={commands} />} />
         <Route path="commands/name" element={<CommandPage {...command} />} />
-      </Route>,
-    ),
+      </Route>
+    )
   );
-  return <RouterProvider router={router} />;
+  return(
+  <CommandsContext.Provider value={commands}>
+    <RouterProvider router={router} />
+  </CommandsContext.Provider>);
 }
 
 export default App;

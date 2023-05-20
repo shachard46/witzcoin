@@ -18,39 +18,32 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-interface Props {
-  commands: Command[];
-}
-
-const CommandList: React.FC<Props> = ({ commands }) => {
+const CommandList: React.FC<{ commands: Command[] }> = ({ commands }) => {
   const classes = useStyles();
   const navigate = useNavigate();
   const handleCommand = (name: string): void => {
     navigate(`/commands/${name}`);
   };
-  let fields: JSX.Element[] = [];
-  for (const command of commands) {
-    fields.push(
-      <Button
-        type="submit"
-        fullWidth
-        variant="contained"
-        color="primary"
-        className={classes.submit}
-        onClick={() => {
-          handleCommand(command.name);
-        }}
-      >
-        {command.name}
-      </Button>,
-    );
-  }
+
   return (
     <Container maxWidth="xs" component="main" className={classes.root}>
       <Typography align="center" component="h1" variant="h5">
         Commands:
       </Typography>
-      {fields}
+      {commands.map((command) => (
+        <Button
+          type="submit"
+          fullWidth
+          variant="contained"
+          color="primary"
+          className={classes.submit}
+          onClick={() => {
+            handleCommand(command.name);
+          }}
+        >
+          {command.name}
+        </Button>
+      ))}
     </Container>
   );
 };
