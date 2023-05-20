@@ -43,7 +43,19 @@ function App() {
       arg3: 'arg2',
     },
   }
-  const [commands, setCommands] = useState([command, command2, command])
+  const [commands, setCommands] = useState([
+    command,
+    command2,
+    command,
+    command,
+    command,
+    command,
+    command,
+    command,
+    command,
+    command,
+    command,
+  ]) //
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<RootLayout />}>
