@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useContext, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { makeStyles } from "@material-ui/core/styles";
 import {
@@ -14,33 +14,13 @@ import {
 } from "@material-ui/core";
 import { Visibility, VisibilityOff } from "@material-ui/icons";
 import axios from "axios";
+import { ThemeContext } from "./root-layout";
 
 interface User {
   username: string;
   password: string;
 }
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(7),
-    width: "wrap-content",
-    paddingTop: theme.spacing(15),
-    paddingBottom: theme.spacing(15),
-    backgroundColor: "#e0e0e0",
-    borderRadius: theme.spacing(1),
-  },
-  textField: {
-    backgroundColor: "white",
-    borderRadius: theme.spacing(1),
-  },
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(2),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
 
 const login = (user: User) => {
   axios({
@@ -51,7 +31,7 @@ const login = (user: User) => {
 };
 
 const LoginForm: React.FC = () => {
-  const classes = useStyles();
+  const classes = useContext(ThemeContext);
   const navigate = useNavigate();
   const [user, setUser] = useState<User>({ username: "", password: "" });
   const [showPassword, setShowPassword] = useState(false);

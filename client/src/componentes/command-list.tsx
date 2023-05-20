@@ -1,25 +1,12 @@
-import React from "react";
+import React, { useContext } from "react";
 import { useNavigate } from "react-router-dom";
-import { Button, Container, Typography, makeStyles } from "@material-ui/core";
-import { Command } from "./command";
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(15),
-    width: "wrap-content",
-    paddingTop: theme.spacing(15),
-    paddingBottom: theme.spacing(15),
-    paddingLeft: theme.spacing(10),
-    paddingRight: theme.spacing(10),
-    backgroundColor: "#e0e0e0",
-    borderRadius: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(2, 0, 0),
-  },
-}));
+import { Button, Container, Typography } from "@material-ui/core";
+import { ThemeContext } from "./root-layout";
+import { CommandsContext } from "../App";
 
-const CommandList: React.FC<{ commands: Command[] }> = ({ commands }) => {
-  const classes = useStyles();
+const CommandList: React.FC = () => {
+  const classes = useContext(ThemeContext);
+  const commands = useContext(CommandsContext);
   const navigate = useNavigate();
   const handleCommand = (name: string): void => {
     navigate(`/commands/${name}`);

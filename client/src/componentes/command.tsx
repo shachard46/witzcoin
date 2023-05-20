@@ -1,8 +1,9 @@
 import { makeStyles } from "@material-ui/core/styles";
 import { Container, Typography, Button, FormControl } from "@material-ui/core";
 import CommandParamsFields, { Params } from "./command-params";
-import { FormEvent, useState } from "react";
+import { FormEvent, useContext, useState } from "react";
 import axios from "axios";
+import { ThemeContext } from "./root-layout";
 
 export interface Command {
   name: string;
@@ -24,30 +25,8 @@ const runCommand = (command: Command) => {
   return "";
 };
 
-const useStyles = makeStyles((theme) => ({
-  root: {
-    marginTop: theme.spacing(7),
-    width: "wrap-content",
-    paddingTop: theme.spacing(5),
-    paddingBottom: theme.spacing(20),
-    backgroundColor: "#e0e0e0",
-    borderRadius: theme.spacing(1),
-  },
-  form: {
-    width: "100%",
-    marginTop: theme.spacing(2),
-  },
-  textField: {
-    backgroundColor: "white",
-    borderRadius: theme.spacing(1),
-  },
-  submit: {
-    margin: theme.spacing(3, 0, 2),
-  },
-}));
-
 const CommandPage: React.FC<Command> = (command: Command) => {
-  const classes = useStyles();
+  const classes = useContext(ThemeContext);
   const [output, setOutput] = useState("");
   const handleSubmit = (event: FormEvent) => {
     setOutput(runCommand(command));
