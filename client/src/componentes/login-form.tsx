@@ -51,7 +51,7 @@ const LoginForm: React.FC = () => {
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
     setToken(login(username, password))
-    navigate('/commands')
+    navigate('/perms')
   }
 
   return (

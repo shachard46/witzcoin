@@ -17,46 +17,20 @@ export const CommandsContext = createContext<Command[]>([])
 export const TokenContext = createContext<[{}, Function]>([{}, () => {}])
 
 const loadCommands = async (setCommands: Function) => {
-  const res = await api.get<Command[]>('commands')
-  setCommands(res.data)
-  return res.data
+  api
+    .get<Command[]>('commands')
+    .then(res => {
+      setCommands(res.data)
+      return res.data
+    })
+    .catch(err => {
+      return err
+    })
 }
 
 function App() {
   const [token, setToken] = useState({})
-  const command: Command = {
-    name: 'com',
-    params: {
-      arg1: 'arg',
-      arg2: 'arg2',
-      arg4: 'arg2',
-      arg5: 'arg2',
-      arg3: 'arg2',
-    },
-  }
-  const command2: Command = {
-    name: 'com22',
-    params: {
-      arg1: 'arg',
-      arg2: 'arg2',
-      arg4: 'arg2',
-      arg5: 'arg2',
-      arg3: 'arg2',
-    },
-  }
-  const [commands, setCommands] = useState([
-    command,
-    command2,
-    command,
-    command,
-    command,
-    command,
-    command,
-    command,
-    command,
-    command,
-    command,
-  ]) //
+  const [commands, setCommands] = useState<Command[]>([]) //
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<RootLayout />}>

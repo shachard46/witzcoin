@@ -40,14 +40,11 @@ async def ip_permissions(request: Request):
 async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     user = all_users.get_user(token)
     if not user:
-        print(token)
-        return {'token': token}
-        # raise HTTPException(
-        #     status_code=status.HTTP_401_UNAUTHORIZED,
-        #     detail="Invalid authentication credentials",
-        #     headers={"WWW-Authenticate": "Bearer"},
-        # )
-    print(token)
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     return user
 
 

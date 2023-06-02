@@ -19,7 +19,10 @@ class Users:
 
     def get_user(self, username) -> User:
         users = {user.username: user for user in self.users}
-        return users[username]
+        if username in users.keys():
+            return users[username]
+        else:
+            return ''
 
     def is_admin(self, username):
         user = self.get_user(username)
