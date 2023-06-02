@@ -25,7 +25,7 @@ const runCommand = (command: Command) => {
 
 const CommandPage: React.FC = () => {
   const classes = useContext(ThemeContext)
-  const commands = useContext(CommandsContext)
+  const [commands, set] = useContext(CommandsContext)
   const location = useLocation()
   const navigate = useNavigate()
   const queryParams = new URLSearchParams(location.search)
