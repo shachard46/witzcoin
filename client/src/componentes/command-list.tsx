@@ -3,26 +3,15 @@ import React, { useContext, useEffect } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { CommandsContext } from '../App'
 import { deepEqual } from '../utils'
-import api from './api'
+import api from './hooks/api'
 import { Command } from './command/command'
 import { ThemeContext } from './root-layout'
+import useCommands from './hooks/get-commands'
 
 const CommandList: React.FC = () => {
   const classes = useContext(ThemeContext)
   const [commands, setCommands] = useContext(CommandsContext)
-  useEffect(() => {
-    api
-      .get<Command[]>('commands')
-      .then(res => {
-        if (!deepEqual(commands, res.data)) {
-          setCommands(res.data)
-        }
-        return res.data
-      })
-      .catch(err => {
-        return err
-      })
-  })
+  useCommands(api, commands, setCommands)
   const navigate = useNavigate()
   const handleCommand = (name: string): void => {
     navigate(`/commands/${name}`)

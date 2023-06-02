@@ -7,7 +7,7 @@ import {
   Typography,
 } from '@material-ui/core'
 import React, { useContext, useState } from 'react'
-import api from './api'
+import api from './hooks/api'
 import { ThemeContext } from './root-layout'
 
 const AdminPage: React.FC = () => {

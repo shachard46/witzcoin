@@ -13,7 +13,7 @@ import { Visibility, VisibilityOff } from '@material-ui/icons'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { TokenContext } from '../App'
-import api from './api'
+import api from './hooks/api'
 import { ThemeContext } from './root-layout'
 
 const login = (username: string, password: string) => {

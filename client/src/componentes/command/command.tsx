@@ -2,7 +2,7 @@ import { Button, Container, FormControl, Typography } from '@material-ui/core'
 import { FormEvent, useContext, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { CommandsContext } from '../../App'
-import api from '../api'
+import api from '../hooks/api'
 import { ThemeContext } from '../root-layout'
 import CommandParamsFields, { Params } from './command-params'
 
@@ -28,10 +28,10 @@ const CommandPage: React.FC = () => {
   const [commands, set] = useContext(CommandsContext)
   const location = useLocation()
   const navigate = useNavigate()
+  const [output, setOutput] = useState('')
   const queryParams = new URLSearchParams(location.search)
   const commandName = queryParams.get('name')
   const command = commands.find(c => c.name === commandName)
-  const [output, setOutput] = useState('')
   if (!command) {
     navigate('/commands')
     return <div></div>
