@@ -10,24 +10,27 @@ import {
   Typography,
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
-import axios from 'axios'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { TokenContext } from '../App'
+import api from './api'
 import { ThemeContext } from './root-layout'
 
 const login = (username: string, password: string) => {
   const form = new FormData()
   form.append('username', username)
   form.append('password', password)
-  axios({
-    method: 'post',
-    url: 'http://localhost:5461/api/login',
-    data: form,
-  }).catch(err => {})
+  api
+    .post('login', form)
+    .then(res => {
+      return res.data
+    })
+    .catch(err => {})
 }
 
 const LoginForm: React.FC = () => {
   const classes = useContext(ThemeContext)
+  const [token, setToken] = useContext(TokenContext)
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -47,7 +50,7 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = (event: React.FormEvent) => {
     event.preventDefault()
-    login(username, password)
+    setToken(login(username, password))
     navigate('/commands')
   }
 

@@ -1,4 +1,3 @@
-import axios from 'axios'
 import { createContext, useState } from 'react'
 import {
   createBrowserRouter,
@@ -8,21 +7,23 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import AdminPage from './componentes/admin-page'
+import api from './componentes/api'
 import CommandList from './componentes/command-list'
 import CommandPage, { Command } from './componentes/command/command'
 import LoginForm from './componentes/login-form'
 import RootLayout from './componentes/root-layout'
 
 export const CommandsContext = createContext<Command[]>([])
+export const TokenContext = createContext<[{}, Function]>([{}, () => {}])
+
 const loadCommands = async (setCommands: Function) => {
-  const res = await axios<Command[]>({
-    method: 'GET',
-    url: 'http://localhost:5461/api/commands',
-  })
+  const res = await api.get<Command[]>('commands')
   setCommands(res.data)
   return res.data
 }
+
 function App() {
+  const [token, setToken] = useState({})
   const command: Command = {
     name: 'com',
     params: {
@@ -72,7 +73,9 @@ function App() {
   )
   return (
     <CommandsContext.Provider value={commands}>
-      <RouterProvider router={router} />
+      <TokenContext.Provider value={[token, setToken]}>
+        <RouterProvider router={router} />
+      </TokenContext.Provider>
     </CommandsContext.Provider>
   )
 }

@@ -1,8 +1,8 @@
 import { Button, Container, FormControl, Typography } from '@material-ui/core'
-import axios from 'axios'
 import { FormEvent, useContext, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { CommandsContext } from '../../App'
+import api from '../api'
 import { ThemeContext } from '../root-layout'
 import CommandParamsFields, { Params } from './command-params'
 
@@ -12,10 +12,8 @@ export interface Command {
 }
 
 const runCommand = (command: Command) => {
-  axios({
-    method: 'GET',
-    url: `http://localhost:5461/api/commands/${command.name}/run`,
-  })
+  api
+    .get(`commands/${command.name}/run`)
     .then(res => {
       return JSON.stringify(res.data)
     })

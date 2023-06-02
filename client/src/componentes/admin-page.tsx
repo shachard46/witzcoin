@@ -6,8 +6,8 @@ import {
   TextField,
   Typography,
 } from '@material-ui/core'
-import axios from 'axios'
 import React, { useContext, useState } from 'react'
+import api from './api'
 import { ThemeContext } from './root-layout'
 
 const AdminPage: React.FC = () => {
@@ -24,11 +24,8 @@ const AdminPage: React.FC = () => {
   }
 
   const handleSubmit = (event: React.FormEvent): void => {
-    axios({
-      method: 'POST',
-      url: 'http://localhost:5461/api/perms',
-      data: { allow_ip: allowIp, block_ip: blockIp },
-    })
+    api
+      .post('perms', { allow_ip: allowIp, block_ip: blockIp })
       .then(res => {})
       .catch(err => {})
   }
