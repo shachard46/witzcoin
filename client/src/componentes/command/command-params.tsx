@@ -5,10 +5,10 @@ export interface Params {
   [key: string]: string
 }
 
-const CommandParamsFields: React.FC<Params> = (params: Params) => {
+const CommandParamsFields: React.FC<Params> = params => {
   const [values, setValues] = useState(params)
   const handleValuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let temp: Params = values
+    let temp = values
     temp[event.target.name] = event.target.value
     setValues(temp)
   }
@@ -25,7 +25,7 @@ const CommandParamsFields: React.FC<Params> = (params: Params) => {
         name={param}
         autoComplete={param}
         autoFocus
-        value={param}
+        value='{param}'
         onChange={handleValuesChange}
       />,
     )

@@ -34,7 +34,6 @@ const CommandList: React.FC = () => {
       </Typography>
       <Paper className='paper'>
         <List className='command-links'>
-          {/* <ul > */}
           {commands.map(command => (
             <li key={'li' + commands.indexOf(command)}>
               <NavLink
@@ -50,7 +49,6 @@ const CommandList: React.FC = () => {
               </NavLink>
             </li>
           ))}
-          {/* </ul> */}
         </List>
       </Paper>
     </Container>
