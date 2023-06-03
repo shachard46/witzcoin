@@ -1,5 +1,4 @@
-import axios, { AxiosInstance } from 'axios'
-import { createContext, useState } from 'react'
+import { useState } from 'react'
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -9,23 +8,13 @@ import {
 import './App.css'
 import AdminPage from './componentes/admin-page'
 import LoginForm from './componentes/auth/login-form'
-import CommandList from './componentes/command/command-list'
+import { TokenProvider } from './componentes/auth/token-provider'
 import CommandPage, { Command } from './componentes/command/command'
-import useCommands, {
-  CommandsProvider,
-} from './componentes/command/commands-provider'
+import CommandList from './componentes/command/command-list'
+import { CommandsProvider } from './componentes/command/commands-provider'
 import RootLayout from './componentes/root-layout'
 
-export const TokenContext = createContext<[Token, Function]>([
-  { access_token: '', token_type: '' },
-  () => {},
-])
-
 function App() {
-  const [token, setToken] = useState<Token>({
-    access_token: '',
-    token_type: '',
-  })
   const [commands, setCommands] = useState<Command[]>([])
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -39,9 +28,9 @@ function App() {
   )
   return (
     <CommandsProvider>
-      <TokenContext.Provider value={[token, setToken]}>
+      <TokenProvider>
         <RouterProvider router={router} />
-      </TokenContext.Provider>
+      </TokenProvider>
     </CommandsProvider>
   )
 }

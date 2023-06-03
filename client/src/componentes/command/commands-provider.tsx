@@ -2,12 +2,13 @@ import { useContext, useState } from 'react'
 import { deepEqual } from '../../utils'
 import { Command } from './command'
 
-import { createContext, ReactNode } from 'react'
+import { createContext } from 'react'
 import { useApi } from '../api/api-provider'
+import Provider from '../provider-model'
 
 const CommandsContext = createContext<Command[]>([])
 
-export const CommandsProvider: React.FC<{ children: ReactNode }> = ({ children }) => {
+export const CommandsProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
   const [commands, setCommands] = useState<Command[]>([])
   api
@@ -31,4 +32,3 @@ export const CommandsProvider: React.FC<{ children: ReactNode }> = ({ children }
 export const useCommands = () => {
   return useContext(CommandsContext)
 }
-

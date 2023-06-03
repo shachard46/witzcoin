@@ -1,7 +1,7 @@
 import { createContext, ReactNode, useContext, useState } from 'react'
 import { deepEqual } from '../../utils'
-import { useApi } from '../api/api-provider'
 import { Token } from './models'
+import Provider from '../provider-model'
 
 const TokenContext = createContext<[Token, Function]>([
   {
@@ -11,8 +11,9 @@ const TokenContext = createContext<[Token, Function]>([
   () => {},
 ])
 
-export const TokenProvider = (children: ReactNode) => {
-  const api = useApi()
+export const TokenProvider: React.FC<Provider> = ({
+  children,
+}) => {
   const [token, setToken] = useState({
     access_token: '',
     token_type: '',
