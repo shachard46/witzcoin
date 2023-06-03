@@ -15,6 +15,7 @@ import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
 import { ThemeContext } from '../root-layout'
+import { useToken } from './token-provider'
 
 const login = async (
   api: AxiosInstance,
@@ -31,6 +32,7 @@ const login = async (
 const LoginForm: React.FC = () => {
   const classes = useContext(ThemeContext)
   const api = useApi()
+  const [token, refreshToken] = useToken()
 
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
@@ -52,7 +54,7 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     const res = await login(api, username, password)
-    localStorage.setItem('token', JSON.stringify(res))
+    refreshToken(JSON.stringify(res))
     navigate('/perms')
   }
 

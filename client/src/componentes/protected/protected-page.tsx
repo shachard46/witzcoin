@@ -7,7 +7,7 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
 }) => {
   const { isAutonticated, user, scope } = useAuth()
   if (isAutonticated) {
-    if (level > scope) {
+    if (level < scope) {
       return <div>Not Authorized</div>
     }
     return <div>{children}</div>
