@@ -52,7 +52,7 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     const res = await login(api, username, password)
-    setToken(res)
+    localStorage.setItem('token', JSON.stringify(res))
     navigate('/perms')
   }
 

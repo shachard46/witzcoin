@@ -7,12 +7,13 @@ import {
   Typography,
 } from '@material-ui/core'
 import React, { useContext, useState } from 'react'
-import { ApiContext } from '../App'
+import { useApi } from './api/api-provider'
+import { ProtectedPage } from './protected/protected-page'
 import { ThemeContext } from './root-layout'
 
 const AdminPage: React.FC = () => {
   const classes = useContext(ThemeContext)
-  const api = useContext(ApiContext)
+  const api = useApi()
   const [allowIp, setAllowIp] = useState('')
   const [blockIp, setBlockIp] = useState('')
 
@@ -32,57 +33,59 @@ const AdminPage: React.FC = () => {
   }
 
   return (
-    <Container component='main' maxWidth='xs' className={classes.root}>
-      <Typography align='center' component='h1' variant='h5'>
-        IP Managment
-      </Typography>
-      <FormControl className={classes.form}>
-        <Grid container spacing={2}>
-          <Grid item xs={6}>
-            <TextField
-              variant='outlined'
-              margin='normal'
-              className={classes.textField}
-              fullWidth
-              id='allow_ip'
-              label='Allow IP'
-              name='allow_ip'
-              autoComplete='192.100.1.12'
-              autoFocus
-              value={allowIp}
-              onChange={handleAllowIPChange}
-            />
+    <ProtectedPage level={0}>
+      <Container component='main' maxWidth='xs' className={classes.root}>
+        <Typography align='center' component='h1' variant='h5'>
+          IP Managment
+        </Typography>
+        <FormControl className={classes.form}>
+          <Grid container spacing={2}>
+            <Grid item xs={6}>
+              <TextField
+                variant='outlined'
+                margin='normal'
+                className={classes.textField}
+                fullWidth
+                id='allow_ip'
+                label='Allow IP'
+                name='allow_ip'
+                autoComplete='192.100.1.12'
+                autoFocus
+                value={allowIp}
+                onChange={handleAllowIPChange}
+              />
+            </Grid>
+            <Grid item xs={6}>
+              <TextField
+                variant='outlined'
+                margin='normal'
+                className={classes.textField}
+                fullWidth
+                id='block_ip'
+                label='Block IP'
+                name='block_ip'
+                autoComplete='192.100.1.12'
+                autoFocus
+                value={blockIp}
+                onChange={handleBlockIPChange}
+              />
+            </Grid>
           </Grid>
-          <Grid item xs={6}>
-            <TextField
-              variant='outlined'
-              margin='normal'
-              className={classes.textField}
+          <Grid item>
+            <Button
+              type='submit'
               fullWidth
-              id='block_ip'
-              label='Block IP'
-              name='block_ip'
-              autoComplete='192.100.1.12'
-              autoFocus
-              value={blockIp}
-              onChange={handleBlockIPChange}
-            />
+              variant='contained'
+              color='primary'
+              className={classes.submit}
+              onClick={handleSubmit}
+            >
+              Change IP Permissions
+            </Button>
           </Grid>
-        </Grid>
-        <Grid item>
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className={classes.submit}
-            onClick={handleSubmit}
-          >
-            Change IP Permissions
-          </Button>
-        </Grid>
-      </FormControl>
-    </Container>
+        </FormControl>
+      </Container>
+    </ProtectedPage>
   )
 }
 

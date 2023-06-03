@@ -1,4 +1,3 @@
-import { useState } from 'react'
 import {
   createBrowserRouter,
   createRoutesFromElements,
@@ -8,13 +7,12 @@ import {
 import './App.css'
 import AdminPage from './componentes/admin-page'
 import LoginForm from './componentes/auth/login-form'
-import CommandPage, { Command } from './componentes/command/command'
+import CommandPage from './componentes/command/command'
 import CommandList from './componentes/command/command-list'
 import { CommandsProvider } from './componentes/command/commands-provider'
 import RootLayout from './componentes/root-layout'
 
 function App() {
-  const [commands, setCommands] = useState<Command[]>([])
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/' element={<RootLayout />}>
