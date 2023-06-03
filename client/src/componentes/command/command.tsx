@@ -9,16 +9,16 @@ import { useCommand } from './command-provider'
 import { Command, Params } from './models'
 import { ParamsProvider } from './params-provider'
 
-const runCommand = (api: AxiosInstance, command: Command, params: Params) => {
-  api
+const runCommand = async (
+  api: AxiosInstance,
+  command: Command,
+  params: Params,
+) => {
+  return api
     .get(`commands/${command.name}/run?params=${JSON.stringify(params)}`)
     .then(res => {
-      return JSON.stringify(res.data)
+      return res.data
     })
-    .catch(err => {
-      return err
-    })
-  return ''
 }
 
 const CommandPage: React.FC = () => {
@@ -28,7 +28,9 @@ const CommandPage: React.FC = () => {
   const [params, setParams] = useState(command.params)
   const api = useApi()
   const handleSubmit = (event: FormEvent) => {
-    setOutput(runCommand(api, command, params))
+    runCommand(api, command, params).then(res => {
+      setOutput(JSON.stringify(res))
+    })
   }
   return (
     <ProtectedPage level={1}>
