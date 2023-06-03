@@ -10,27 +10,29 @@ import {
   Typography,
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
+import { AxiosInstance } from 'axios'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { TokenContext } from '../App'
-import api from './hooks/api'
+import { ApiContext, TokenContext } from '../App'
 import { ThemeContext } from './root-layout'
 
-const login = (username: string, password: string) => {
+const login = async (
+  api: AxiosInstance,
+  username: string,
+  password: string,
+): Promise<{}> => {
   const form = new FormData()
   form.append('username', username)
   form.append('password', password)
-  api
-    .post('login', form)
-    .then(res => {
-      return res.data
-    })
-    .catch(err => {})
+  const res = await api.post('login', form)
+  return res.data
 }
 
 const LoginForm: React.FC = () => {
   const classes = useContext(ThemeContext)
   const [token, setToken] = useContext(TokenContext)
+  const api = useContext(ApiContext)
+
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
@@ -48,9 +50,10 @@ const LoginForm: React.FC = () => {
     setShowPassword(!showPassword)
   }
 
-  const handleSubmit = (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    setToken(login(username, password))
+    const res = await login(api, username, password)
+    setToken(res)
     navigate('/perms')
   }
 

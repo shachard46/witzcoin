@@ -7,11 +7,12 @@ import {
   Typography,
 } from '@material-ui/core'
 import React, { useContext, useState } from 'react'
-import api from './hooks/api'
+import { ApiContext } from '../App'
 import { ThemeContext } from './root-layout'
 
 const AdminPage: React.FC = () => {
   const classes = useContext(ThemeContext)
+  const api = useContext(ApiContext)
   const [allowIp, setAllowIp] = useState('')
   const [blockIp, setBlockIp] = useState('')
 

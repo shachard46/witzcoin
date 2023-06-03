@@ -1,3 +1,4 @@
+import axios, { AxiosInstance } from 'axios'
 import { createContext, useState } from 'react'
 import {
   createBrowserRouter,
@@ -9,20 +10,32 @@ import './App.css'
 import AdminPage from './componentes/admin-page'
 import CommandList from './componentes/command-list'
 import CommandPage, { Command } from './componentes/command/command'
-import api from './componentes/hooks/api'
+import getApi from './componentes/hooks/api'
+import useCommands from './componentes/hooks/get-commands'
 import LoginForm from './componentes/login-form'
 import RootLayout from './componentes/root-layout'
-import useCommands from './componentes/hooks/get-commands'
 
 export const CommandsContext = createContext<[Command[], Function]>([
   [],
   () => {},
 ])
-export const TokenContext = createContext<[{}, Function]>([{}, () => {}])
+interface Token {
+  access_token: string
+  token_type: string
+}
+export const TokenContext = createContext<[Token, Function]>([
+  { access_token: '', token_type: '' },
+  () => {},
+])
+export const ApiContext = createContext<AxiosInstance>(axios.create())
 
 function App() {
-  const [token, setToken] = useState({})
+  const [token, setToken] = useState<Token>({
+    access_token: '',
+    token_type: '',
+  })
   const [commands, setCommands] = useState<Command[]>([])
+  const api = getApi(token.access_token)
   useCommands(api, commands, setCommands)
   const router = createBrowserRouter(
     createRoutesFromElements(
@@ -35,11 +48,13 @@ function App() {
     ),
   )
   return (
-    <CommandsContext.Provider value={[commands, setCommands]}>
-      <TokenContext.Provider value={[token, setToken]}>
-        <RouterProvider router={router} />
-      </TokenContext.Provider>
-    </CommandsContext.Provider>
+    <ApiContext.Provider value={api}>
+      <CommandsContext.Provider value={[commands, setCommands]}>
+        <TokenContext.Provider value={[token, setToken]}>
+          <RouterProvider router={router} />
+        </TokenContext.Provider>
+      </CommandsContext.Provider>
+    </ApiContext.Provider>
   )
 }
 

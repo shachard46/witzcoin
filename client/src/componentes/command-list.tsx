@@ -1,16 +1,14 @@
 import { Container, List, Paper, Typography } from '@material-ui/core'
-import React, { useContext, useEffect } from 'react'
+import React, { useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
-import { CommandsContext } from '../App'
-import { deepEqual } from '../utils'
-import api from './hooks/api'
-import { Command } from './command/command'
-import { ThemeContext } from './root-layout'
+import { ApiContext, CommandsContext } from '../App'
 import useCommands from './hooks/get-commands'
+import { ThemeContext } from './root-layout'
 
 const CommandList: React.FC = () => {
   const classes = useContext(ThemeContext)
   const [commands, setCommands] = useContext(CommandsContext)
+  const api = useContext(ApiContext)
   useCommands(api, commands, setCommands)
   const navigate = useNavigate()
   const handleCommand = (name: string): void => {

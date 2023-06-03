@@ -1,8 +1,8 @@
 import { Button, Container, FormControl, Typography } from '@material-ui/core'
+import { AxiosInstance } from 'axios'
 import { FormEvent, useContext, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
-import { CommandsContext } from '../../App'
-import api from '../hooks/api'
+import { ApiContext, CommandsContext } from '../../App'
 import { ThemeContext } from '../root-layout'
 import CommandParamsFields, { Params } from './command-params'
 
@@ -11,7 +11,7 @@ export interface Command {
   params: Params
 }
 
-const runCommand = (command: Command) => {
+const runCommand = (api: AxiosInstance, command: Command) => {
   api
     .get(`commands/${command.name}/run`)
     .then(res => {
@@ -26,6 +26,7 @@ const runCommand = (command: Command) => {
 const CommandPage: React.FC = () => {
   const classes = useContext(ThemeContext)
   const [commands, set] = useContext(CommandsContext)
+  const api = useContext(ApiContext)
   const location = useLocation()
   const navigate = useNavigate()
   const [output, setOutput] = useState('')
@@ -37,7 +38,7 @@ const CommandPage: React.FC = () => {
     return <div></div>
   }
   const handleSubmit = (event: FormEvent) => {
-    setOutput(runCommand(command))
+    setOutput(runCommand(api, command))
   }
   return (
     <Container component='main' maxWidth='xs' className={classes.root}>
