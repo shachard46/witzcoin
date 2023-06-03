@@ -21,12 +21,17 @@ const login = async (
   api: AxiosInstance,
   username: string,
   password: string,
-): Promise<{}> => {
+): Promise<{} | undefined> => {
   const form = new FormData()
   form.append('username', username)
   form.append('password', password)
-  const res = await api.post('login', form)
-  return res.data
+  try {
+    const res = await api.post('login', form)
+    return res.data
+  } catch (error) {
+    alert('False Creds')
+    return undefined
+  }
 }
 
 const LoginForm: React.FC = () => {
@@ -54,61 +59,65 @@ const LoginForm: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     const res = await login(api, username, password)
-    refreshToken(JSON.stringify(res))
-    navigate('/perms')
+    if (res) {
+      refreshToken(JSON.stringify(res))
+      navigate('/p/commands')
+    }
   }
 
   return (
-    <Container component='main' maxWidth='xs' className={classes.root}>
-      <div>
-        <Typography component='h1' variant='h5' align='center'>
-          Log In
-        </Typography>
-        <TextField
-          variant='outlined'
-          margin='normal'
-          required
-          className={classes.textField}
-          fullWidth
-          id='username'
-          label='Username'
-          name='username'
-          autoComplete='username'
-          autoFocus
-          value={username}
-          onChange={handleUsernameChange}
-        />
-        <FormControl variant='outlined' margin='normal' required fullWidth>
-          <InputLabel htmlFor='password'>Password</InputLabel>
-          <OutlinedInput
-            id='password'
-            name='password'
+    <div className='container'>
+      <Container component='main' maxWidth='xs' className={classes.root}>
+        <div>
+          <Typography component='h1' variant='h5' align='center'>
+            Log In
+          </Typography>
+          <TextField
+            variant='outlined'
+            margin='normal'
+            required
             className={classes.textField}
-            type={showPassword ? 'text' : 'password'}
-            value={password}
-            onChange={handlePasswordChange}
-            endAdornment={
-              <InputAdornment position='end'>
-                <IconButton onClick={handleShowPasswordToggle} edge='end'>
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
-            labelWidth={70}
+            fullWidth
+            id='username'
+            label='Username'
+            name='username'
+            autoComplete='username'
+            autoFocus
+            value={username}
+            onChange={handleUsernameChange}
           />
-        </FormControl>
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          color='primary'
-          className={classes.submit}
-          onClick={handleSubmit}
-        >
-          Log In
-        </Button>
-      </div>
-    </Container>
+          <FormControl variant='outlined' margin='normal' required fullWidth>
+            <InputLabel htmlFor='password'>Password</InputLabel>
+            <OutlinedInput
+              id='password'
+              name='password'
+              className={classes.textField}
+              type={showPassword ? 'text' : 'password'}
+              value={password}
+              onChange={handlePasswordChange}
+              endAdornment={
+                <InputAdornment position='end'>
+                  <IconButton onClick={handleShowPasswordToggle} edge='end'>
+                    {showPassword ? <Visibility /> : <VisibilityOff />}
+                  </IconButton>
+                </InputAdornment>
+              }
+              labelWidth={70}
+            />
+          </FormControl>
+          <Button
+            type='submit'
+            fullWidth
+            variant='contained'
+            color='primary'
+            className={classes.submit}
+            onClick={handleSubmit}
+          >
+            Log In
+          </Button>
+        </div>
+      </Container>
+    </div>
   )
 }
 
