@@ -8,7 +8,6 @@ import {
 import './App.css'
 import AdminPage from './componentes/admin-page'
 import LoginForm from './componentes/auth/login-form'
-import { TokenProvider } from './componentes/auth/token-provider'
 import CommandPage, { Command } from './componentes/command/command'
 import CommandList from './componentes/command/command-list'
 import { CommandsProvider } from './componentes/command/commands-provider'
@@ -28,9 +27,7 @@ function App() {
   )
   return (
     <CommandsProvider>
-      <TokenProvider>
-        <RouterProvider router={router} />
-      </TokenProvider>
+      <RouterProvider router={router} />
     </CommandsProvider>
   )
 }
