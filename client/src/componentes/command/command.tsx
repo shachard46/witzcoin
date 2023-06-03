@@ -15,7 +15,9 @@ export interface Command {
 
 const runCommand = (api: AxiosInstance, command: Command) => {
   api
-    .get(`commands/${command.name}/run`)
+    .get(
+      `commands/${command.name}/run?params=${JSON.stringify(command.params)}`,
+    )
     .then(res => {
       return JSON.stringify(res.data)
     })
