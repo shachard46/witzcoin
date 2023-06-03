@@ -8,21 +8,18 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import AdminPage from './componentes/admin-page'
+import getApi from './componentes/api/api-providfer'
+import LoginForm from './componentes/auth/login-form'
 import CommandList from './componentes/command-list'
 import CommandPage, { Command } from './componentes/command/command'
-import getApi from './componentes/hooks/api'
-import useCommands from './componentes/hooks/get-commands'
-import LoginForm from './componentes/login-form'
+import useCommands from './componentes/command/commands-provider'
 import RootLayout from './componentes/root-layout'
 
 export const CommandsContext = createContext<[Command[], Function]>([
   [],
   () => {},
 ])
-interface Token {
-  access_token: string
-  token_type: string
-}
+
 export const TokenContext = createContext<[Token, Function]>([
   { access_token: '', token_type: '' },
   () => {},
@@ -48,13 +45,11 @@ function App() {
     ),
   )
   return (
-    <ApiContext.Provider value={api}>
-      <CommandsContext.Provider value={[commands, setCommands]}>
-        <TokenContext.Provider value={[token, setToken]}>
-          <RouterProvider router={router} />
-        </TokenContext.Provider>
-      </CommandsContext.Provider>
-    </ApiContext.Provider>
+    <CommandsContext.Provider value={[commands, setCommands]}>
+      <TokenContext.Provider value={[token, setToken]}>
+        <RouterProvider router={router} />
+      </TokenContext.Provider>
+    </CommandsContext.Provider>
   )
 }
 

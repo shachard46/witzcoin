@@ -2,7 +2,7 @@ import { Container, List, Paper, Typography } from '@material-ui/core'
 import React, { useContext } from 'react'
 import { NavLink, useNavigate } from 'react-router-dom'
 import { ApiContext, CommandsContext } from '../App'
-import useCommands from './hooks/get-commands'
+import useCommands from './command/commands-provider'
 import { ThemeContext } from './root-layout'
 
 const CommandList: React.FC = () => {
