@@ -6,16 +6,21 @@ export interface Params {
 }
 
 const CommandParamsFields: React.FC<Params> = params => {
-  const [values, setValues] = useState(params)
+  const [values, setValues] = useState<Params>(params)
+
   const handleValuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    let temp = values
-    temp[event.target.name] = event.target.value
-    setValues(temp)
+    const { name, value } = event.target
+    setValues(prevValues => ({
+      ...prevValues,
+      [name]: value,
+    }))
   }
-  let fields: JSX.Element[] = []
+
+  const fields: JSX.Element[] = []
   for (const param in params) {
     fields.push(
       <TextField
+        key={param}
         variant='outlined'
         margin='normal'
         required
@@ -25,11 +30,12 @@ const CommandParamsFields: React.FC<Params> = params => {
         name={param}
         autoComplete={param}
         autoFocus
-        value='{param}'
+        value={values[param]}
         onChange={handleValuesChange}
       />,
     )
   }
+
   return <div>{fields}</div>
 }
 

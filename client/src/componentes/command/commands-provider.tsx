@@ -33,7 +33,7 @@ export const CommandsProvider: React.FC<Provider> = ({ children }) => {
   if (isAutonticated) {
     refreshCommands(api, setCommands, commands)
   }
-  return (
+  return (      
     <CommandsContext.Provider
       value={[commands, () => refreshCommands(api, setCommands, commands)]}
     >
