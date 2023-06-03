@@ -1,10 +1,10 @@
 import { TextField } from '@material-ui/core'
 import React from 'react'
-import { useCommand } from './command-provider'
 import { Params } from './models'
+import { useParams } from './params-provider'
 
 const CommandParamsFields: React.FC = () => {
-  const [command, setParams] = useCommand()
+  const [params, setParams] = useParams()
 
   const handleValuesChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = event.target
@@ -15,7 +15,7 @@ const CommandParamsFields: React.FC = () => {
   }
 
   const fields: JSX.Element[] = []
-  for (const param in Object.keys(command.params)) {
+  for (const param in params) {
     fields.push(
       <TextField
         key={param}
@@ -28,7 +28,7 @@ const CommandParamsFields: React.FC = () => {
         name={param}
         autoComplete={param}
         autoFocus
-        value={command.params[param]}
+        value={params[param]}
         onChange={handleValuesChange}
       />,
     )
