@@ -5,7 +5,7 @@ import { useApi } from '../api/api-provider'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
 import CommandParamsFields from './command-params'
-import { useCommand } from './command-provider'
+import { CommandProvider, useCommand } from './command-provider'
 import { Command } from './models'
 
 const runCommand = (api: AxiosInstance, command: Command) => {
@@ -25,7 +25,8 @@ const runCommand = (api: AxiosInstance, command: Command) => {
 const CommandPage: React.FC = () => {
   const classes = useContext(ThemeContext)
   const [output, setOutput] = useState('')
-  const [command, setParams] = useCommand()
+  const command = useCommand()
+  const [params, setParams] = useState(command.pa)
   const api = useApi()
   const handleSubmit = (event: FormEvent) => {
     setOutput(runCommand(api, command))
@@ -37,7 +38,10 @@ const CommandPage: React.FC = () => {
           {command.name}
         </Typography>
         <FormControl className={classes.form}>
-          <CommandParamsFields/>
+          <CommandProvider>
+            <CommandParamsFields />
+          </CommandProvider>
+
           <Button
             type='submit'
             fullWidth

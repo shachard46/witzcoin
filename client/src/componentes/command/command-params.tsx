@@ -15,7 +15,7 @@ const CommandParamsFields: React.FC = () => {
   }
 
   const fields: JSX.Element[] = []
-  for (const param in command.params) {
+  for (const param in Object.keys(command.params)) {
     fields.push(
       <TextField
         key={param}

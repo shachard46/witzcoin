@@ -1,4 +1,4 @@
-import { useContext, useState } from 'react'
+import { useContext, useEffect, useState } from 'react'
 
 import { AxiosInstance } from 'axios'
 import { createContext } from 'react'
@@ -30,10 +30,12 @@ export const CommandsProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
   const { isAutonticated, user, scope } = useAuth()
   const [commands, setCommands] = useState<Command[]>([])
-  if (isAutonticated) {
-    refreshCommands(api, setCommands, commands)
-  }
-  return (      
+  useEffect(() => {
+    if (isAutonticated) {
+      refreshCommands(api, setCommands, commands)
+    }
+  }, [isAutonticated, api, commands])
+  return (
     <CommandsContext.Provider
       value={[commands, () => refreshCommands(api, setCommands, commands)]}
     >
