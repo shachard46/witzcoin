@@ -16,10 +16,12 @@ import RootLayout from './componentes/root-layout'
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
-      <Route path='/' element={<RootLayout />}>
+      <Route path='/'>
         <Route path='login' element={<LoginForm />} />
-        <Route path='perms' element={<AdminPage />} />
-        <Route path='commands' element={<CommandList />} />
+        <Route path='p' element={<RootLayout />}>
+          <Route path='perms' element={<AdminPage />} />
+          <Route path='commands' element={<CommandList />} />
+        </Route>
         <Route
           path='command'
           element={

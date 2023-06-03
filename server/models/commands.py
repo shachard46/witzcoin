@@ -1,3 +1,4 @@
+import re
 from typing import Dict
 
 from models.scheduale_task import SchedualerTask
@@ -36,9 +37,15 @@ class AddCommand(Command):
         super().__init__()
         self.commands = commands
         self.params = params
+        # self.cleaning_pattern = r'[\s\t]*\n[\s\t]*'
+
+    def clean_code(self):
+        code: str = self.params['code']
+        return code.strip()
+        # code = re.sub(self.cleaning_pattern, r'\n', code)
 
     def execute(self):
-        self.commands[self.params['name']] = Command({}, self.params['code'])
+        self.commands[self.params['name']] = Command({}, self.clean_code())
 
 
 class RunInCMD(Command):

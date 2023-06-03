@@ -14,11 +14,10 @@ const runCommand = async (
   command: Command,
   params: Params,
 ) => {
-  return api
-    .get(`commands/${command.name}/run?params=${JSON.stringify(params)}`)
-    .then(res => {
-      return res.data
-    })
+  const p = params == null ? '{}' : JSON.stringify(params)
+  return api.get(`commands/${command.name}/run?params=${p}`).then(res => {
+    return res.data
+  })
 }
 
 const CommandPage: React.FC = () => {
