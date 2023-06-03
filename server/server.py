@@ -50,12 +50,11 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
 
 async def is_admin(user: Annotated[User, Depends(get_current_user)]):
     if not user.admin:
-        return user.username
-        # raise HTTPException(
-        #     status_code=status.HTTP_401_UNAUTHORIZED,
-        #     detail="Invalid authentication credentials",
-        #     headers={"WWW-Authenticate": "Bearer"},
-        # )
+        raise HTTPException(
+            status_code=status.HTTP_401_UNAUTHORIZED,
+            detail="Invalid authentication credentials",
+            headers={"WWW-Authenticate": "Bearer"},
+        )
     return user
 
 
