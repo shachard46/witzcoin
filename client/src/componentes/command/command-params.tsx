@@ -1,9 +1,6 @@
 import { TextField } from '@material-ui/core'
 import React, { useState } from 'react'
-
-export interface Params {
-  [key: string]: string
-}
+import { Params } from './models'
 
 const CommandParamsFields: React.FC<Params> = params => {
   const [values, setValues] = useState<Params>(params)

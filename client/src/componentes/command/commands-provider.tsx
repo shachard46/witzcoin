@@ -1,5 +1,4 @@
 import { useContext, useState } from 'react'
-import { Command } from './command'
 
 import { AxiosInstance } from 'axios'
 import { createContext } from 'react'
@@ -7,6 +6,7 @@ import { deepEqual } from '../../utils'
 import { useApi } from '../api/api-provider'
 import { useAuth } from '../auth/auth-provider'
 import Provider from '../provider-model'
+import { Command } from './models'
 
 const CommandsContext = createContext<[Command[], Function]>([[], () => {}])
 const getCommands = async (api: AxiosInstance) => {

@@ -1,23 +1,17 @@
 import { Button, Container, FormControl, Typography } from '@material-ui/core'
 import { AxiosInstance } from 'axios'
-import { FormEvent, useContext, useState } from 'react'
+import { FormEvent, useContext, useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router'
 import { useApi } from '../api/api-provider'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
-import CommandParamsFields, { Params } from './command-params'
+import CommandParamsFields from './command-params'
 import { useCommands } from './commands-provider'
+import { Command, Params } from './models'
 
-export interface Command {
-  name: string
-  params: Params
-}
-
-const runCommand = (api: AxiosInstance, command: Command) => {
+const runCommand = (api: AxiosInstance, command: Command, params: Params) => {
   api
-    .get(
-      `commands/${command.name}/run?params=${JSON.stringify(command.params)}`,
-    )
+    .get(`commands/${command.name}/run?params=${JSON.stringify(params)}`)
     .then(res => {
       return JSON.stringify(res.data)
     })
@@ -27,6 +21,17 @@ const runCommand = (api: AxiosInstance, command: Command) => {
   return ''
 }
 
+const getCommandFromQuery = (
+  queryParams: URLSearchParams,
+  commands: Command[],
+) => {
+  const commandName = queryParams.get('name')
+  const command = commands.find(c => c.name === commandName)
+  if (!command) {
+    return null
+  }
+}
+
 const CommandPage: React.FC = () => {
   const classes = useContext(ThemeContext)
   const commands = useCommands()
@@ -34,15 +39,23 @@ const CommandPage: React.FC = () => {
   const location = useLocation()
   const navigate = useNavigate()
   const [output, setOutput] = useState('')
-  const queryParams = new URLSearchParams(location.search)
-  const commandName = queryParams.get('name')
-  const command = commands.find(c => c.name === commandName)
+  const [command, setCommand] = useState<Command>()
+  const [params, setParams] = useState<Params>({})
+  useEffect(() => {
+    const queryParams = new URLSearchParams(location.search)
+    const command = getCommandFromQuery(queryParams, commands)
+    if (command) {
+      setCommand(command)
+    } else {
+      navigate('/commands')
+    }
+  }, [command, commands, location.search, navigate])
+
   if (!command) {
-    navigate('/commands')
-    return <div></div>
+    return null
   }
   const handleSubmit = (event: FormEvent) => {
-    setOutput(runCommand(api, command))
+    setOutput(runCommand(api, command, params))
   }
   return (
     <ProtectedPage level={1}>
