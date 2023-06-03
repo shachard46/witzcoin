@@ -19,7 +19,14 @@ function App() {
         <Route path='login' element={<LoginForm />} />
         <Route path='perms' element={<AdminPage />} />
         <Route path='commands' element={<CommandList />} />
-        <Route path='command' element={<CommandPage />} />
+        <Route
+          path='command'
+          element={
+            <CommandsProvider>
+              <CommandPage />
+            </CommandsProvider>
+          }
+        />
       </Route>,
     ),
   )
