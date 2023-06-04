@@ -21,15 +21,15 @@ function App() {
         <Route path='p' element={<RootLayout />}>
           <Route path='perms' element={<AdminPage />} />
           <Route path='commands' element={<CommandList />} />
+          <Route
+            path='command'
+            element={
+              <CommandProvider>
+                <CommandPage />
+              </CommandProvider>
+            }
+          />
         </Route>
-        <Route
-          path='command'
-          element={
-            <CommandProvider>
-              <CommandPage />
-            </CommandProvider>
-          }
-        />
       </Route>,
     ),
   )
