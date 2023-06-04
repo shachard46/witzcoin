@@ -1,9 +1,13 @@
 export interface Token {
-  access_token: string
+  access_token: TokenData
   token_type: string
-  scope: number
+  
 }
 
+export interface TokenData {
+  sub: string
+  scopes: string
+}
 export interface Auth {
   isAutonticated: boolean
   user: string
