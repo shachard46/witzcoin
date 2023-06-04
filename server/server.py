@@ -66,7 +66,10 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     if sha1(form_data.password) != user.password:
         raise HTTPException(
             status_code=400, detail="Incorrect username or password")
-    return {"access_token": user.username, "token_type": "bearer"}
+    scope = 1
+    if user.admin:
+        scope = 0
+    return {"access_token": user.username, "token_type": "bearer", "scope": scope}
 
 
 @app.get('/api/admin')
