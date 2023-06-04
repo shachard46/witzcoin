@@ -15,7 +15,7 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
       value={{
         isAutonticated: token ? true : false,
         user: token ? token.access_token : '',
-        scope: 0,
+        scope: 1,
       }}
     >
       {children}

@@ -1,7 +1,6 @@
-import { useEffect } from 'react'
 import { useAuth } from '../auth/auth-provider'
-import { ProtectedPageParams } from './model'
 import NotFoundPage from '../not-found-page'
+import { ProtectedPageParams } from './model'
 
 export const ProtectedPage: React.FC<ProtectedPageParams> = ({
   level,
@@ -10,9 +9,9 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
   const { isAutonticated, user, scope } = useAuth()
   if (isAutonticated) {
     if (level < scope) {
-      return <NotFoundPage/>
+      return null
     }
     return <div>{children}</div>
   }
-  return <NotFoundPage/>
+  return <NotFoundPage />
 }

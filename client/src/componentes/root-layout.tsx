@@ -39,9 +39,11 @@ const RootLayout: React.FC = () => {
               <li>
                 <NavLink to='/p/commands'>Commands</NavLink>
               </li>
-              <li>
-                <NavLink to='/p/perms'>Admin</NavLink>
-              </li>
+              <ProtectedPage level={0}>
+                <li>
+                  <NavLink to='/p/perms'>Admin</NavLink>
+                </li>
+              </ProtectedPage>
               <li>
                 <NavLink to='/login'>Login</NavLink>
               </li>
