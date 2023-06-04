@@ -1,6 +1,7 @@
-from fastapi import FastAPI, HTTPException, Depends, Path, Request, status
+import json
+from fastapi import FastAPI, HTTPException, Depends, Path, Request, status, Security
 from fastapi.middleware.cors import CORSMiddleware
-from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
+from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 import uvicorn
 from models.commands import Commands
 from models.permissions import Permissions
@@ -11,7 +12,7 @@ app = FastAPI()
 
 commands = Commands()
 permissions = Permissions(['127.0.0.1'], [], '1227.0.0.1')
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login")
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login", scopes={'admin': 'Admin', 'user': 'User'})
 origins = [
     "*"
 ]
@@ -36,18 +37,23 @@ async def ip_permissions(request: Request):
         raise HTTPException(status_code=404)
 
 
-async def get_current_user(token: str = Depends(oauth2_scheme)):
-    user = all_users.get_user(token)
-    if not user:
+async def get_current_user(scopes: SecurityScopes, token: str = Depends(oauth2_scheme)):
+    if scopes.scopes:
+        authenticate_value = f'Bearer scope="{scopes.scope_str}"'
+    else:
+        authenticate_value = "Bearer"
+    token = json.loads(token)
+    user = all_users.get_user(token['sub'])
+    if not user or token['scopes'] not in scopes.scopes:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
-            headers={"WWW-Authenticate": "Bearer"},
+            headers={"WWW-Authenticate": authenticate_value},
         )
     return user
 
 
-async def is_admin(user: User = Depends(get_current_user)):
+async def is_admin(user: User = Security(get_current_user, scopes=['admin'])):
     if not user.admin:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -66,10 +72,10 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     if sha1(form_data.password) != user.password:
         raise HTTPException(
             status_code=400, detail="Incorrect username or password")
-    scope = 1
+    scope = 'user'
     if user.admin:
-        scope = 0
-    return {"access_token": user.username, "token_type": "bearer", "scope": scope}
+        scope = 'admin'
+    return {"access_token": {"sub": user.username, "scopes": scope}, "token_type": "bearer"}
 
 
 @app.get('/api/admin')
@@ -86,17 +92,17 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
     return allow_ip or block_ip
 
 
-@app.get('/api/commands', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
+@app.get('/api/commands', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
     return commands.get_all_commands()
 
 
-@app.get('/api/commands/{name}', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
+@app.get('/api/commands/{name}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(name: str = Path(title="the name of the command to run")):
     return commands.get_command(name)
 
 
-@app.get('/api/commands/{name}/run', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
+@app.get('/api/commands/{name}/run', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(params, name: str = Path(title="the name of the command to run")):
     return commands.run_command(name, eval(params))
 
