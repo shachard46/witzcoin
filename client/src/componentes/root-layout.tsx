@@ -2,6 +2,7 @@ import { makeStyles } from '@material-ui/core/styles'
 import { ClassNameMap } from '@material-ui/styles'
 import React, { createContext } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
+import { ProtectedPage } from './protected/protected-page'
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -30,28 +31,30 @@ export const ThemeContext = createContext<ClassNameMap>({})
 const RootLayout: React.FC = () => {
   const classes = useStyles()
   return (
-    <div className='container'>
-      <header className='header'>
-        <nav>
-          <ul className='nav-links'>
-            <li>
-              <NavLink to='/p/commands'>Commands</NavLink>
-            </li>
-            <li>
-              <NavLink to='/p/perms'>Admin</NavLink>
-            </li>
-            <li>
-              <NavLink to='/login'>Login</NavLink>
-            </li>
-          </ul>
-        </nav>
-      </header>
-      <main>
-        <ThemeContext.Provider value={classes}>
-          <Outlet />
-        </ThemeContext.Provider>
-      </main>
-    </div>
+    <ProtectedPage level={1}>
+      <div className='container'>
+        <header className='header'>
+          <nav>
+            <ul className='nav-links'>
+              <li>
+                <NavLink to='/p/commands'>Commands</NavLink>
+              </li>
+              <li>
+                <NavLink to='/p/perms'>Admin</NavLink>
+              </li>
+              <li>
+                <NavLink to='/login'>Login</NavLink>
+              </li>
+            </ul>
+          </nav>
+        </header>
+        <main>
+          <ThemeContext.Provider value={classes}>
+            <Outlet />
+          </ThemeContext.Provider>
+        </main>
+      </div>
+    </ProtectedPage>
   )
 }
 

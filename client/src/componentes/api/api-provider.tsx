@@ -9,10 +9,7 @@ export const ApiProvider: React.FC<{ children: ReactNode }> = ({
   const api = axios.create({
     baseURL: 'http://localhost:5461/api',
   })
-  api.interceptors.request.use(config => {
-    config.headers.Authorization = `Bearer admin`//${token.access_token}`
-    return config
-  })
+
   return <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
 }
 
