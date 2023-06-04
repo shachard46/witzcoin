@@ -1,7 +1,6 @@
 from fastapi import FastAPI, HTTPException, Depends, Path, Request, status
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm
-from typing import Annotated
 import uvicorn
 from models.commands import Commands
 from models.permissions import Permissions
@@ -37,7 +36,7 @@ async def ip_permissions(request: Request):
         raise HTTPException(status_code=404)
 
 
-async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
+async def get_current_user(token: str = Depends(oauth2_scheme)):
     user = all_users.get_user(token)
     if not user:
         raise HTTPException(
@@ -48,7 +47,7 @@ async def get_current_user(token: Annotated[str, Depends(oauth2_scheme)]):
     return user
 
 
-async def is_admin(user: Annotated[User, Depends(get_current_user)]):
+async def is_admin(user: User = Depends(get_current_user)):
     if not user.admin:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
@@ -59,7 +58,7 @@ async def is_admin(user: Annotated[User, Depends(get_current_user)]):
 
 
 @app.post('/api/login', dependencies=[Depends(ip_permissions)])
-async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
+async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     if not all_users.is_valid(form_data.username):
         raise HTTPException(
             status_code=400, detail="Incorrect username or password")
@@ -71,7 +70,7 @@ async def login(form_data: Annotated[OAuth2PasswordRequestForm, Depends()]):
 
 
 @app.get('/api/admin')
-async def get_admin(user: Annotated[User, Depends(is_admin)]):
+async def get_admin(user: User = Depends(is_admin)):
     return user.admin
 
 
@@ -90,12 +89,12 @@ async def get_commands():
 
 
 @app.get('/api/commands/{name}', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
-async def get_command(name: Annotated[str, Path(title="the name of the command to run")]):
+async def get_command(name: str = Path(title="the name of the command to run")):
     return commands.get_command(name)
 
 
 @app.get('/api/commands/{name}/run', dependencies=[Depends(ip_permissions), Depends(get_current_user)])
-async def run_command(name: Annotated[str, Path(title="the name of the command to run")], params):
+async def run_command(params, name: str = Path(title="the name of the command to run")):
     return commands.run_command(name, eval(params))
 
 
