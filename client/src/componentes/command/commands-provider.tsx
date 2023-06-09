@@ -28,13 +28,13 @@ const refreshCommands = (
 }
 export const CommandsProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
-  const { isAutonticated, user, scope } = useAuth()
+  const auth = useAuth()
   const [commands, setCommands] = useState<Command[]>([])
   useEffect(() => {
-    if (isAutonticated) {
+    if (auth.isAutonticated) {
       refreshCommands(api, setCommands, commands)
     }
-  }, [isAutonticated, api, commands])
+  }, [auth.isAutonticated, api, commands])
   return (
     <CommandsContext.Provider
       value={[commands, () => refreshCommands(api, setCommands, commands)]}

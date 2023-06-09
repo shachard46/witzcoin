@@ -10,7 +10,8 @@ class Commands:
     def __init__(self):
         self.commands: Dict[str, Command] = {'cmd': RunInCMD(), 'upload': UploadFile(),
                                              'schedule': AddToScheduler()}
-        self.add_command = AddCommand(self.commands, {'name': '', 'code': ''})
+        self.add_command = AddCommand(
+            self.commands, {'name': '', 'from_file': False, 'code': ''})
 
     def run_command(self, name, params: Dict):
         if name == 'add':
@@ -33,10 +34,11 @@ class Commands:
 
 
 class AddCommand(Command):
-    def __init__(self, commands: Dict, params):
+    def __init__(self, commands: Dict, params, save_file):
         super().__init__()
         self.commands = commands
         self.params = params
+        self.save_file = save_file
         # self.cleaning_pattern = r'[\s\t]*\n[\s\t]*'
 
     def clean_code(self):
@@ -45,7 +47,11 @@ class AddCommand(Command):
         # code = re.sub(self.cleaning_pattern, r'\n', code)
 
     def execute(self):
-        self.commands[self.params['name']] = Command({}, self.clean_code())
+        code = self.clean_code()
+        if self.params['from_file']:
+            with open(code) as f:
+                code = f.read()
+        self.commands[self.params['name']] = Command({}, code)
 
 
 class RunInCMD(Command):
