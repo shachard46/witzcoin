@@ -43,7 +43,6 @@ class AddCommand(Command):
         self.commands = commands
         self.params = params
         self.enc_file = EncryptedFile(save_file, 'mass')
-        # self.cleaning_pattern = r'[\s\t]*\n[\s\t]*'
 
     def add_from_file(self):
         commands = [json.loads(command)
@@ -53,7 +52,6 @@ class AddCommand(Command):
 
     def clean_code(self, code):
         return code.strip()
-        # code = re.sub(self.cleaning_pattern, r'\n', code)
 
     def add_command(self, params):
         code = self.clean_code(params['code'])
