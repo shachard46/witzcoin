@@ -26,12 +26,12 @@ export class Api {
 
   post(url: string, data?: any, config?: any) {
     url = this.dictionary[url]
-    this.api.post(url, data, config)
+    return this.api.post(url, data, config)
   }
   get(url: string, config?: any) {
     const [path, params] = url.split('?')
     url = this.dictionary[path]
     const final = url + '?' + params
-    this.api.get(final, config)
+    return this.api.get(final, config)
   }
 }
