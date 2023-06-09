@@ -26,6 +26,12 @@ class Commands:
         except Exception:
             print('no commands yet')
 
+    def find_by_alias(self, alias):
+        for name, command in self.commands.items():
+            if command.alias == alias:
+                return name, command
+        return
+
     def run_command(self, name, params: Dict):
         if name == 'add':
             self.add_command.set_params(params)
@@ -33,16 +39,17 @@ class Commands:
         self.commands[name].set_params(params)
         return self.commands[name].execute()
 
-    def get_command(self, name):
+    def get_command(self, alias):
         try:
-            params = {'params': self.commands[name].params,
-                      'name': name, 'alias': self.commands[name].alias}
+            command = self.find_by_alias(alias)
+            params = {'params': command[1].params,
+                      'name': command[0], 'alias': alias}
         except KeyError:
             params = {}
         return params
 
     def get_all_commands(self):
-        commands = [self.get_command(name) for name in self.commands]
+        commands = [self.get_command(command.alias) for command in self.commands.values()]
         commands.append({'name': 'add', 'params': self.add_command.params})
         return commands
 

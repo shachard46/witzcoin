@@ -1,5 +1,6 @@
 export interface Command {
   name: string
+  alias: string
   params: Params
 }
 

@@ -1,7 +1,7 @@
 import { Button, Container, FormControl, Typography } from '@material-ui/core'
-import { AxiosInstance } from 'axios'
 import { FormEvent, useContext, useState } from 'react'
 import { useApi } from '../api/api-provider'
+import { Api } from '../api/models'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
 import CommandParamsFields from './command-params'
@@ -9,13 +9,9 @@ import { useCommand } from './command-provider'
 import { Command, Params } from './models'
 import { ParamsProvider } from './params-provider'
 
-const runCommand = async (
-  api: AxiosInstance,
-  command: Command,
-  params: Params,
-) => {
+const runCommand = async (api: Api, command: Command, params: Params) => {
   const p = params == null ? '{}' : JSON.stringify(params)
-  return api.get(`commands/${command.name}/run?params=${p}`).then(res => {
+  return api.get(`commands/${command.alias}/run?params=${p}`).then(res => {
     return res.data
   })
 }

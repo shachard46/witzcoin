@@ -1,7 +1,7 @@
 import { createContext, useContext } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
 import Provider from '../provider-model'
-import { useCommands } from './commands-provider';
+import { useCommands } from './commands-provider'
 import { Command } from './models'
 
 const getCommandFromQuery = (
@@ -15,7 +15,11 @@ const getCommandFromQuery = (
   }
   return command
 }
-const CommandContext = createContext<Command>({ name: '', params: {} })
+const CommandContext = createContext<Command>({
+  name: '',
+  alias: '',
+  params: {},
+})
 
 export const CommandProvider: React.FC<Provider> = ({ children }) => {
   const [commands, refreshCommands] = useCommands()

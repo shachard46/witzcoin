@@ -15,7 +15,7 @@ const getCommands = async (api: Api) => {
 }
 
 const refreshCommands = (
-  api: AxiosInstance,
+  api: Api,
   setCommands: Function,
   commands: Command[],
 ) => {

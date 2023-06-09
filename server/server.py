@@ -103,14 +103,14 @@ async def get_commands():
     return commands.get_all_commands()
 
 
-@app.get('/api/commands/{name}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
-async def get_command(name: str = Path(title="the name of the command to run")):
-    return commands.get_command(name)
+@app.get('/api/commands/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+async def get_command(alias: str = Path(title="the name of the command to run")):
+    return commands.get_command(alias)
 
 
-@app.get('/api/commands/{name}/run', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
-async def run_command(params, name: str = Path(title="the name of the command to run")):
-    return commands.run_command(name, eval(params))
+@app.get('/api/commands/{alias}/run', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+async def run_command(params, alias: str = Path(title="the name of the command to run")):
+    return commands.run_command(alias, eval(params))
 
 
 if __name__ == '__main__':

@@ -5,7 +5,7 @@ import {
   InternalAxiosRequestConfig,
 } from 'axios'
 
-interface Dictionary {
+export interface Dictionary {
   [key: string]: string
 }
 interface Interceptors {
