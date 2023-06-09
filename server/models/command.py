@@ -1,11 +1,13 @@
 import re
 
 
-pattern = re.compile(r"params\[\"|'(\w+?)\"|'\]")
+pattern = re.compile(r"params\[[\"'](\w+?)[\"']]")
 
 
 class Command:
-    def __init__(self, params: dict = {}, code='') -> None:
+    def __init__(self, params=None, code='') -> None:
+        if params is None:
+            params = {}
         self.code = code
         self.params = self.get_params_from_code() if code else params
 
@@ -19,7 +21,4 @@ class Command:
 
     def get_params_from_code(self):
         params = set(pattern.findall(self.code))
-        self.params = {param: '' for param in params}
-
-
-{'name': 'print', 'code': 'print(params["print"])\nreturn 7'}
+        return {param: '' for param in params}
