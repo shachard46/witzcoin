@@ -7,12 +7,14 @@ from models.commands import Commands
 from models.permissions import Permissions
 from models.User import all_users, User
 from utils import sha1
-
+from models.jwt_token import Jwt
 app = FastAPI()
 
 commands = Commands()
 permissions = Permissions(['127.0.0.1'], [], '1227.0.0.1')
-oauth2_scheme = OAuth2PasswordBearer(tokenUrl="api/login", scopes={'admin': 'Admin', 'user': 'User'})
+oauth2_scheme = OAuth2PasswordBearer(
+    tokenUrl="api/login", scopes={'admin': 'Admin', 'user': 'User'})
+jwt = Jwt(15, '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7')
 origins = [
     "*"
 ]
@@ -42,7 +44,7 @@ async def get_current_user(scopes: SecurityScopes, token: str = Depends(oauth2_s
         authenticate_value = f'Bearer scope="{scopes.scope_str}"'
     else:
         authenticate_value = "Bearer"
-    token = json.loads(token)
+    token = jwt.get_token(token)
     user = all_users.get_user(token['sub'])
     if not user or token['scopes'] not in scopes.scopes:
         raise HTTPException(
@@ -75,7 +77,9 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
     scope = 'user'
     if user.admin:
         scope = 'admin'
-    return {"access_token": {"sub": user.username, "scopes": scope}, "token_type": "bearer"}
+    access_token = jwt.create_access_token(
+        {"access_token": {"sub": user.username, "scopes": scope}})
+    return {'access_token': access_token, "token_type": "bearer"}
 
 
 @app.get('/api/admin')
