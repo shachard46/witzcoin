@@ -1,6 +1,6 @@
 import json
 from typing import Dict
-from encrypted_file import EncryptedFile
+from models.encrypted_file import EncryptedFile
 from models.scheduale_task import SchedualerTask
 import os
 from models.command import Command
@@ -11,8 +11,11 @@ class Commands:
         self.commands: Dict[str, Command] = {'cmd': RunInCMD(), 'upload': UploadFile(),
                                              'schedule': AddToScheduler()}
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': False, 'code': ''}, 'file.txt')
-        self.add_command.add_from_file()
+            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt')
+        try:
+            self.add_command.add_from_file()
+        except Exception:
+            print('no commands yet')
 
     def run_command(self, name, params: Dict):
         if name == 'add':
@@ -44,7 +47,7 @@ class AddCommand(Command):
 
     def add_from_file(self):
         commands = [json.loads(command)
-                    for command in self.enc_file.read_file().split(' ')]
+                    for command in self.enc_file.read_file().split('\n') if command]
         for command in commands:
             self.add_command(command)
 
@@ -54,9 +57,11 @@ class AddCommand(Command):
 
     def add_command(self, params):
         code = self.clean_code(params['code'])
-        if params['from_file']:
+        from_file: str = params['from_file']
+        if from_file.lower() == 'true':
             with open(code) as f:
                 code = f.read()
+        print(params)
         self.commands[params['name']] = Command({}, code)
 
     def execute(self):
