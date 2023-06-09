@@ -13,7 +13,7 @@ const getCommands = async (api: AxiosInstance) => {
   return (await api.get<Command[]>('commands')).data
 }
 
-export const refreshCommands = (
+const refreshCommands = (
   api: AxiosInstance,
   setCommands: Function,
   commands: Command[],
@@ -45,7 +45,5 @@ export const CommandsProvider: React.FC<Provider> = ({ children }) => {
 }
 
 export const useCommands = () => {
-  const [commands, refreshCommands] = useContext(CommandsContext)
-  refreshCommands()
-  return commands
+  return useContext(CommandsContext)
 }

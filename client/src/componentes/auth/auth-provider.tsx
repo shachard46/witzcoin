@@ -10,21 +10,18 @@ const AuthContext = createContext<Auth>({
 
 export const AuthProvider: React.FC<Provider> = ({ children }) => {
   const [token, refreshToken] = useToken()
-  let scope = 2
-  if (token) {
-    scope =
-      token.access_token.scopes === 'admin'
-        ? 0
-        : token.access_token.scopes === 'user'
-        ? 1
-        : 2
-  }
   return (
     <AuthContext.Provider
       value={{
         isAutonticated: token ? true : false,
         user: token ? token.access_token.sub : '',
-        scope: scope,
+        scope: !token
+          ? 2
+          : token.access_token.scopes === 'admin'
+          ? 0
+          : token.access_token.scopes === 'user'
+          ? 1
+          : 2,
       }}
     >
       {children}

@@ -4,6 +4,7 @@ import { ProtectedPageParams } from './model'
 
 export const ProtectedPage: React.FC<ProtectedPageParams> = ({
   level,
+  className,
   children,
 }) => {
   const { isAutonticated, user, scope } = useAuth()
@@ -11,7 +12,7 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
     if (level < scope) {
       return null
     }
-    return <div>{children}</div>
+    return <div className={className ? className : ''}>{children}</div>
   }
   return <NotFoundPage />
 }

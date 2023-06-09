@@ -36,15 +36,15 @@ const RootLayout: React.FC = () => {
         <header className='header'>
           <nav>
             <ul className='nav-links'>
-              <li>
+              <li  className='nav-link'>
                 <NavLink to='/p/commands'>Commands</NavLink>
               </li>
-              <ProtectedPage level={0}>
+              <ProtectedPage  className='nav-link' level={0}>
                 <li>
                   <NavLink to='/p/perms'>Admin</NavLink>
                 </li>
               </ProtectedPage>
-              <li>
+              <li  className='nav-link'>
                 <NavLink to='/login'>Login</NavLink>
               </li>
             </ul>

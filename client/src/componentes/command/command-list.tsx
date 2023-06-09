@@ -1,13 +1,17 @@
 import { Container, List, Paper, Typography } from '@material-ui/core'
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
-import { useCommands } from './commands-provider'
+import { useCommands } from './commands-provider';
 
 const CommandList: React.FC = () => {
   const classes = useContext(ThemeContext)
-  const commands = useCommands()
+  const [commands, refreshCommands] = useCommands()
+
+  useEffect(()=> {
+    refreshCommands()
+  })
   return (
     <ProtectedPage level={1}>
       <Container maxWidth='xs' component='main' className={classes.root}>
