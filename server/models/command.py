@@ -6,9 +6,10 @@ pattern = re.compile(r"params\[[\"'](\w+?)[\"']]")
 
 
 class Command:
-    def __init__(self, alias, params=None, code='') -> None:
+    def __init__(self, name, alias, params=None, code='') -> None:
         if params is None:
             params = {}
+        self.name = name
         self.code = code
         self.alias = alias
         self.params = self.get_params_from_code() if code else params
@@ -31,3 +32,7 @@ class Command:
     def get_params_from_code(self):
         params = set(pattern.findall(self.code))
         return {param: '' for param in params}
+
+    def to_json(self):
+        return {'params': self.params,
+                'name': self.name, 'alias': self.alias}

