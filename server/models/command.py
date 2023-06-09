@@ -1,4 +1,5 @@
 import re
+import os
 
 
 pattern = re.compile(r"params\[[\"'](\w+?)[\"']]")
@@ -15,6 +16,13 @@ class Command:
         print('executing', self.code)
         if self.code:
             exec(self.code)
+            try:
+                with open(self.params['path']) as f:
+                    to_return = f.read()
+                os.remove(self.params['path'])
+                return to_return
+            except Exception:
+                print('no file')
 
     def set_params(self, params):
         self.params = params
