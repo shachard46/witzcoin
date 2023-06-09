@@ -1,3 +1,4 @@
+import jwtDecode from 'jwt-decode'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { deepEqual } from '../../utils'
 import { useApi } from '../api/api-provider'
@@ -8,7 +9,8 @@ const TokenContext = createContext<[Token | undefined, Function]>([
   undefined,
   () => {},
 ])
-
+export const KEY =
+  '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7'
 export const TokenProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
   const [token, setToken] = useState<Token | undefined>(undefined)
@@ -38,7 +40,10 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
 const getTokenFromStorage = () => {
   const storage_token = localStorage.getItem('token')
   if (storage_token) {
-    return JSON.parse(storage_token)
+    const verified_token = jwtDecode<Token>(storage_token)
+    if (typeof verified_token != 'string') {
+      return verified_token
+    }
   }
   return {}
 }

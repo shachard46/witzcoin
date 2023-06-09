@@ -44,7 +44,8 @@ async def get_current_user(scopes: SecurityScopes, token: str = Depends(oauth2_s
         authenticate_value = f'Bearer scope="{scopes.scope_str}"'
     else:
         authenticate_value = "Bearer"
-    token = jwt.get_token(token)
+    print(token)
+    token = json.loads(token)
     user = all_users.get_user(token['sub'])
     if not user or token['scopes'] not in scopes.scopes:
         raise HTTPException(
@@ -79,6 +80,7 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         scope = 'admin'
     access_token = jwt.create_access_token(
         {"access_token": {"sub": user.username, "scopes": scope}})
+    print(access_token)
     return {'access_token': access_token, "token_type": "bearer"}
 
 

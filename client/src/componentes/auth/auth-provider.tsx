@@ -15,7 +15,7 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
   useEffect(()=>{
     setIsLoading(true)
     setIsLoading(false)
-  })
+  }, [])
   return (
     <AuthContext.Provider
       value={{

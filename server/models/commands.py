@@ -59,7 +59,6 @@ class AddCommand(Command):
         if from_file.lower() == 'true':
             with open(code) as f:
                 code = f.read()
-        print(params)
         self.commands[params['name']] = Command({}, code)
 
     def execute(self):
