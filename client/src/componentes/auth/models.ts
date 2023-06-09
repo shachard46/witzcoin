@@ -12,4 +12,5 @@ export interface Auth {
   isAutonticated: boolean
   user: string
   scope: number
+  isLoading: boolean
 }

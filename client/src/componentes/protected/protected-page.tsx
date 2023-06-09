@@ -7,7 +7,10 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
   className,
   children,
 }) => {
-  const { isAutonticated, user, scope } = useAuth()
+  const { isAutonticated, user, scope, isLoading } = useAuth()
+  if (isLoading) {
+    return null
+  }
   if (isAutonticated) {
     if (level < scope) {
       return null

@@ -1,4 +1,4 @@
-import { createContext, useContext } from 'react'
+import { createContext, useContext, useEffect, useState } from 'react'
 import Provider from '../provider-model'
 import { Auth } from './models'
 import { useToken } from './token-provider'
@@ -6,10 +6,16 @@ const AuthContext = createContext<Auth>({
   isAutonticated: false,
   user: '',
   scope: 2,
+  isLoading: true
 })
 
 export const AuthProvider: React.FC<Provider> = ({ children }) => {
   const [token, refreshToken] = useToken()
+  const [isLoading, setIsLoading] = useState(true)
+  useEffect(()=>{
+    setIsLoading(true)
+    setIsLoading(false)
+  })
   return (
     <AuthContext.Provider
       value={{
@@ -22,6 +28,7 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
           : token.access_token.scopes === 'user'
           ? 1
           : 2,
+          isLoading
       }}
     >
       {children}
