@@ -1,6 +1,6 @@
-import re
+import json
 from typing import Dict
-
+from encrypted_file import EncryptedFile
 from models.scheduale_task import SchedualerTask
 import os
 from models.command import Command
@@ -11,7 +11,8 @@ class Commands:
         self.commands: Dict[str, Command] = {'cmd': RunInCMD(), 'upload': UploadFile(),
                                              'schedule': AddToScheduler()}
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': False, 'code': ''})
+            self.commands, {'name': '', 'from_file': False, 'code': ''}, 'file.txt')
+        self.add_command.add_from_file()
 
     def run_command(self, name, params: Dict):
         if name == 'add':
@@ -38,20 +39,29 @@ class AddCommand(Command):
         super().__init__()
         self.commands = commands
         self.params = params
-        self.save_file = save_file
+        self.enc_file = EncryptedFile(save_file, 'mass')
         # self.cleaning_pattern = r'[\s\t]*\n[\s\t]*'
 
-    def clean_code(self):
-        code: str = self.params['code']
+    def add_from_file(self):
+        commands = [json.loads(command)
+                    for command in self.enc_file.read_file().split(' ')]
+        for command in commands:
+            self.add_command(command)
+
+    def clean_code(self, code):
         return code.strip()
         # code = re.sub(self.cleaning_pattern, r'\n', code)
 
-    def execute(self):
-        code = self.clean_code()
-        if self.params['from_file']:
+    def add_command(self, params):
+        code = self.clean_code(params['code'])
+        if params['from_file']:
             with open(code) as f:
                 code = f.read()
-        self.commands[self.params['name']] = Command({}, code)
+        self.commands[params['name']] = Command({}, code)
+
+    def execute(self):
+        self.add_command(self.params)
+        self.enc_file.update_file(self.params)
 
 
 class RunInCMD(Command):
