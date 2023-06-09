@@ -7,9 +7,10 @@ import { useApi } from '../api/api-provider'
 import { useAuth } from '../auth/auth-provider'
 import Provider from '../provider-model'
 import { Command } from './models'
+import { Api } from '../api/models'
 
 const CommandsContext = createContext<[Command[], Function]>([[], () => {}])
-const getCommands = async (api: AxiosInstance) => {
+const getCommands = async (api: Api) => {
   return (await api.get<Command[]>('commands')).data
 }
 
