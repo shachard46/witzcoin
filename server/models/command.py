@@ -6,10 +6,11 @@ pattern = re.compile(r"params\[[\"'](\w+?)[\"']]")
 
 
 class Command:
-    def __init__(self, params=None, code='') -> None:
+    def __init__(self, alias, params=None, code='') -> None:
         if params is None:
             params = {}
         self.code = code
+        self.alias = alias
         self.params = self.get_params_from_code() if code else params
 
     def execute(self):

