@@ -10,10 +10,12 @@ import { Command, Params } from './models'
 import { ParamsProvider } from './params-provider'
 
 const runCommand = async (api: Api, command: Command, params: Params) => {
-  const p = params == null ? '{}' : JSON.stringify(params)
-  return api.get(`commands/${command.alias}/run?params=${p}`).then(res => {
-    return res.data
-  })
+  // const p = params == null ? '{}' : JSON.stringify(params)
+  return api
+    .post(`commands/${command.alias}/run`, { params: params })
+    .then(res => {
+      return res.data
+    })
 }
 
 const CommandPage: React.FC = () => {

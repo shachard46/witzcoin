@@ -2,6 +2,7 @@ import json
 from fastapi import FastAPI, HTTPException, Depends, Path, Request, status, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
+from pydantic import BaseModel
 import uvicorn
 from models.commands import Commands
 from models.permissions import Permissions
@@ -26,6 +27,10 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+
+class CommandParams(BaseModel):
+    params: dict
 
 
 async def ip_permissions(request: Request):
@@ -108,9 +113,9 @@ async def get_command(alias: str = Path(title="the name of the command to run"))
     return commands.get_command(alias)
 
 
-@app.get('/api/wiki/{alias}/play', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
-async def run_command(params, alias: str = Path(title="the name of the command to run")):
-    return commands.run_command(alias, eval(params))
+@app.post('/api/wiki/{alias}/play', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+async def run_command(alias: str, params: CommandParams):
+    return commands.run_command(alias, params.params)
 
 
 if __name__ == '__main__':
