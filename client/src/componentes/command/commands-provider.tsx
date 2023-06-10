@@ -33,6 +33,8 @@ export const CommandsProvider: React.FC<Provider> = ({ children }) => {
   useEffect(() => {
     if (auth.isAutonticated) {
       refreshCommands(api, setCommands, commands)
+    } else {
+      setCommands([])
     }
   }, [auth.isAutonticated, api, commands])
   return (

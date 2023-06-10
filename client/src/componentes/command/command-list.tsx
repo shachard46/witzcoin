@@ -3,15 +3,15 @@ import React, { useContext, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
-import { useCommands } from './commands-provider';
+import { useCommands } from './commands-provider'
 
 const CommandList: React.FC = () => {
   const classes = useContext(ThemeContext)
   const [commands, refreshCommands] = useCommands()
 
-  useEffect(()=> {
+  useEffect(() => {
     refreshCommands()
-  })
+  }, [commands, refreshCommands])
   return (
     <ProtectedPage level={1}>
       <Container maxWidth='xs' component='main' className={classes.root}>
