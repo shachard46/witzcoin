@@ -23,7 +23,7 @@ const login = async (api: Api, username: string, password: string) => {
   form.append('password', password)
   try {
     const res = await api.post('login', form)
-    return res.data
+    return res
   } catch (error) {
     alert('False Creds')
     return undefined

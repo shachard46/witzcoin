@@ -1,17 +1,16 @@
 import { useContext, useEffect, useState } from 'react'
 
-import { AxiosInstance } from 'axios'
 import { createContext } from 'react'
 import { deepEqual } from '../../utils'
 import { useApi } from '../api/api-provider'
+import { Api } from '../api/models'
 import { useAuth } from '../auth/auth-provider'
 import Provider from '../provider-model'
 import { Command } from './models'
-import { Api } from '../api/models'
 
 const CommandsContext = createContext<[Command[], Function]>([[], () => {}])
 const getCommands = async (api: Api) => {
-  return (await api.get<Command[]>('commands')).data
+  return await api.get<Command[]>('commands')
 }
 
 const refreshCommands = (

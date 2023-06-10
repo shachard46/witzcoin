@@ -41,7 +41,6 @@ class EncryptedPayload:
         if char[0].isdigit():
             return char
         shift_range = (65, 90) if char.isupper() else (97, 122)
-        print(shift_range)
         char = ord(char[0]) + shift
         if char > shift_range[1]:
             char = shift_range[0] + (char - shift_range[1])
@@ -65,13 +64,15 @@ class EncryptedPayload:
             enc_data = []
             for item in data:
                 enc_data.append(self.enc_dec_data(item, dec))
-        if type(data) is dict:
+        elif type(data) is dict:
             enc_data = {}
             for key, value in data.items():
                 if type(value) is dict:
-                    value = self.enc_dec_data(value, dec)
-                enc_data[self.shift_word(
-                    key, dec)] = self.shift_word(value, dec)
+                    enc_data[self.shift_word(
+                        key, dec)] = self.enc_dec_data(value, dec)
+                else:
+                    enc_data[self.shift_word(
+                        key, dec)] = self.shift_word(value, dec)
         else:
             enc_data = self.shift_word(data, dec)
         return enc_data

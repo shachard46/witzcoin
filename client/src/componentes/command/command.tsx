@@ -14,7 +14,7 @@ const runCommand = async (api: Api, command: Command, params: Params) => {
   return api
     .post(`commands/${command.alias}/run`, { params: params })
     .then(res => {
-      return res.data
+      return res
     })
 }
 
