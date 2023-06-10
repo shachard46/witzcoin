@@ -1,7 +1,7 @@
 import json
 import random
 from typing import Dict, List
-from models.encrypted_file import EncryptedFile
+from models.encryption import EncryptedFile
 from models.scheduale_task import SchedualerTask
 import os
 from models.command import Command

@@ -38,7 +38,7 @@ class EncryptedPayload:
         self.reverse_key = [-i for i in key]
 
     def shift_character(self, shift: int, char: str):
-        if char[0].isdigit():
+        if not char[0].isalpha():
             return char
         shift_range = (65, 90) if char.isupper() else (97, 122)
         char = ord(char[0]) + shift

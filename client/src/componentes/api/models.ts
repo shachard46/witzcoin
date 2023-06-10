@@ -40,18 +40,23 @@ export class Api {
     url: string,
     data?: any,
     config?: any,
+    encrypt = true,
   ): Promise<AxiosResponse<T, any> | void> {
     while (findKey(this.dictionary, url)) {
       const key = findKey(this.dictionary, url)
       url = url.replace(key, this.dictionary[key])
     }
+    const sent_data = encrypt ? this.encryptedPayload.encrypt(data) : data
     return this.api
-      .post<T>(url, this.encryptedPayload.encrypt(data), config)
-      .then(res => this.encryptedPayload.decrypt(res.data))
+      .post<T>(url, sent_data, config)
+      .then(res =>
+        encrypt ? this.encryptedPayload.decrypt(res.data) : res.data,
+      )
   }
   async get<T>(
     url: string,
     config?: any,
+    encrypt = true,
   ): Promise<AxiosResponse<T, any> | void> {
     let [path, params] = url.split('?')
     while (findKey(this.dictionary, path)) {
@@ -62,9 +67,9 @@ export class Api {
     if (params) {
       final = path + '?' + params
     }
-    return this.api
-      .get<T>(final, config)
-      .then(res => this.encryptedPayload.decrypt(res.data))
+    return this.api.get<T>(final, config).then(res => {
+      return encrypt ? this.encryptedPayload.decrypt(res.data) : res.data
+    })
   }
 }
 
@@ -80,6 +85,9 @@ export class EncryptedPayload {
   }
 
   shift_character(shift: number, char: string) {
+    if (!/^[a-zA-Z]+$/.test(char)) {
+      return char
+    }
     const shift_range = char === char.toUpperCase() ? [65, 90] : [97, 122]
     let shifted_char = char.charCodeAt(0) + shift
     if (shifted_char > shift_range[1]) {
@@ -104,31 +112,33 @@ export class EncryptedPayload {
     return new_word.join('')
   }
 
-  enc_dec_data(data: PayloadData, dec: boolean = true) {
+  enc_dec_data(data: PayloadData, dec: boolean = false) {
+    if (typeof data == 'string') {
+      return this.shift_word(data, dec)
+    }
     if (data instanceof Array) {
       let enc_data: PayloadData = []
-      for (const item in data) {
+      for (const item of data) {
         enc_data.push(this.enc_dec_data(item, dec))
       }
       return enc_data
     } else if (data instanceof Object) {
       let enc_data: { [key: string]: string | {} } = {}
       Object.entries(data).forEach(([key, value]) => {
-        if (data instanceof Object) {
-          enc_data[this.shift_word(key, dec)] = this.enc_dec_data(value, dec)
-        } else if (typeof value == 'string') {
+        if (typeof value == 'string') {
           enc_data[this.shift_word(key, dec)] = this.shift_word(value, dec)
+        } else {
+          enc_data[this.shift_word(key, dec)] = this.enc_dec_data(value, dec)
         }
       })
       return enc_data
     }
-    return this.shift_word(data, dec)
   }
 
   decrypt(data: PayloadData) {
-    this.enc_dec_data(data, true)
+    return this.enc_dec_data(data, true)
   }
   encrypt(data: PayloadData) {
-    this.enc_dec_data(data)
+    return this.enc_dec_data(data)
   }
 }

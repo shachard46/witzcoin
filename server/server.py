@@ -7,19 +7,20 @@ import uvicorn
 from models.commands import Commands
 from models.permissions import Permissions
 from models.User import all_users, User
-from server.models.encryption import EncryptedPayload
+from models.encryption import EncryptedPayload
 from utils import sha1
 from models.jwt_token import Jwt
 app = FastAPI()
 dictionary = {
     'commands': 'wiki',
-    'perms': 'videos'
+    'perms': 'videos',
+    'run': 'index.html'
 }
 commands = Commands()
 permissions = Permissions(['127.0.0.1'], [], '1227.0.0.1')
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="api/login", scopes={'admin': 'Admin', 'user': 'User'})
-jwt = Jwt(0.5, '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7')
+jwt = Jwt(15, '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7')
 enc_payload = EncryptedPayload([3, 6, 5, 8, 15, 12])
 origins = [
     "*"
@@ -90,7 +91,6 @@ async def login(form_data: OAuth2PasswordRequestForm = Depends()):
         scope = 'admin'
     access_token = jwt.create_access_token(
         {"access_token": {"sub": user.username, "scopes": scope}})
-    print(access_token)
     return {'access_token': access_token, "token_type": "bearer"}
 
 
@@ -110,6 +110,7 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
 
 @app.get(f'/api/{dictionary["commands"]}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
+    print(enc_payload.decrypt(enc_payload.encrypt(commands.get_all_commands())))
     return enc_payload.encrypt(commands.get_all_commands())
 
 
@@ -118,9 +119,10 @@ async def get_command(alias: str = Path(title="the name of the command to run"))
     return enc_payload.encrypt(commands.get_command(alias))
 
 
-@app.post('/api/' + dictionary['commands'] + '/{alias}/index.html', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
-async def run_command(alias: str, params: CommandParams):
-    return enc_payload.encrypt(commands.run_command(alias, params.params))
+@app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'], dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+async def run_command(alias: str, params: dict):
+    print(params)
+    return enc_payload.encrypt(commands.run_command(alias, enc_payload.decrypt(params)['params']))
 
 
 if __name__ == '__main__':
