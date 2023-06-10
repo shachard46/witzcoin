@@ -1,6 +1,7 @@
 import axios from 'axios'
 import { createContext, ReactNode, useContext } from 'react'
-import { Api, Dictionary } from './models'
+import { Dictionary } from './models'
+import { Api } from './api'
 
 const ApiContext = createContext<Api>(new Api(axios.create(), {}))
 const dictionary: Dictionary = {

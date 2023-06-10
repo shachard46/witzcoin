@@ -1,7 +1,7 @@
 import { Button, Container, FormControl, Typography } from '@material-ui/core'
 import { FormEvent, useContext, useState } from 'react'
+import { Api } from '../api/api'
 import { useApi } from '../api/api-provider'
-import { Api } from '../api/models'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
 import CommandParamsFields from './command-params'
@@ -10,7 +10,6 @@ import { Command, Params } from './models'
 import { ParamsProvider } from './params-provider'
 
 const runCommand = async (api: Api, command: Command, params: Params) => {
-  // const p = params == null ? '{}' : JSON.stringify(params)
   return api
     .post(`commands/${command.alias}/run`, { params: params })
     .then(res => {

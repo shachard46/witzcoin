@@ -12,8 +12,8 @@ import {
 import { Visibility, VisibilityOff } from '@material-ui/icons'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
+import { Api } from '../api/api'
 import { useApi } from '../api/api-provider'
-import { Api } from '../api/models'
 import { ThemeContext } from '../root-layout'
 import { useToken } from './token-provider'
 
