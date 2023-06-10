@@ -4,6 +4,7 @@ import {
   AxiosResponse,
   InternalAxiosRequestConfig,
 } from 'axios'
+import fernet, { Fernet } from 'fernet'
 
 export interface Dictionary {
   [key: string]: string
@@ -57,4 +58,42 @@ export class Api {
     }
     return this.api.get<T>(final, config)
   }
+}
+
+export class EncryptedPayload {
+  private key: string
+  private chipher: Fernet
+  private token: fernet.Token
+
+  constructor(key: string) {
+    this.key = this.generateKey(key)
+    this.chipher = new fernet()
+  }
+
+  generateKey(key: string) {
+    let to_encode = ''
+    while (to_encode.length < 32) {
+      to_encode += key
+    }
+    return urlSafeBase64Encode(to_encode.substring(0, 32))
+  }
+
+  encode(payload: {}) {
+    const token = new fernet.Token({
+      secret: secret,
+      time: Date.parse(1),
+      iv: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    })
+    token.encode('Message')
+  }
+}
+
+function urlSafeBase64Encode(data: string): string {
+  const buffer = Buffer.from(data, 'utf-8')
+  const base64 = buffer.toString('base64')
+  const urlSafeBase64 = base64
+    .replace(/\+/g, '-')
+    .replace(/\//g, '_')
+    .replace(/=+$/, '')
+  return urlSafeBase64
 }
