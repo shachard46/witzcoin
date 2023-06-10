@@ -18,7 +18,7 @@ commands = Commands()
 permissions = Permissions(['127.0.0.1'], [], '1227.0.0.1')
 oauth2_scheme = OAuth2PasswordBearer(
     tokenUrl="api/login", scopes={'admin': 'Admin', 'user': 'User'})
-jwt = Jwt(15, '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7')
+jwt = Jwt(0.5, '09d25e094faa6ca2556c818166b7a9563b93f7099f6f0f4caa6cf63b88e8d3e7')
 origins = [
     "*"
 ]
@@ -116,7 +116,7 @@ async def get_command(alias: str = Path(title="the name of the command to run"))
     return commands.get_command(alias)
 
 
-@app.post('/api/' + dictionary['commands'] + '/{alias}/play', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.post('/api/' + dictionary['commands'] + '/{alias}/index.html', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: CommandParams):
     return commands.run_command(alias, params.params)
 

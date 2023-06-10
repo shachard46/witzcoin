@@ -7,7 +7,7 @@ const dictionary: Dictionary = {
   commands: 'wiki',
   perms: 'videos',
   command: 'game',
-  run: 'play',
+  run: 'index.html',
 }
 export const ApiProvider: React.FC<{ children: ReactNode }> = ({
   children,
