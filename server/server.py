@@ -10,7 +10,10 @@ from models.User import all_users, User
 from utils import sha1
 from models.jwt_token import Jwt
 app = FastAPI()
-
+dictionary = {
+    'commands': 'wiki',
+    'perms': 'videos'
+}
 commands = Commands()
 permissions = Permissions(['127.0.0.1'], [], '1227.0.0.1')
 oauth2_scheme = OAuth2PasswordBearer(
@@ -94,7 +97,7 @@ async def get_admin(user: User = Depends(is_admin)):
     return user.admin
 
 
-@app.post('/api/videos', dependencies=[Depends(ip_permissions), Depends(is_admin)])
+@app.post(f'/api/{dictionary["perms"]}', dependencies=[Depends(ip_permissions), Depends(is_admin)])
 async def change_ip_permissions(allow_ip='', block_ip=''):
     if allow_ip:
         permissions.allow_ip(allow_ip)
@@ -103,17 +106,17 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
     return allow_ip or block_ip
 
 
-@app.get('/api/wiki', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.get(f'/api/{dictionary["commands"]}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
     return commands.get_all_commands()
 
 
-@app.get('/api/wiki/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.get('/api/' + dictionary['commands'] + '/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(alias: str = Path(title="the name of the command to run")):
     return commands.get_command(alias)
 
 
-@app.post('/api/wiki/{alias}/play', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.post('/api/' + dictionary['commands'] + '/{alias}/play', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: CommandParams):
     return commands.run_command(alias, params.params)
 
