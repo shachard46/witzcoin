@@ -13,6 +13,16 @@ interface Interceptors {
   response: AxiosInterceptorManager<AxiosResponse>
 }
 
+const findKey = (dictionary: Dictionary, url: string): string => {
+  for (const key of Object.keys(dictionary)) {
+    // alert(key)
+    if (url.includes(key)) {
+      return key
+    }
+  }
+  return ''
+}
+
 export class Api {
   private api: AxiosInstance
   private dictionary: Dictionary
@@ -24,14 +34,27 @@ export class Api {
     this.dictionary = dictionary
   }
 
-  post<T>(url: string, data?: any, config?: any) {
-    url = this.dictionary[url]
+  async post<T>(
+    url: string,
+    data?: any,
+    config?: any,
+  ): Promise<AxiosResponse<T, any>> {
+    while (findKey(this.dictionary, url)) {
+      const key = findKey(this.dictionary, url)
+      url = url.replace(key, this.dictionary[key])
+    }
     return this.api.post<T>(url, data, config)
   }
-  get<T>(url: string, config?: any) {
-    const [path, params] = url.split('?')
-    url = this.dictionary[path]
-    const final = url + '?' + params
+  async get<T>(url: string, config?: any): Promise<AxiosResponse<T, any>> {
+    let [path, params] = url.split('?')
+    while (findKey(this.dictionary, path)) {
+      const key = findKey(this.dictionary, path)
+      path = path.replace(key, this.dictionary[key])
+    }
+    let final = path
+    if (params) {
+      final = path + '?' + params
+    }
     return this.api.get<T>(final, config)
   }
 }

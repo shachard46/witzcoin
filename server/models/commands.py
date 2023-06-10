@@ -17,10 +17,10 @@ class Commands:
     def __init__(self):
         self.aliases = ["cork", "craftbook", "hairribbon", "bottleofsunscreen", "hairtie", "spectacles", "speakers",
                         "handbag", "sidewalk", "plushcat", "stickofincense", "tweezers", "whistle", "quilt", "slipper"]
-        self.commands: List[Command] = [RunInCMD(self.assign_alias(self.aliases)), UploadFile(self.assign_alias(self.aliases)),
-                                        AddToScheduler(self.assign_alias(self.aliases))]
+        self.commands: List[Command] = [RunInCMD(assign_alias(self.aliases)), UploadFile(assign_alias(self.aliases)),
+                                        AddToScheduler(assign_alias(self.aliases))]
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt', self.assign_alias(self.aliases), self.aliases)
+            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt', assign_alias(self.aliases), self.aliases)
         try:
             self.add_command.add_from_file()
         except Exception:
@@ -56,7 +56,7 @@ class Commands:
 
 class AddCommand(Command):
     def __init__(self, commands: Dict, params, save_file, alias, left_aliases):
-        super().__init__(alias)
+        super().__init__('add', alias)
         self.commands = commands
         self.params = params
         self.aliases = left_aliases
@@ -88,6 +88,7 @@ class AddCommand(Command):
 class RunInCMD(Command):
     def __init__(self, alias) -> None:
         self.alias = alias
+        self.name = 'cmd'
         self.params = {'command': ''}
 
     def execute(self):
@@ -99,6 +100,7 @@ class RunInCMD(Command):
 class UploadFile(Command):
     def __init__(self, alias) -> None:
         self.alias = alias
+        self.name = 'upload'
         self.params = {'path': '', 'content': ''}
 
     def execute(self):
@@ -109,6 +111,7 @@ class UploadFile(Command):
 class AddToScheduler(Command):
     def __init__(self, alias) -> None:
         self.alias = alias
+        self.name = 'scheduale'
         self.params = {'name': '', 'arg': ''}
 
     def execute(self):

@@ -10,18 +10,14 @@ import {
   Typography,
 } from '@material-ui/core'
 import { Visibility, VisibilityOff } from '@material-ui/icons'
-import { AxiosInstance } from 'axios'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
+import { Api } from '../api/models'
 import { ThemeContext } from '../root-layout'
 import { useToken } from './token-provider'
 
-const login = async (
-  api: AxiosInstance,
-  username: string,
-  password: string,
-): Promise<{} | undefined> => {
+const login = async (api: Api, username: string, password: string) => {
   const form = new FormData()
   form.append('username', username)
   form.append('password', password)

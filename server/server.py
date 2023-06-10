@@ -89,7 +89,7 @@ async def get_admin(user: User = Depends(is_admin)):
     return user.admin
 
 
-@app.post('/api/perms', dependencies=[Depends(ip_permissions), Depends(is_admin)])
+@app.post('/api/videos', dependencies=[Depends(ip_permissions), Depends(is_admin)])
 async def change_ip_permissions(allow_ip='', block_ip=''):
     if allow_ip:
         permissions.allow_ip(allow_ip)
@@ -98,17 +98,17 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
     return allow_ip or block_ip
 
 
-@app.get('/api/commands', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.get('/api/wiki', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
     return commands.get_all_commands()
 
 
-@app.get('/api/commands/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.get('/api/wiki/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(alias: str = Path(title="the name of the command to run")):
     return commands.get_command(alias)
 
 
-@app.get('/api/commands/{alias}/run', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.get('/api/wiki/{alias}/play', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(params, alias: str = Path(title="the name of the command to run")):
     return commands.run_command(alias, eval(params))
 
