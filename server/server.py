@@ -55,7 +55,6 @@ async def get_current_user(scopes: SecurityScopes, token: str = Depends(oauth2_s
         authenticate_value = f'Bearer scope="{scopes.scope_str}"'
     else:
         authenticate_value = "Bearer"
-    print(token)
     token = json.loads(token)
     user = all_users.get_user(token['sub'])
     if not user or token['scopes'] not in scopes.scopes:
@@ -110,7 +109,6 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
 
 @app.get(f'/api/{dictionary["commands"]}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
-    print(enc_payload.decrypt(enc_payload.encrypt(commands.get_all_commands())))
     return enc_payload.encrypt(commands.get_all_commands())
 
 
@@ -121,7 +119,6 @@ async def get_command(alias: str = Path(title="the name of the command to run"))
 
 @app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'], dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: dict):
-    print(params)
     return enc_payload.encrypt(commands.run_command(alias, enc_payload.decrypt(params)['params']))
 
 

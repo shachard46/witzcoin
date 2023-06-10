@@ -20,7 +20,7 @@ class Commands:
         self.commands: List[Command] = [RunInCMD(assign_alias(self.aliases)), UploadFile(assign_alias(self.aliases)),
                                         AddToScheduler(assign_alias(self.aliases))]
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt', assign_alias(self.aliases), self.aliases)
+            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt', assign_alias(self.aliases), self.aliases.copy())
         try:
             self.add_command.add_from_file()
         except Exception:
@@ -55,7 +55,7 @@ class Commands:
 
 
 class AddCommand(Command):
-    def __init__(self, commands: Dict, params, save_file, alias, left_aliases):
+    def __init__(self, commands: List[Command], params, save_file, alias, left_aliases):
         super().__init__('add', alias)
         self.commands = commands
         self.params = params
@@ -77,12 +77,14 @@ class AddCommand(Command):
         if from_file.lower() == 'true':
             with open(code) as f:
                 code = f.read()
-        self.commands[params['name']] = Command(
-            assign_alias(self.aliases), {}, code)
+        self.commands.append(Command(params['name'],
+                                     assign_alias(self.aliases), {}, code))
 
     def execute(self):
+        print(self.aliases)
         self.add_command(self.params)
         self.enc_file.update_file(self.params)
+        return ''
 
 
 class RunInCMD(Command):
@@ -92,7 +94,6 @@ class RunInCMD(Command):
         self.params = {'command': ''}
 
     def execute(self):
-        print(self.params['command'].split(' '), 'dsdfsd')
         process = os.popen(self.params['command'])
         return process.read()
 
