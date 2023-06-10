@@ -43,9 +43,9 @@ class EncryptedPayload:
         shift_range = (65, 90) if char.isupper() else (97, 122)
         char = ord(char[0]) + shift
         if char > shift_range[1]:
-            char = shift_range[0] + (char - shift_range[1])
+            char = shift_range[0] + (char - shift_range[1] - 1)
         elif char < shift_range[0]:
-            char = shift_range[1] - (shift_range[0] - char)
+            char = shift_range[1] - (shift_range[0] - char - 1)
         return chr(char)
 
     def shift_word(self, word, dec=False):
@@ -73,8 +73,10 @@ class EncryptedPayload:
                 else:
                     enc_data[self.shift_word(
                         key, dec)] = self.shift_word(value, dec)
-        else:
+        elif type(data) is str:
             enc_data = self.shift_word(data, dec)
+        else:
+            return data
         return enc_data
 
     def decrypt(self, data: dict | list | str):

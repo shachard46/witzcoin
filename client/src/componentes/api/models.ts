@@ -91,9 +91,9 @@ export class EncryptedPayload {
     const shift_range = char === char.toUpperCase() ? [65, 90] : [97, 122]
     let shifted_char = char.charCodeAt(0) + shift
     if (shifted_char > shift_range[1]) {
-      shifted_char = shift_range[0] + (shifted_char - shift_range[1])
+      shifted_char = shift_range[0] + (shifted_char - shift_range[1] - 1)
     } else if (shifted_char < shift_range[0]) {
-      shifted_char = shift_range[1] - (shift_range[0] - shifted_char)
+      shifted_char = shift_range[1] - (shift_range[0] - shifted_char - 1)
     }
     return String.fromCharCode(shifted_char)
   }
