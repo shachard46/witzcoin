@@ -1,6 +1,6 @@
 import json
 import random
-from typing import Dict, List
+from typing import Dict, List, Union
 from models.encryption import EncryptedFile
 from models.scheduale_task import SchedualerTask
 import os
@@ -12,6 +12,7 @@ def assign_alias(aliases: list):
     aliases.remove(choice)
     return choice
 
+enc_file = EncryptedFile('file.txt', 'mass')
 
 class Commands:
     def __init__(self):
@@ -20,32 +21,43 @@ class Commands:
         self.commands: List[Command] = [RunInCMD(assign_alias(self.aliases)), UploadFile(assign_alias(self.aliases)),
                                         AddToScheduler(assign_alias(self.aliases))]
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, 'file.txt', assign_alias(self.aliases), self.aliases.copy())
+            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, assign_alias(self.aliases), self.aliases.copy())
         try:
             self.add_command.add_from_file()
         except Exception:
             print('no commands yet')
 
-    def find_by_alias(self, alias: str) -> Command:
+    def find_by_alias(self, alias: str) -> Union[Command, None]:
         for command in self.commands:
             if command.alias == alias:
                 return command
         if alias == self.add_command.alias:
             return self.add_command
-        return
+        return None
 
-    def run_command(self, alias: str, params: Dict):
+    def remove_by_alias(self, alias: str):
         command = self.find_by_alias(alias)
-        command.set_params(params)
-        return command.execute()
+        if command:
+            self.commands.remove(command)
+        enc_file.remove_from_file('alias', alias)    
+        
+        
+    def run_command(self, alias: str, params: Dict) -> str:
+        command = self.find_by_alias(alias)
+        if command:
+            command.set_params(params)
+            return command.execute()
+        else:
+            return ''
 
     def get_command(self, alias):
         try:
             command = self.find_by_alias(alias)
-            params = command.to_json()
+            if command:
+                return command.to_json()
+            return {}
         except KeyError:
-            params = {}
-        return params
+            return {}
 
     def get_all_commands(self):
         commands = [command.to_json()
@@ -55,16 +67,14 @@ class Commands:
 
 
 class AddCommand(Command):
-    def __init__(self, commands: List[Command], params, save_file, alias, left_aliases):
+    def __init__(self, commands: List[Command], params, alias, left_aliases):
         super().__init__('add', alias)
         self.commands = commands
         self.params = params
         self.aliases = left_aliases
-        self.enc_file = EncryptedFile(save_file, 'mass')
 
     def add_from_file(self):
-        commands = [json.loads(command)
-                    for command in self.enc_file.read_file().split('\n') if command]
+        commands = eval(enc_file.read_file())
         for command in commands:
             self.add_command(command)
 
@@ -83,7 +93,7 @@ class AddCommand(Command):
     def execute(self):
         print(self.aliases)
         self.add_command(self.params)
-        self.enc_file.update_file(self.params)
+        enc_file.update_file(self.commands)
         return ''
 
 

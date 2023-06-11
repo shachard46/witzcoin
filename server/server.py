@@ -43,7 +43,7 @@ async def ip_permissions(request: Request):
     headers = request.headers
     path = request.url.path
     ip_address = headers.get(
-        "X-Forwarded-For") or headers.get("X-Real-IP") or request.client.host
+        "X-Forwarded-For") or headers.get("X-Real-IP") or (request.client.host if request.client else '')
     if not permissions.is_allowed(ip_address):
         raise HTTPException(status_code=404)
     if '/api/admin' in path and not permissions.is_admin(ip_address):
@@ -55,9 +55,9 @@ async def get_current_user(scopes: SecurityScopes, token: str = Depends(oauth2_s
         authenticate_value = f'Bearer scope="{scopes.scope_str}"'
     else:
         authenticate_value = "Bearer"
-    token = json.loads(token)
-    user = all_users.get_user(token['sub'])
-    if not user or token['scopes'] not in scopes.scopes:
+    token_json: dict = json.loads(token)
+    user = all_users.get_user(token_json['sub'])
+    if not user or token_json['scopes'] not in scopes.scopes:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,
             detail="Invalid authentication credentials",
@@ -115,6 +115,11 @@ async def get_commands():
 @app.get('/api/' + dictionary['commands'] + '/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(alias: str = Path(title="the name of the command to run")):
     return enc_payload.encrypt(commands.get_command(alias))
+
+@app.delete('/api/' + dictionary['commands'] + '/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+async def delete_command(alias: str = Path(title="the name of the command to run")):
+    commands.remove_by_alias(alias)
+
 
 
 @app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'], dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])

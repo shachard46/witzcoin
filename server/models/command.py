@@ -25,6 +25,7 @@ class Command:
                 return to_return
             except Exception:
                 print('no file')
+        return ''
 
     def set_params(self, params):
         self.params = params

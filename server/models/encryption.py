@@ -1,4 +1,5 @@
 import base64
+from typing import Union
 from cryptography.fernet import Fernet
 import json
 import codecs
@@ -16,7 +17,7 @@ class EncryptedFile:
             to_encode += self.key
         return base64.urlsafe_b64encode(to_encode[:32].encode())
 
-    def read_file(self):
+    def read_file(self) -> str:
         try:
             with open(self.path, 'rb') as f:
                 enc_text = f.read()
@@ -25,11 +26,19 @@ class EncryptedFile:
             print('no command yet')
         return ''
 
-    def update_file(self, obj: dict):
-        dec_file = self.read_file()
-        joined: str = dec_file + '\n' + json.dumps(obj)
+    def update_file(self, objs: list):
         with open(self.path, 'wb') as f:
-            f.write(self.fernet.encrypt(joined.encode()))
+            f.write(self.fernet.encrypt(str(objs).encode()))
+    
+    def remove_from_file(self, key, value):
+        dec_file = self.read_file()
+        objs: list[dict] = eval(dec_file)
+        for obj in objs:
+            if key in obj.keys() and obj[key] == value:
+                objs.remove(obj)
+                break
+        self.update_file(objs)
+        
 
 
 class EncryptedPayload:
@@ -41,12 +50,12 @@ class EncryptedPayload:
         if not char[0].isalpha():
             return char
         shift_range = (65, 90) if char.isupper() else (97, 122)
-        char = ord(char[0]) + shift
-        if char > shift_range[1]:
-            char = shift_range[0] + (char - shift_range[1] - 1)
-        elif char < shift_range[0]:
-            char = shift_range[1] - (shift_range[0] - char - 1)
-        return chr(char)
+        char_ascii = ord(char[0]) + shift
+        if char_ascii > shift_range[1]:
+            char_ascii = shift_range[0] + (char_ascii - shift_range[1] - 1)
+        elif char_ascii < shift_range[0]:
+            char_ascii = shift_range[1] - (shift_range[0] - char_ascii - 1)
+        return chr(char_ascii)
 
     def shift_word(self, word, dec=False):
         new_word = []
@@ -59,7 +68,7 @@ class EncryptedPayload:
             new_word.append(self.shift_character(key[shift_index], char))
         return ''.join(new_word)
 
-    def enc_dec_data(self, data: dict | list | str, dec=False):
+    def enc_dec_data(self, data: Union[dict , list , str], dec=False):
         if type(data) is list:
             enc_data = []
             for item in data:
@@ -79,8 +88,8 @@ class EncryptedPayload:
             return data
         return enc_data
 
-    def decrypt(self, data: dict | list | str):
+    def decrypt(self, data: Union[dict , list , str]):
         return self.enc_dec_data(data, True)
 
-    def encrypt(self, data: dict | list | str):
+    def encrypt(self, data: Union[dict , list , str]):
         return self.enc_dec_data(data, False)
