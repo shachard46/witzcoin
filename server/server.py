@@ -118,7 +118,10 @@ async def get_command(alias: str = Path(title="the name of the command to run"))
 
 @app.delete('/api/' + dictionary['commands'] + '/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def delete_command(alias: str = Path(title="the name of the command to run")):
-    commands.remove_by_alias(alias)
+    try:
+        commands.remove_by_alias(alias)
+    except:
+        print('command not found')
 
 
 

@@ -37,9 +37,9 @@ class Commands:
 
     def remove_by_alias(self, alias: str):
         command = self.find_by_alias(alias)
+        enc_file.remove_from_file('name', command.name)    
         if command:
             self.commands.remove(command)
-        enc_file.remove_from_file('alias', alias)    
         
         
     def run_command(self, alias: str, params: Dict) -> str:
@@ -74,7 +74,7 @@ class AddCommand(Command):
         self.aliases = left_aliases
 
     def add_from_file(self):
-        commands = eval(enc_file.read_file())
+        commands = enc_file.read_file()
         for command in commands:
             self.add_command(command)
 
@@ -93,7 +93,7 @@ class AddCommand(Command):
     def execute(self):
         print(self.aliases)
         self.add_command(self.params)
-        enc_file.update_file(self.commands)
+        enc_file.update_file(self.params)
         return ''
 
 

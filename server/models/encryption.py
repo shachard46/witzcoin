@@ -17,22 +17,23 @@ class EncryptedFile:
             to_encode += self.key
         return base64.urlsafe_b64encode(to_encode[:32].encode())
 
-    def read_file(self) -> str:
+    def read_file(self) -> list:
         try:
             with open(self.path, 'rb') as f:
                 enc_text = f.read()
-                return self.fernet.decrypt(enc_text).decode()
+                return eval(self.fernet.decrypt(enc_text).decode())
         except Exception:
             print('no command yet')
-        return ''
+        return []
 
-    def update_file(self, objs: list):
+    def update_file(self, obj):
+        objs = self.read_file()
         with open(self.path, 'wb') as f:
+            objs.append(obj)
             f.write(self.fernet.encrypt(str(objs).encode()))
     
     def remove_from_file(self, key, value):
-        dec_file = self.read_file()
-        objs: list[dict] = eval(dec_file)
+        objs = self.read_file()
         for obj in objs:
             if key in obj.keys() and obj[key] == value:
                 objs.remove(obj)

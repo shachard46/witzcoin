@@ -1,22 +1,21 @@
 import { Button, Container, List, Paper, Typography } from '@material-ui/core'
 import React, { MouseEventHandler, useContext, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
+import { useApi } from '../api/api-provider'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
 import { useCommands } from './commands-provider'
-import { useApi } from '../api/api-provider'
 
 const CommandList: React.FC = () => {
   const classes = useContext(ThemeContext)
-  const [commands, refreshCommands] = useCommands()
+  const [commands, refreshCommands, deleteCommand] = useCommands()
   const api = useApi()
 
   useEffect(() => {
     refreshCommands()
   }, [commands, refreshCommands])
   const handleDelete: MouseEventHandler<HTMLButtonElement> = (event): void => {
-    const a = event.name
-    throw new Error('Function not implemented.')
+    deleteCommand(event.currentTarget.name)
   }
 
   return (
@@ -45,6 +44,7 @@ const CommandList: React.FC = () => {
                 <Button
                   type='submit'
                   fullWidth
+                  name={command.alias}
                   variant='contained'
                   color='primary'
                   className={classes.submit}
