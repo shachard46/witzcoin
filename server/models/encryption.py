@@ -25,21 +25,28 @@ class EncryptedFile:
         except Exception:
             print('no command yet')
         return []
-
+    def check_for_dups(self, objs, obj):
+        without = [o for o in objs if o['name'] !=obj['name']]
+        without.append(obj)
+        return without
+            
     def update_file(self, obj):
         objs = self.read_file()
         with open(self.path, 'wb') as f:
-            objs.append(obj)
+            if obj:
+                objs = self.check_for_dups(objs, obj)
             f.write(self.fernet.encrypt(str(objs).encode()))
     
     def remove_from_file(self, key, value):
         objs = self.read_file()
+        print(objs)
         for obj in objs:
             if key in obj.keys() and obj[key] == value:
                 objs.remove(obj)
-                break
-        self.update_file(objs)
-        
+                print('here', objs, obj)
+                self.update_file(objs)
+                return True
+        return False
 
 
 class EncryptedPayload:

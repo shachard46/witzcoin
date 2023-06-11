@@ -32,28 +32,29 @@ const CommandList: React.FC = () => {
         <Paper className='paper'>
           <List className='command-links'>
             {commands.map(command => (
-              <li key={'li' + commands.indexOf(command)}>
-                <NavLink
-                  to={`/p/command/?name=${command.name}`}
-                  color='primary'
-                  key={'link' + commands.indexOf(command)}
-                  className={classes.submit}
-                >
-                  {command.name}
-                </NavLink>
+              <div>
+                <li key={'li' + commands.indexOf(command)} className='half-command'>
+                  <NavLink
+                    to={`/p/command/?name=${command.name}`}
+                    color='primary'
+                    key={'link' + commands.indexOf(command)}
+                    className={classes.submit}
+                  >
+                    {command.name}
+                  </NavLink>
+                </li>
                 <Button
                   type='submit'
                   fullWidth
                   name={command.alias}
                   variant='contained'
                   color='primary'
-                  className={classes.submit}
+                  className='half-delete'
                   onClick={handleDelete}
                 >
-                  Log In
+                  Delete
                 </Button>
-                ƒ
-              </li>
+              </div>
             ))}
           </List>
         </Paper>

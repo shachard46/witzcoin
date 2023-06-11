@@ -12,7 +12,9 @@ def assign_alias(aliases: list):
     aliases.remove(choice)
     return choice
 
+
 enc_file = EncryptedFile('file.txt', 'mass')
+
 
 class Commands:
     def __init__(self):
@@ -22,10 +24,10 @@ class Commands:
                                         AddToScheduler(assign_alias(self.aliases))]
         self.add_command = AddCommand(
             self.commands, {'name': '', 'from_file': 'False', 'code': ''}, assign_alias(self.aliases), self.aliases.copy())
-        try:
-            self.add_command.add_from_file()
-        except Exception:
-            print('no commands yet')
+        # try:
+        self.add_command.add_from_file()
+        # except Exception:
+        # print('no commands yet')
 
     def find_by_alias(self, alias: str) -> Union[Command, None]:
         for command in self.commands:
@@ -37,11 +39,10 @@ class Commands:
 
     def remove_by_alias(self, alias: str):
         command = self.find_by_alias(alias)
-        enc_file.remove_from_file('name', command.name)    
-        if command:
+        print(command.name)
+        if command and enc_file.remove_from_file('name', command.name):
             self.commands.remove(command)
-        
-        
+
     def run_command(self, alias: str, params: Dict) -> str:
         command = self.find_by_alias(alias)
         if command:
@@ -75,11 +76,19 @@ class AddCommand(Command):
 
     def add_from_file(self):
         commands = enc_file.read_file()
+        if type(commands) is not list:
+            return
         for command in commands:
             self.add_command(command)
 
     def clean_code(self, code):
         return code.strip()
+
+    def no_dups(self, command: Command, ):
+        for c in self.commands:
+            if c.name == command.name:
+                self.commands.remove(c)
+        self.commands.append(command)
 
     def add_command(self, params):
         code = self.clean_code(params['code'])
@@ -87,7 +96,7 @@ class AddCommand(Command):
         if from_file.lower() == 'true':
             with open(code) as f:
                 code = f.read()
-        self.commands.append(Command(params['name'],
+        self.no_dups(Command(params['name'],
                                      assign_alias(self.aliases), {}, code))
 
     def execute(self):

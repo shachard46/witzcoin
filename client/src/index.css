@@ -29,7 +29,7 @@ code {
   border-radius: 10px;
 }
 .paper {
-  height: 300px;
+  height: 350px;
   width: 100%;
   overflow: auto;
   background-color: #f5f5f5 !important;
@@ -43,18 +43,33 @@ code {
   display: flex;
   flex-direction: column;
   width: 100%;
-  padding: 0;
+  padding-top: 9% !important;
 }
-
-.command-links li {
+.command-links div {
+  width: 75%;
+  display: flex;
+  
+}
+.command-links .half-command {
   margin-bottom: 20px;
+  margin-right: 5%;
   background-color: #505050;
-  width: 50%;
+  width: 70%;
   text-align: center;
   padding-top: 15px;
   padding-bottom: 15px;
   border-radius: 8px;
 }
+.command-links .half-delete {
+  margin-bottom: 20px;
+  background-color: #bb5d5d;
+  width: 30%;
+  text-align: center;
+  padding-top: 15px;
+  padding-bottom: 15px;
+  border-radius: 8px;
+}
+
 .command-links a {
   color: #fff;
   text-decoration: none;
