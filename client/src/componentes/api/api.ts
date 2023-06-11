@@ -1,6 +1,6 @@
 import { AxiosInstance, AxiosResponse } from 'axios'
-import { Dictionary, Interceptors } from './models'
 import { EncryptedPayload } from './encryption'
+import { Dictionary, Interceptors } from './models'
 const findKey = (dictionary: Dictionary, url: string): string => {
   for (const key of Object.keys(dictionary)) {
     // alert(key)
@@ -58,5 +58,16 @@ export class Api {
     return this.api.get<T>(final, config).then(res => {
       return encrypt ? this.encryptedPayload.decrypt(res.data) : res.data
     })
+  }
+
+  async delete<T>(
+    url: string,
+    config?: any,
+  ): Promise<AxiosResponse<T, any> | void> {
+    while (findKey(this.dictionary, url)) {
+      const key = findKey(this.dictionary, url)
+      url = url.replace(key, this.dictionary[key])
+    }
+    return this.api.delete(url, config)
   }
 }
