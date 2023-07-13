@@ -1,15 +1,18 @@
 import json
+
+import uvicorn
 from fastapi import FastAPI, HTTPException, Depends, Path, Request, status, Security
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from pydantic import BaseModel
-import uvicorn
-from models.commands import Commands
-from models.permissions import Permissions
+
 from models.User import all_users, User
+from models.commands import Commands
 from models.encryption import EncryptedPayload
-from utils import sha1
 from models.jwt_token import Jwt
+from models.permissions import Permissions
+from utils import sha1
+
 app = FastAPI()
 dictionary = {
     'commands': 'wiki',
@@ -107,16 +110,20 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
     return allow_ip or block_ip
 
 
-@app.get(f'/api/{dictionary["commands"]}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.get(f'/api/{dictionary["commands"]}',
+         dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
     return enc_payload.encrypt(commands.get_all_commands())
 
 
-@app.get('/api/' + dictionary['commands'] + '/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.get('/api/' + dictionary['commands'] + '/{alias}',
+         dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(alias: str = Path(title="the name of the command to run")):
     return enc_payload.encrypt(commands.get_command(alias))
 
-@app.delete('/api/' + dictionary['commands'] + '/{alias}', dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+
+@app.delete('/api/' + dictionary['commands'] + '/{alias}',
+            dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def delete_command(alias: str = Path(title="the name of the command to run")):
     try:
         commands.remove_by_alias(alias)
@@ -124,8 +131,8 @@ async def delete_command(alias: str = Path(title="the name of the command to run
         print('command not found')
 
 
-
-@app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'], dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+@app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'],
+          dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: dict):
     return enc_payload.encrypt(commands.run_command(alias, enc_payload.decrypt(params)['params']))
 
