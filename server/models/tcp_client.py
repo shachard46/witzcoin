@@ -10,5 +10,8 @@ class TCPClient:
     def connect(self):
         self.server.sok.connect((self.server.host, self.server.port))
 
-    def send_request(self, request: Request) -> Response:
-        return self.server.handle_request(request)
+    def send_request(self, path: str, params=None) -> Response:
+        if params is None:
+            params = {}
+        middle_response = Response(path, params)
+        return self.server.handle_request(Request(middle_response.raw))

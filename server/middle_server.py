@@ -11,6 +11,7 @@ from models.commands import Commands
 from models.encryption import EncryptedPayload
 from models.jwt_token import Jwt
 from models.permissions import Permissions
+from target_server import client
 from utils import sha1
 
 app = FastAPI()
@@ -113,20 +114,23 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
 @app.get(f'/api/{dictionary["commands"]}',
          dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
-    return enc_payload.encrypt(commands.get_all_commands())
+    return client.send_request('get')
+    # return enc_payload.encrypt(commands.get_all_commands())
 
 
 @app.get('/api/' + dictionary['commands'] + '/{alias}',
          dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(alias: str = Path(title="the name of the command to run")):
-    return enc_payload.encrypt(commands.get_command(alias))
+    return client.send_request(f'get/{alias}')
+    # return enc_payload.encrypt(commands.get_command(alias))
 
 
 @app.delete('/api/' + dictionary['commands'] + '/{alias}',
             dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def delete_command(alias: str = Path(title="the name of the command to run")):
     try:
-        commands.remove_by_alias(alias)
+        return client.send_request(f'delete/{alias}')
+        # commands.remove_by_alias(alias)
     except:
         print('command not found')
 
@@ -134,7 +138,8 @@ async def delete_command(alias: str = Path(title="the name of the command to run
 @app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'],
           dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: dict):
-    return enc_payload.encrypt(commands.run_command(alias, enc_payload.decrypt(params)['params']))
+    return client.send_request(f'run/{alias}', params)
+    # return enc_payload.encrypt(commands.run_command(alias, enc_payload.decrypt(params)['params']))
 
 
 if __name__ == '__main__':

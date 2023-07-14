@@ -1,7 +1,9 @@
 from server.models.commands import Commands
 from server.models.route_server import RouteServer
+from server.models.tcp_client import TCPClient
 
 app = RouteServer(host='127.0.0.1', port=5461)
+client = TCPClient(app)
 commands = Commands()
 
 
@@ -17,4 +19,9 @@ def get_all_commands():
 
 @app.route('get/{command}')
 def get_command(command: str):
-    pass 
+    pass
+
+
+@app.route('delete/{command}')
+def delete_command(command: str):
+    pass
