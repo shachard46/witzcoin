@@ -1,14 +1,17 @@
+from typing import Tuple
+
+
 class Request:
     def __init__(self, raw: str) -> None:
-        self.payload = self.extract_content(raw)
+        self.path, self.payload = self.extract_content(raw)
 
-    def extract_content(self, raw) -> dict:
+    def extract_content(self, raw) -> Tuple[str, dict]:
         pass
 
 
 class Response:
-    def __init__(self, payload: dict):
-        self.raw = self.encode_content(payload)
+    def __init__(self, path: str, payload: dict):
+        self.raw = self.encode_content(path, payload)
 
-    def encode_content(self, payload: dict) -> str:
+    def encode_content(self, path: str, payload: dict) -> str:
         pass
