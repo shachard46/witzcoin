@@ -25,7 +25,12 @@ class TCPServer(ABC):
             self.__on_connection(conn)
 
     def __on_connection(self, conn: socket.socket):
-        request = Request(conn.recv(1024).decode())
+        packets = []
+        p = conn.recv(1024).decode()
+        while p.endswith(Request.codes['end_packet']):
+            packets.append(p)
+            p = conn.recv(1024).decode()
+        request = Request(packets)
         response: Response = self.handle_request(request)
         if not response:
             return
