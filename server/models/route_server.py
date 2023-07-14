@@ -27,8 +27,8 @@ class Route:
 
 
 class RouteServer(TCPServer):
-    def __init__(self, address: Tuple[str, int]):
-        super().__init__(address)
+    def __init__(self, host: str, port: int):
+        super().__init__(host, port)
         self.routes: List[Route] = []
 
     def add_route(self, path: str, action: Callable):

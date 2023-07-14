@@ -1,7 +1,6 @@
 import abc
 import socket
 from abc import ABC
-from typing import Tuple
 
 from server.models.packet import Response, Request
 
@@ -10,13 +9,14 @@ DEF = ('127.0.0.1', 8765)
 
 class TCPServer(ABC):
 
-    def __init__(self, address: Tuple[str, int]) -> None:
+    def __init__(self, host: str, port: int) -> None:
         self.KILL = False
-        self.address = address
+        self.host = host
+        self.port = port
         self.sok = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 
     def __bind_connection(self):
-        self.sok.bind(self.address)
+        self.sok.bind((self.host, self.port))
         self.sok.listen()
 
     def __wait_for_connection(self):
