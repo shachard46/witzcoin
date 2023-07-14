@@ -27,7 +27,9 @@ class TCPServer(ABC):
     def __on_connection(self, conn: socket.socket):
         request = Request(conn.recv(1024).decode())
         response: Response = self.handle_request(request)
-        self.handle_response(response)
+        if not response:
+            return
+        conn.sendall(response.raw.encode())
 
     def close(self):
         self.sok.close()
@@ -39,9 +41,3 @@ class TCPServer(ABC):
     @abc.abstractmethod
     def handle_request(self, request: Request) -> Response:
         pass
-
-    @abc.abstractmethod
-    def handle_response(self, response: Response):
-        pass
-
-
