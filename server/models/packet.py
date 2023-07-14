@@ -34,6 +34,8 @@ class Packet:
     def extract_content(raw: List[str]) -> Tuple[str, dict]:
         path, params = '', {}
         path = Packet.extract_line_from_raw(raw[0], 'path')
+        if len(raw) < 2:
+            return path, params
         for i in range(1, len(raw) - 2, 2):
             param_name = Packet.extract_line_from_raw(raw[i], 'param_name')
             param_value = Packet.extract_line_from_raw(raw[i + 1], 'param_value')
