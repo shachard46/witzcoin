@@ -6,7 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from pydantic import BaseModel
 
-from models.User import all_users, User
+from models.user import all_users, User
 from models.commands import Commands
 from models.encryption import EncryptedPayload
 from models.jwt_token import Jwt
@@ -116,28 +116,24 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
          dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
     return client.send_request('get')
-    # return enc_payload.encrypt(commands.get_all_commands())
 
 
 @app.get('/api/' + dictionary['commands'] + '/{alias}',
          dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(alias: str = Path(title="the name of the command to run")):
     return client.send_request(f'get/{alias}')
-    # return enc_payload.encrypt(commands.get_command(alias))
 
 
 @app.delete('/api/' + dictionary['commands'] + '/{alias}',
             dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def delete_command(alias: str = Path(title="the name of the command to run")):
     return client.send_request(f'delete/{alias}')
-    # commands.remove_by_alias(alias)
 
 
 @app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'],
           dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: dict):
     return client.send_request(f'run/{alias}', params)
-    # return enc_payload.encrypt(commands.run_command(alias, enc_payload.decrypt(params)['params']))
 
 
 if __name__ == '__main__':

@@ -1,8 +1,7 @@
 import base64
 from typing import Union
+
 from cryptography.fernet import Fernet
-import json
-import codecs
 
 
 class EncryptedFile:
@@ -25,18 +24,19 @@ class EncryptedFile:
         except Exception:
             print('no command yet')
         return []
+
     def check_for_dups(self, objs, obj):
-        without = [o for o in objs if o['name'] !=obj['name']]
+        without = [o for o in objs if o['name'] != obj['name']]
         without.append(obj)
         return without
-            
+
     def update_file(self, obj):
         objs = self.read_file()
         with open(self.path, 'wb') as f:
             if obj:
                 objs = self.check_for_dups(objs, obj)
             f.write(self.fernet.encrypt(str(objs).encode()))
-    
+
     def remove_from_file(self, key, value):
         objs = self.read_file()
         print(objs)
@@ -76,7 +76,7 @@ class EncryptedPayload:
             new_word.append(self.shift_character(key[shift_index], char))
         return ''.join(new_word)
 
-    def enc_dec_data(self, data: Union[dict , list , str], dec=False):
+    def enc_dec_data(self, data: Union[dict, list, str], dec=False):
         if type(data) is list:
             enc_data = []
             for item in data:
@@ -96,8 +96,8 @@ class EncryptedPayload:
             return data
         return enc_data
 
-    def decrypt(self, data: Union[dict , list , str]):
+    def decrypt(self, data: Union[dict, list, str]):
         return self.enc_dec_data(data, True)
 
-    def encrypt(self, data: Union[dict , list , str]):
+    def encrypt(self, data: Union[dict, list, str]):
         return self.enc_dec_data(data, False)

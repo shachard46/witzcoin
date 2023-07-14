@@ -1,10 +1,10 @@
-import json
+import os
 import random
 from typing import Dict, List, Union
+
+from models.command import Command
 from models.encryption import EncryptedFile
 from models.scheduale_task import SchedualerTask
-import os
-from models.command import Command
 
 
 def assign_alias(aliases: list):
@@ -23,7 +23,8 @@ class Commands:
         self.commands: List[Command] = [RunInCMD(assign_alias(self.aliases)), UploadFile(assign_alias(self.aliases)),
                                         AddToScheduler(assign_alias(self.aliases))]
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, assign_alias(self.aliases), self.aliases.copy())
+            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, assign_alias(self.aliases),
+            self.aliases.copy())
         # try:
         self.add_command.add_from_file()
         # except Exception:
@@ -97,7 +98,7 @@ class AddCommand(Command):
             with open(code) as f:
                 code = f.read()
         self.no_dups(Command(params['name'],
-                                     assign_alias(self.aliases), {}, code))
+                             assign_alias(self.aliases), {}, code))
 
     def execute(self):
         print(self.aliases)
