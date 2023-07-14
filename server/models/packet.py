@@ -1,17 +1,34 @@
 from typing import Tuple
 
 
-class Request:
+class Packet:
+    def __init__(self) -> None:
+        pass
+
+    @staticmethod
+    def extract_content(raw) -> Tuple[str, dict]:
+        pass
+
+    @staticmethod
+    def encode_content(path: str, payload: dict) -> str:
+        pass
+
+
+class Request(Packet):
     def __init__(self, raw: str) -> None:
-        self.path, self.payload = self.extract_content(raw)
+        super().__init__()
+        self.path, self.payload = Request.extract_content(raw)
 
-    def extract_content(self, raw) -> Tuple[str, dict]:
-        pass
+    @staticmethod
+    def send_request(path: str, payload: dict):
+        return Request(*Request.encode_content(path, payload))
 
 
-class Response:
+class Response(Packet):
     def __init__(self, path: str, payload: dict):
-        self.raw = self.encode_content(path, payload)
+        super().__init__()
+        self.raw = Response.encode_content(path, payload)
 
-    def encode_content(self, path: str, payload: dict) -> str:
-        pass
+    @staticmethod
+    def get_response(raw: str):
+        return Response(*Response.extract_content(raw))

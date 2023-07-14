@@ -11,10 +11,11 @@ from models.commands import Commands
 from models.encryption import EncryptedPayload
 from models.jwt_token import Jwt
 from models.permissions import Permissions
-from target_server import client
+from server.models.tcp_client import TCPClient
 from utils import sha1
 
 app = FastAPI()
+client = TCPClient(host='127.0.0.1', port=5461)
 dictionary = {
     'commands': 'wiki',
     'perms': 'videos',
@@ -128,11 +129,8 @@ async def get_command(alias: str = Path(title="the name of the command to run"))
 @app.delete('/api/' + dictionary['commands'] + '/{alias}',
             dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def delete_command(alias: str = Path(title="the name of the command to run")):
-    try:
-        return client.send_request(f'delete/{alias}')
-        # commands.remove_by_alias(alias)
-    except:
-        print('command not found')
+    return client.send_request(f'delete/{alias}')
+    # commands.remove_by_alias(alias)
 
 
 @app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'],
