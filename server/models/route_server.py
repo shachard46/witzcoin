@@ -1,8 +1,11 @@
 import inspect
-from typing import Tuple, Callable, List
+import re
+from typing import Tuple, Callable, List, Any
 
 from server.models.packet import Response, Request
 from server.models.tcp_server import TCPServer
+
+param_pattern = re.compile(r"\{.*?}")
 
 
 class Route:
@@ -10,6 +13,14 @@ class Route:
         self.path = path
         self.args = args
         self.action = action
+        self.is_wildcard = '{' in path
+
+    def handle_params_in_path(self) -> Tuple[re.Pattern, list]:
+        if not self.is_wildcard:
+            return re.compile(self.path), []
+        params = param_pattern.findall(self.path)
+        formatted_route = re.compile(param_pattern.sub(r'(.*?)', self.path))
+        return formatted_route, params
 
     def run(self, *args) -> Tuple[str, dict]:
         return self.path, self.action(args)
@@ -32,14 +43,15 @@ class RouteServer(TCPServer):
 
         return decorator
 
-    def find_route(self, path: str):
+    def find_route(self, path: str) -> tuple[Any, Any] | tuple[None, None]:
         for route in self.routes:
-            if route.path == path:
-                return route
-        return None
+            formatted_route, params = route.handle_params_in_path()
+            if formatted_route.findall(path):
+                return route, params
+        return None, None
 
     def handle_request(self, request: Request) -> Response:
-        route = self.find_route(request.path)
+        route, params = self.find_route(request.path)
         if not route:
             return Response(request.path, {'error': 'no such route'})
-        return Response(*route.run(request.payload))
+        return Response(*route.run(*params, request.payload))
