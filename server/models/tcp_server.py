@@ -24,17 +24,23 @@ class TCPServer(ABC):
         while not self.KILL:
             self.__on_connection(conn)
 
-    def __on_connection(self, conn: socket.socket):
+    @staticmethod
+    def __receive_packets(conn: socket.socket):
         packets = []
         p = conn.recv(1024).decode()
         while p.endswith(Request.codes['end_packet']):
             packets.append(p)
             p = conn.recv(1024).decode()
+        return packets
+
+    def __on_connection(self, conn: socket.socket):
+        packets = TCPServer.__receive_packets(conn)
         request = Request(packets)
         response: Response = self.handle_request(request)
         if not response:
             return
-        conn.sendall(response.raw.encode())
+        for packet in response.raw:
+            conn.sendall(packet.encode())
 
     def close(self):
         self.sok.close()

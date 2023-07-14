@@ -58,7 +58,7 @@ class Request(Packet):
 
     @staticmethod
     def send_request(path: str, payload: dict):
-        return Request(*Request.encode_content(path, payload))
+        return Request.encode_content(path, payload)
 
 
 class Response(Packet):
