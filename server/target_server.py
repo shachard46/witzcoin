@@ -23,6 +23,7 @@ def get_command(alias: str):
 @app.route('delete/{alias}')
 def delete_command(alias: str):
     try:
+        print('deleteing')
         return commands.remove_by_alias(alias)
     except:
         return 'no such flower'

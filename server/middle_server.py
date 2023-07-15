@@ -1,4 +1,7 @@
+import concurrent.futures
 import json
+import threading
+from typing import Callable
 
 import uvicorn
 from fastapi import FastAPI, HTTPException, Depends, Path, Request, status, Security
@@ -6,13 +9,15 @@ from fastapi.middleware.cors import CORSMiddleware
 from fastapi.security import OAuth2PasswordBearer, OAuth2PasswordRequestForm, SecurityScopes
 from pydantic import BaseModel
 
-from models.user import all_users, User
 from models.commands import Commands
 from models.encryption import EncryptedPayload
 from models.jwt_token import Jwt
 from models.permissions import Permissions
+from models.user import all_users, User
 from server.models.tcp_client import TCPClient
 from utils import sha1
+
+threading.Thread()
 
 client = TCPClient(host='127.0.0.1', port=5461)
 # client.connect()
@@ -43,6 +48,12 @@ app.add_middleware(
 
 class CommandParams(BaseModel):
     params: dict
+
+
+def add_thread(func: Callable):
+    with concurrent.futures.ThreadPoolExecutor() as executor:
+        future = executor.submit(func)
+        return future.result()
 
 
 async def ip_permissions(request: Request):
@@ -113,28 +124,28 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
     return allow_ip or block_ip
 
 
-@app.get(f'/api/{dictionary["commands"]}',
-         dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
-async def get_commands():
-    return client.send_request('get')
-
-
-@app.get('/api/' + dictionary['commands'] + '/{alias}',
+@app.get(f'/api/' + dictionary['commands'] + '/{alias}',
          dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_command(alias: str = Path(title="the name of the command to run")):
-    return client.send_request(f'get/{alias}')
+    return add_thread(lambda: client.send_request(f'get/{alias}'))
 
 
 @app.delete('/api/' + dictionary['commands'] + '/{alias}',
             dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def delete_command(alias: str = Path(title="the name of the command to run")):
-    return client.send_request(f'delete/{alias}')
+    return add_thread(lambda: client.send_request(f'delete/{alias}'))
+
+
+@app.get(f'/api/{dictionary["commands"]}',
+         dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
+async def get_commands():
+    return add_thread(lambda: client.send_request('get'))
 
 
 @app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'],
           dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: dict):
-    return client.send_request(f'run/{alias}', params['params'])
+    return add_thread(lambda: client.send_request(f'run/{alias}', params['params']))
 
 
 if __name__ == '__main__':
