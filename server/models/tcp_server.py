@@ -56,9 +56,7 @@ class TCPServer(ABC):
             return
         request = Request(packets)
         if not request.path:
-            return
-        if request.path == 'kill':
-            self.KILL = True
+            self.KILL = request.path == 'kill'
             return
         response: Response = self.handle_request(request)
         if not response:

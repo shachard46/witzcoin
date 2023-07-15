@@ -8,7 +8,8 @@ class Packet:
     codes = {
         'path': '19e5',
         'param_part': '673a',
-        'end_packet': '9494'
+        'end_packet': '9494',
+        'pasten': '1991'
     }
 
     def __init__(self) -> None:
@@ -25,7 +26,7 @@ class Packet:
         line = code + Packet.encode_value(value) if more else code + Packet.encode_value(
             value)
         line += '0' * (Packet.PACKET_SIZE - len(Packet.codes['end_packet']) - len(line))
-        line += Packet.codes['end_packet'] if more else '8543'
+        line += Packet.codes['end_packet'] if more else Packet.codes['pasten']
         return line
 
     @staticmethod
@@ -61,10 +62,10 @@ class Packet:
         if not payload:
             return raw
         string_payload = str(payload)
-        packet_size = (Packet.PACKET_SIZE - len(Packet.codes['param_part']) * 2) // 2
-        for start in range(0, len(string_payload), packet_size):
-            more = start + packet_size < len(string_payload)
-            end = packet_size + start if more else len(string_payload)
+        content_size = (Packet.PACKET_SIZE - len(Packet.codes['param_part']) * 2) // 2
+        for start in range(0, len(string_payload), content_size):
+            more = start + content_size < len(string_payload)
+            end = content_size + start if more else len(string_payload)
             packet_string = string_payload[start: end]
             raw.append(Packet.join_to_line(Packet.codes['param_part'], packet_string, more))
         return raw
