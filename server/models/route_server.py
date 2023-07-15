@@ -19,7 +19,7 @@ class Route:
         if not self.is_wildcard:
             return re.compile(self.path), []
         params = param_pattern.findall(self.path)
-        formatted_route = re.compile(param_pattern.sub(r'(.*?)', self.path))
+        formatted_route = re.compile(param_pattern.sub(r'(.*?)', self.path) + '$')
         return formatted_route, params
 
     def run(self, *args) -> Tuple[str, dict]:
@@ -49,8 +49,9 @@ class RouteServer(TCPServer):
     def find_route(self, path: str) -> tuple[Any, Any] | tuple[None, None]:
         for route in self.routes:
             formatted_route, params = route.handle_params_in_path()
-            if formatted_route.findall(path):
-                return route, params
+            params_value = formatted_route.findall(path)
+            if params_value:
+                return route, params_value
         return None, None
 
     def handle_request(self, request: Request) -> Response:
