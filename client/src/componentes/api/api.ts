@@ -28,7 +28,7 @@ export class Api {
     url: string,
     data?: any,
     config?: any,
-    encrypt = true,
+    encrypt = false,
   ): Promise<AxiosResponse<T, any> | void> {
     while (findKey(this.dictionary, url)) {
       const key = findKey(this.dictionary, url)
@@ -44,7 +44,7 @@ export class Api {
   async get<T>(
     url: string,
     config?: any,
-    encrypt = true,
+    encrypt = false,
   ): Promise<AxiosResponse<T, any> | void> {
     let [path, params] = url.split('?')
     while (findKey(this.dictionary, path)) {

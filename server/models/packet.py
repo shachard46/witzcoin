@@ -16,13 +16,14 @@ class Packet:
     def extract_line_from_raw(line: str, field):
         if not line.startswith(Packet.codes[field]):
             return ''
-        return Packet.decode_value(line.replace(Packet.codes[field], ''))
+        return Packet.decode_value(line.replace(Packet.codes[field], '', 1))
 
     @staticmethod
     def join_to_line(code, value, more=True):
-        line = code + Packet.encode_value(value) + Packet.codes['end_packet'] if more else code + Packet.encode_value(
-            value) + '8543'
-        line += '0' * (Packet.PACKET_SIZE - len(line))
+        line = code + Packet.encode_value(value) if more else code + Packet.encode_value(
+            value)
+        line += '0' * (Packet.PACKET_SIZE - len(Packet.codes['end_packet']) - len(line))
+        line += Packet.codes['end_packet'] if more else '8543'
         return line
 
     @staticmethod
@@ -32,9 +33,10 @@ class Packet:
     @staticmethod
     def decode_value(value: str) -> str:
         res = []
-        for i in range(0, len(value), 2):
-            if value[i: i + 2] != '00':
-                res.append(chr(int(value[i: i + 2], 16)))
+        for i in range(0, len(value) - len(Packet.codes['end_packet']), 2):
+            if value[i: i + 4] == '0000':
+                break
+            res.append(chr(int(value[i: i + 2], 16)))
         return ''.join(res)
 
     @staticmethod
@@ -54,12 +56,12 @@ class Packet:
         if not payload:
             return raw
         string_payload = str(payload)
-        payload_packet_size = len(string_payload) // (Packet.PACKET_SIZE - len(Packet.codes['param_part'] * 2))
-        for start in range(0, len(string_payload), payload_packet_size):
-            more = start + payload_packet_size < len(string_payload)
-            end = payload_packet_size + start if more else len(string_payload)
+        packet_size = (Packet.PACKET_SIZE - len(Packet.codes['param_part']) * 2) // 2
+        for start in range(0, len(string_payload), packet_size):
+            more = start + packet_size < len(string_payload)
+            end = packet_size + start if more else len(string_payload)
             packet_string = string_payload[start: end]
-            raw.append(Packet.join_to_line(Packet.codes['param_part'], Packet.encode_value(packet_string), more))
+            raw.append(Packet.join_to_line(Packet.codes['param_part'], packet_string, more))
         return raw
 
 
