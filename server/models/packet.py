@@ -5,8 +5,7 @@ class Packet:
     PACKET_SIZE = 60
     codes = {
         'path': '19e5',
-        'param_name': '673a',
-        'param_content': '32b4',
+        'param_part': '673a',
         'end_packet': '9494'
     }
 
@@ -54,10 +53,13 @@ class Packet:
     def encode_content(path: str, payload: dict) -> List[str]:
         more = True if payload else False
         raw = [Packet.join_to_line(Packet.codes['path'], path, more)]
-        for index, param_name, param_value in enumerate(payload.items()):
-            more = index + 1 != len(payload.keys())
-            raw.append(Packet.join_to_line(Packet.codes['param_name'], Packet.encode_value(param_name), more))
-            raw.append(Packet.join_to_line(Packet.codes['param_value'], Packet.encode_value(param_value), more))
+        string_payload = str(payload)
+        payload_packet_size = len(string_payload) // (Packet.PACKET_SIZE - len(Packet.codes['param_part'] * 2))
+        for start in range(0, len(string_payload), payload_packet_size):
+            more = start + payload_packet_size < len(string_payload)
+            end = payload_packet_size if more else len(string_payload)
+            packet_string = string_payload[start: end]
+            raw.append(Packet.join_to_line(Packet.codes['param_part'], Packet.encode_value(packet_string), more))
         return raw
 
 
