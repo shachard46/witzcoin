@@ -14,10 +14,13 @@ class TCPClient:
 
     def __receive_packets(self):
         packets = []
-        p = self.sok.recv(1024).decode()
-        while p.endswith(Request.codes['end_packet']):
-            packets.append(p)
-            p = self.sok.recv(1024).decode()
+        while True:
+            packet = self.sok.recv(1024).decode()
+            if not packet:
+                break
+            packets.append(packet)
+            if packet.endswith(Request.codes['end_packet']):
+                break
         return packets
 
     def send_request(self, path: str, params=None) -> Response:

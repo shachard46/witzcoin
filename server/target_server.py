@@ -26,3 +26,7 @@ def delete_command(alias: str):
         return commands.remove_by_alias(alias)
     except:
         return 'no such flower'
+
+
+if __name__ == '__main__':
+    app.raise_server()

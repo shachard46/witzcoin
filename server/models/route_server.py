@@ -23,7 +23,10 @@ class Route:
         return formatted_route, params
 
     def run(self, *args) -> Tuple[str, dict]:
-        return self.path, self.action(args)
+        if args:
+            return self.path, self.action(*args)
+        else:
+            return self.path, self.action()
 
 
 class RouteServer(TCPServer):
@@ -54,4 +57,6 @@ class RouteServer(TCPServer):
         route, params = self.find_route(request.path)
         if not route:
             return Response(request.path, {'error': 'no such route'})
-        return Response(*route.run(*params, request.payload))
+        if request.payload:
+            return Response(*route.run(*params, request.payload))
+        return Response(*route.run(*params))

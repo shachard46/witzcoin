@@ -20,22 +20,33 @@ class TCPServer(ABC):
         self.sok.listen()
 
     def __wait_for_connection(self):
+        print('listening on port ' + str(self.port))
         conn, addr = self.sok.accept()
-        while not self.KILL:
+        while True:
             self.__on_connection(conn)
+        print('out')
+        # self.close()
 
     @staticmethod
     def __receive_packets(conn: socket.socket):
         packets = []
-        p = conn.recv(1024).decode()
-        while p.endswith(Request.codes['end_packet']):
-            packets.append(p)
-            p = conn.recv(1024).decode()
+        while True:
+            packet = conn.recv(1024).decode()
+            print(packet)
+            if not packet:
+                break
+            packets.append(packet)
+            if not packet.endswith(Request.codes['end_packet']):
+                break
         return packets
 
     def __on_connection(self, conn: socket.socket):
         packets = TCPServer.__receive_packets(conn)
+        if not packets:
+            return
         request = Request(packets)
+        if not request.path:
+            return
         response: Response = self.handle_request(request)
         if not response:
             return

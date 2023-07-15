@@ -15,26 +15,32 @@ class Packet:
     @staticmethod
     def extract_line_from_raw(line: str, field):
         if not line.startswith(Packet.codes[field]):
-            return '', {}
+            return ''
         return Packet.decode_value(line.replace(Packet.codes[field], ''))
 
     @staticmethod
     def join_to_line(code, value, more=True):
-        return code + value + Packet.codes['end_packet'] if more else code + value + '8543'
+        line = code + Packet.encode_value(value) + Packet.codes['end_packet'] if more else code + Packet.encode_value(
+            value) + '8543'
+        line += '0' * (60 - len(line))
+        return line
 
     @staticmethod
     def encode_value(value: str) -> str:
-        pass
+        return ''.join([hex(ord(c))[2:] for c in value])
 
     @staticmethod
     def decode_value(value: str) -> str:
-        pass
+        res = []
+        for i in range(0, len(value), 2):
+            res.append(chr(int(value[i: i + 2], 16)))
+        return ''.join(res)
 
     @staticmethod
     def extract_content(raw: List[str]) -> Tuple[str, dict]:
         path, params = '', {}
         path = Packet.extract_line_from_raw(raw[0], 'path')
-        if len(raw) < 2:
+        if len(raw) < 2 or not path:
             return path, params
         for i in range(1, len(raw) - 2, 2):
             param_name = Packet.extract_line_from_raw(raw[i], 'param_name')

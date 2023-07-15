@@ -14,8 +14,9 @@ from models.permissions import Permissions
 from server.models.tcp_client import TCPClient
 from utils import sha1
 
-app = FastAPI()
 client = TCPClient(host='127.0.0.1', port=5461)
+# client.connect()
+app = FastAPI()
 dictionary = {
     'commands': 'wiki',
     'perms': 'videos',
@@ -137,4 +138,4 @@ async def run_command(alias: str, params: dict):
 
 
 if __name__ == '__main__':
-    uvicorn.run(host='127.0.0.1', port=5461, reload=True, app='server:app')
+    uvicorn.run(host='127.0.0.1', port=5462, reload=True, app='middle_server:app')
