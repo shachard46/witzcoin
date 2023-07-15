@@ -4,8 +4,6 @@ from abc import ABC
 
 from server.models.packet import Response, Request, Packet
 
-DEF = ('127.0.0.1', 8765)
-
 
 class TCPServer(ABC):
 
@@ -51,6 +49,7 @@ class TCPServer(ABC):
         if not response:
             return
         for packet in response.raw:
+            print('sending')
             conn.sendall(packet.encode())
 
     def close(self):

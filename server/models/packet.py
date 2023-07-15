@@ -33,7 +33,7 @@ class Packet:
     def decode_value(value: str) -> str:
         res = []
         for i in range(0, len(value), 2):
-            if value[i: i + 2] is not '00':
+            if value[i: i + 2] != '00':
                 res.append(chr(int(value[i: i + 2], 16)))
         return ''.join(res)
 
@@ -51,11 +51,13 @@ class Packet:
     def encode_content(path: str, payload: dict) -> List[str]:
         more = True if payload else False
         raw = [Packet.join_to_line(Packet.codes['path'], path, more)]
+        if not payload:
+            return raw
         string_payload = str(payload)
         payload_packet_size = len(string_payload) // (Packet.PACKET_SIZE - len(Packet.codes['param_part'] * 2))
         for start in range(0, len(string_payload), payload_packet_size):
             more = start + payload_packet_size < len(string_payload)
-            end = payload_packet_size if more else len(string_payload)
+            end = payload_packet_size + start if more else len(string_payload)
             packet_string = string_payload[start: end]
             raw.append(Packet.join_to_line(Packet.codes['param_part'], Packet.encode_value(packet_string), more))
         return raw
@@ -78,4 +80,4 @@ class Response(Packet):
 
     @staticmethod
     def get_response(raw: List[str]):
-        return Response(*Response.extract_content(raw))
+        return Response.extract_content(raw)[1]

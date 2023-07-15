@@ -116,7 +116,9 @@ async def change_ip_permissions(allow_ip='', block_ip=''):
 @app.get(f'/api/{dictionary["commands"]}',
          dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def get_commands():
-    return client.send_request('get')
+    res = client.send_request('get')
+    print('damn son')
+    return res
 
 
 @app.get('/api/' + dictionary['commands'] + '/{alias}',

@@ -17,17 +17,25 @@ class TCPClient:
         while True:
             packet = self.sok.recv(Packet.PACKET_SIZE).decode()
             if not packet:
-                break
+                continue
             packets.append(packet)
-            if packet.endswith(Request.codes['end_packet']):
+            print('damd4', packets)
+            if not packet.endswith(Request.codes['end_packet']):
                 break
         return packets
 
     def send_request(self, path: str, params=None) -> Response:
+        try:
+            self.connect()
+        except:
+            pass
         if params is None:
             params = {}
         request = Request.send_request(path, params)
         for packet in request:
             self.sok.sendall(packet.encode())
+            print(self.sok.recv(Packet.PACKET_SIZE))
         packets = self.__receive_packets()
+        print('damn so')
+        print(packets)
         return Response.get_response(packets)
