@@ -20,10 +20,12 @@ class TCPServer(ABC):
     def __wait_for_connection(self):
         print('listening on port ' + str(self.port))
         conn, addr = self.sok.accept()
-        while True:
-            self.__on_connection(conn)
-        print('out')
-        # self.close()
+        while not self.KILL:
+            try:
+                self.__on_connection(conn)
+            except Exception as e:
+                print(e)
+                self.raise_server()
 
     @staticmethod
     def __receive_packets(conn: socket.socket):
@@ -45,11 +47,14 @@ class TCPServer(ABC):
         request = Request(packets)
         if not request.path:
             return
+        if request.path == 'kill':
+            self.KILL = True
+            return
         response: Response = self.handle_request(request)
         if not response:
             return
         for packet in response.raw:
-            print('sending')
+            print(f'responding on {request.path}')
             conn.sendall(packet.encode())
 
     def close(self):
