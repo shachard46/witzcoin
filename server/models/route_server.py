@@ -13,6 +13,7 @@ class Route:
         self.path = path
         self.args = args
         self.action = action
+        self.has_params = len(args) > 1
         self.is_wildcard = '{' in path
 
     def handle_params_in_path(self) -> Tuple[re.Pattern, list]:
@@ -60,6 +61,6 @@ class RouteServer(TCPServer):
         route, params = self.find_route(request.path)
         if not route:
             return Response(request.path, {'error': 'no such route'})
-        if request.payload:
+        if request.payload or route.has_params:
             return Response(*route.run(*params, request.payload))
         return Response(*route.run(*params))
