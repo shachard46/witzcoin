@@ -2,7 +2,7 @@ import abc
 import socket
 from abc import ABC
 
-from server.models.packet import Response, Request
+from server.models.packet import Response, Request, Packet
 
 DEF = ('127.0.0.1', 8765)
 
@@ -31,7 +31,7 @@ class TCPServer(ABC):
     def __receive_packets(conn: socket.socket):
         packets = []
         while True:
-            packet = conn.recv(1024).decode()
+            packet = conn.recv(Packet.PACKET_SIZE).decode()
             print(packet)
             if not packet:
                 break

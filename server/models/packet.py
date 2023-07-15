@@ -2,6 +2,7 @@ from typing import Tuple, List
 
 
 class Packet:
+    PACKET_SIZE = 60
     codes = {
         'path': '19e5',
         'param_name': '673a',
@@ -22,7 +23,7 @@ class Packet:
     def join_to_line(code, value, more=True):
         line = code + Packet.encode_value(value) + Packet.codes['end_packet'] if more else code + Packet.encode_value(
             value) + '8543'
-        line += '0' * (60 - len(line))
+        line += '0' * (Packet.PACKET_SIZE - len(line))
         return line
 
     @staticmethod
@@ -33,7 +34,8 @@ class Packet:
     def decode_value(value: str) -> str:
         res = []
         for i in range(0, len(value), 2):
-            res.append(chr(int(value[i: i + 2], 16)))
+            if value[i: i + 2] is not '00':
+                res.append(chr(int(value[i: i + 2], 16)))
         return ''.join(res)
 
     @staticmethod

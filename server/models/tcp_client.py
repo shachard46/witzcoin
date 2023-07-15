@@ -1,6 +1,6 @@
 import socket
 
-from server.models.packet import Request, Response
+from server.models.packet import Request, Response, Packet
 
 
 class TCPClient:
@@ -15,7 +15,7 @@ class TCPClient:
     def __receive_packets(self):
         packets = []
         while True:
-            packet = self.sok.recv(1024).decode()
+            packet = self.sok.recv(Packet.PACKET_SIZE).decode()
             if not packet:
                 break
             packets.append(packet)
