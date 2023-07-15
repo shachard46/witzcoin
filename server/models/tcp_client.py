@@ -19,7 +19,6 @@ class TCPClient:
             if not packet:
                 continue
             packets.append(packet)
-            print('damd4', packets)
             if not packet.endswith(Request.codes['end_packet']):
                 print(packets)
                 break
@@ -36,7 +35,4 @@ class TCPClient:
         for packet in request:
             self.sok.sendall(packet.encode())
         packets = self.__receive_packets()
-        print('damn so')
-        print(packets)
         return Response.get_response(packets)
-

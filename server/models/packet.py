@@ -4,7 +4,7 @@ from server import utils
 
 
 class Packet:
-    PACKET_SIZE = 60
+    PACKET_SIZE = 15
     codes = {
         'path': '19e5',
         'param_part': '673a',
