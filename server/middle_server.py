@@ -136,7 +136,7 @@ async def delete_command(alias: str = Path(title="the name of the command to run
 @app.post('/api/' + dictionary['commands'] + '/{alias}/' + dictionary['run'],
           dependencies=[Depends(ip_permissions), Security(get_current_user, scopes=['admin', 'user'])])
 async def run_command(alias: str, params: dict):
-    return client.send_request(f'run/{alias}', params)
+    return client.send_request(f'run/{alias}', params['params'])
 
 
 if __name__ == '__main__':

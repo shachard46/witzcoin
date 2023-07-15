@@ -1,5 +1,7 @@
 from typing import Tuple, List
 
+from server import utils
+
 
 class Packet:
     PACKET_SIZE = 60
@@ -47,7 +49,10 @@ class Packet:
         payload = []
         for packet in raw:
             payload.append(Packet.extract_line_from_raw(packet, 'param_part'))
-        return path, eval(''.join(payload))
+        try:
+            return path, eval(utils.filter_unreadable_chars(''.join(payload)))
+        except SyntaxError:
+            return path, utils.filter_unreadable_chars(''.join(payload))
 
     @staticmethod
     def encode_content(path: str, payload: dict) -> List[str]:

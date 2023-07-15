@@ -49,6 +49,8 @@ class RouteServer(TCPServer):
     def find_route(self, path: str) -> tuple[Any, Any] | tuple[None, None]:
         for route in self.routes:
             formatted_route, params = route.handle_params_in_path()
+            if not params:
+                return route, []
             params_value = formatted_route.findall(path)
             if params_value:
                 return route, params_value
