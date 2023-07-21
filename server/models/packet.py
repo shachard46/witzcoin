@@ -37,6 +37,17 @@ class Packet:
         return line
 
     @staticmethod
+    def _break_to_lines(code: str, text: str, auto_more: bool = False) -> List:
+        lines = []
+        content_size = (Packet.PACKET_SIZE - Packet.CODE_SIZE * 2) // 2
+        for start in range(0, len(text), content_size):
+            more = start + content_size < len(text) or auto_more
+            end = content_size + start if more else len(text)
+            packet_string = text[start: end]
+            lines.append(Packet._join_to_line(code, packet_string, more))
+        return lines
+
+    @staticmethod
     def _encode_value(value: str) -> str:
         return ''.join([hex(ord(c))[2:] for c in value])
 
@@ -67,16 +78,11 @@ class Packet:
     @staticmethod
     def encode_content(path: str, payload: dict) -> List[str]:
         more = True if payload else False
-        raw = [Packet._join_to_line(Packet.codes['path'], path, more)]
-        if not payload:
+        raw = Packet._break_to_lines(Packet.codes['path'], path, more)
+        if not more:
             return raw
         string_payload = str(payload)
-        content_size = (Packet.PACKET_SIZE - Packet.CODE_SIZE * 2) // 2
-        for start in range(0, len(string_payload), content_size):
-            more = start + content_size < len(string_payload)
-            end = content_size + start if more else len(string_payload)
-            packet_string = string_payload[start: end]
-            raw.append(Packet._join_to_line(Packet.codes['param_part'], packet_string, more))
+        raw.extend(Packet._break_to_lines(Packet.codes['param_part'], string_payload))
         return raw
 
 
