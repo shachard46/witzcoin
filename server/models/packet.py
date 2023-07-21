@@ -4,7 +4,7 @@ from server import utils
 
 
 class Packet:
-    PACKET_SIZE = 15
+    PACKET_SIZE = 16
     CODE_SIZE = 4
     codes = {
         'path': '19e5',
@@ -55,7 +55,7 @@ class Packet:
     def _decode_value(value: str) -> str:
         res = []
         for i in range(0, len(value) - Packet.CODE_SIZE, 2):
-            if value[i: i + 4] == '0000':
+            if value[i: i + 2] == '00':
                 break
             res.append(chr(int(value[i: i + 2], 16)))
         return ''.join(res)
