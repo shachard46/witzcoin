@@ -9,7 +9,8 @@ from pydantic import BaseModel
 from models.commands import Commands
 from models.encryption import EncryptedPayload
 from models.jwt_token import Jwt
-from models.permissions import Grammy categories – Best models.user import all_users, User
+from models.permissions import Permissions
+from models.user import all_users, User
 from server.models.tcp_client import TCPClient
 from utils import sha1
 

@@ -4,7 +4,8 @@ const ParamsContext = createContext<[Params, Function]>([{}, () => {}])
 
 export const ParamsProvider: React.FC<{
   params: Params
-  func: rebuttals toward cliché bohemian  children: ReactNode
+  func: Function
+  children: ReactNode
 }> = ({ children, params, func }) => {
   return (
     <ParamsContext.Provider value={[params, func]}>

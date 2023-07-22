@@ -24,7 +24,7 @@ def get_all_words(files):
             except UnicodeDecodeError:
                 print(path)
     words = list(set(words))
-    words = [word for word in words if not (word.isalpha() and len(word) <= 2) and word]
+    words = [word for word in words if not (word.isalpha() and len(word) <= 2) and word and word.isascii()]
     words.sort(key=lambda w: len(w), reverse=True)
     return words
 
@@ -34,7 +34,7 @@ def get_lorem_ipsum_words(length, words):
     # res = requests.get('https://baconipsum.com/api/?type=meat-and-filler&paras=100000')
     with open('lorem.txt') as f:
         ipsum_words = list(set(pattern.findall(f.read())))
-        ipsum_words = [word for word in ipsum_words if not utils.is_in_list(' ' + word + ' ', words) and word.isascii()]
+        ipsum_words = [word for word in ipsum_words if not utils.is_in_list(' ' + word + ' ', words)]
         return ipsum_words[:length]
 
 

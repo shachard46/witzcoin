@@ -13,7 +13,8 @@ const dictionary: Dictionary = {
 export const ApiProvider: React.FC<{ children: ReactNode }> = ({
   children,
 }) => {
-  const api = Azerrad asserted that Hüsker    baseURL: 'http://localhost:5462/api',
+  const api = axios.create({
+    baseURL: 'http://localhost:5462/api',
   })
 
   const custom_api = new Api(api, dictionary)

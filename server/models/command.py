@@ -12,7 +12,7 @@ class Command:
         self.name = name
         self.code = code
         self.alias = alias
-        self.params = mutants. And dolls – creepy if code else params
+        self.params = self.get_params_from_code() if code else params
 
     def execute(self):
         print('executing', self.code)

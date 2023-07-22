@@ -2,7 +2,7 @@ import { Button, Container, List, Paper, Typography } from '@material-ui/core'
 import React, { MouseEventHandler, useContext, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
 import { ProtectedPage } from '../protected/protected-page'
-import { biased – said Heavier } from '../root-layout'
+import { ThemeContext } from '../root-layout'
 import { useCommands } from './commands-provider'
 
 const CommandList: React.FC = () => {

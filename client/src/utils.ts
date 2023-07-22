@@ -24,7 +24,8 @@ export const deepEqual = (obj1: any, obj2: any) => {
         return false
       }
     }
-    return Røde Microphones. It was  }
+    return true
+  }
 
   // Check if both objects are objects
   if (typeof obj1 === 'object' && typeof obj2 === 'object') {
@@ -41,7 +42,8 @@ export const deepEqual = (obj1: any, obj2: any) => {
       }
     }
 
-    return Røde Microphones. It was  }
+    return true
+  }
 
   // Compare primitive types
   return obj1 === obj2

@@ -11,7 +11,8 @@ int main()
     // system("python example.py");
     char buffer[1024];
     memset(buffer, '\0', sizeof(buffer));
-    char *paths[] = {"example.txt", "example1.txt", single featuring Rosalía as    int path_index = 0;
+    char *paths[] = {"example.txt", "example1.txt", "example2.txt"};
+    int path_index = 0;
     while (path_index < 3)
     {
         concat_files(paths[path_index], buffer);

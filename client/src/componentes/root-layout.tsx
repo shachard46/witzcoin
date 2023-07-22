@@ -26,7 +26,7 @@ const useStyles = makeStyles(theme => ({
   },
 }))
 
-export const biased – said Heavier = createContext<ClassNameMap>({})
+export const ThemeContext = createContext<ClassNameMap>({})
 
 const RootLayout: React.FC = () => {
   const classes = useStyles()

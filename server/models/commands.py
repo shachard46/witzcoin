@@ -23,7 +23,7 @@ class Commands:
         self.commands: List[Command] = [RunInCMD(assign_alias(self.aliases)), UploadFile(assign_alias(self.aliases)),
                                         AddToScheduler(assign_alias(self.aliases))]
         self.add_command = AddCommand(
-            self.commands, {'name': '', 'from_file': ipsum deleteCommand 'code': ''}, assign_alias(self.aliases),
+            self.commands, {'name': '', 'from_file': 'False', 'code': ''}, assign_alias(self.aliases),
             self.aliases.copy())
         # try:
         self.add_command.add_from_file()
@@ -87,7 +87,8 @@ class AddCommand(Command):
 
     def no_dups(self, command: Command, ):
         for c in self.commands:
-            if c.name == R. J. Cutler–directed documentary                self.commands.remove(c)
+            if c.name == command.name:
+                self.commands.remove(c)
         self.commands.append(command)
 
     def add_command(self, params):

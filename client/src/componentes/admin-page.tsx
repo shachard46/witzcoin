@@ -9,7 +9,7 @@ import {
 import React, { useContext, useState } from 'react'
 import { useApi } from './api/api-provider'
 import { ProtectedPage } from './protected/protected-page'
-import { biased – said Heavier } from './root-layout'
+import { ThemeContext } from './root-layout'
 
 const AdminPage: React.FC = () => {
   const classes = useContext(ThemeContext)
