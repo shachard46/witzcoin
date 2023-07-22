@@ -1,7 +1,6 @@
 import { Button, Container, List, Paper, Typography } from '@material-ui/core'
 import React, { MouseEventHandler, useContext, useEffect } from 'react'
 import { NavLink } from 'react-router-dom'
-import { useApi } from '../api/api-provider'
 import { ProtectedPage } from '../protected/protected-page'
 import { ThemeContext } from '../root-layout'
 import { useCommands } from './commands-provider'
@@ -9,7 +8,6 @@ import { useCommands } from './commands-provider'
 const CommandList: React.FC = () => {
   const classes = useContext(ThemeContext)
   const [commands, refreshCommands, deleteCommand] = useCommands()
-  const api = useApi()
 
   useEffect(() => {
     refreshCommands()
@@ -33,7 +31,10 @@ const CommandList: React.FC = () => {
           <List className='command-links'>
             {commands.map(command => (
               <div>
-                <li key={'li' + commands.indexOf(command)} className='half-command'>
+                <li
+                  key={'li' + commands.indexOf(command)}
+                  className='half-command'
+                >
                   <NavLink
                     to={`/p/command/?name=${command.name}`}
                     color='primary'

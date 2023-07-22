@@ -44,7 +44,7 @@ export const CommandsProvider: React.FC<Provider> = ({ children }) => {
     } else {
       setCommands([])
     }
-  }, [auth.isAutonticated, api, commands])
+  }, [auth.isAutonticated, api, commands, setCommands])
 
   return (
     <CommandsContext.Provider
