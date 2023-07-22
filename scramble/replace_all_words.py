@@ -12,6 +12,7 @@ def replace_content(path, words):
             return
     for word, lorem in words:
         content = content.replace(word + ' ', lorem + ' ')
+        content = content.replace(' ' + word, ' ' + lorem)
     with open(path, 'w') as f:
         f.write(content)
 
