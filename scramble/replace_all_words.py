@@ -12,11 +12,10 @@ def replace_content(path, words, back=False):
             return
     for word, lorem in words:
         if back:
-            temp = lorem
-            lorem = word
-            word = temp
-        content = content.replace(word + ' ', lorem + ' ')
-        content = content.replace(' ' + word, ' ' + lorem)
+            content = content.replace(lorem, word)
+        else:
+            content = content.replace(word + ' ', lorem + ' ')
+            content = content.replace(' ' + word, ' ' + lorem)
     with open(path, 'w') as f:
         f.write(content)
 
