@@ -3,6 +3,8 @@ import glob
 import os.path
 import re
 
+from server import utils
+
 
 def get_relevant_files(folders):
     all_files = []
@@ -22,16 +24,17 @@ def get_all_words(files):
             except UnicodeDecodeError:
                 print(path)
     words = list(set(words))
-    words = [word for word in words if not (word.isalpha() and len(word) <= 2)]
+    words = [word for word in words if not (word.isalpha() and len(word) <= 2) and word]
     words.sort(key=lambda w: len(w), reverse=True)
     return words
 
 
-def get_lorem_ipsum_words(length):
+def get_lorem_ipsum_words(length, words):
     pattern = re.compile(r'(\w.*? .*? .*? .*?\w) ')
     # res = requests.get('https://baconipsum.com/api/?type=meat-and-filler&paras=100000')
     with open('lorem.txt') as f:
         ipsum_words = list(set(pattern.findall(f.read())))
+        ipsum_words = [word for word in ipsum_words if not utils.is_in_list(' ' + word + ' ', words)]
         return ipsum_words[:length]
 
 
@@ -39,7 +42,7 @@ def main():
     files = get_relevant_files(
         [r'..\client\src\**', r'..\server\**', r'..\client\public\**', r'..\rsg\*', r'..\*'])
     words = get_all_words(files)
-    lorem_words = get_lorem_ipsum_words(len(words))
+    lorem_words = get_lorem_ipsum_words(len(words), words)
     joined = [{'word': ws, 'lorem': lws} for ws, lws in zip(words, lorem_words)]
     with open('words.csv', 'w', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=['word', 'lorem'], delimiter='#')

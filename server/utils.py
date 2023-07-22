@@ -10,3 +10,10 @@ def sha1(string):
 def filter_unreadable_chars(text: str):
     filtered_text = ''.join(c for c in text if c.isprintable())
     return filtered_text
+
+
+def is_in_list(text, lst: list):
+    for item in lst:
+        if item in text or item.strip() == text.strip():
+            return True
+    return False

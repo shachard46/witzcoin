@@ -12,6 +12,8 @@ def replace_content(path, words, back=False):
             return
     for word, lorem in words:
         if back:
+            if 'Than Ever, The World' in lorem:
+                a = 0
             content = content.replace(lorem, word)
         else:
             content = content.replace(word + ' ', lorem + ' ')
