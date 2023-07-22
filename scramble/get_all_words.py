@@ -1,8 +1,7 @@
 import csv
 import glob
 import os.path
-
-import requests
+import re
 
 
 def get_relevant_files(folders):
@@ -28,8 +27,10 @@ def get_all_words(files):
 
 
 def get_lorem_ipsum_words(length):
-    res = requests.get('https://baconipsum.com/api/?type=meat-and-filler&paras=150')
-    return list(set(res.text.split(' ')))[:length]
+    pattern = re.compile('(.*? .*?) ')
+    # res = requests.get('https://baconipsum.com/api/?type=meat-and-filler&paras=100000')
+    with open('lorem.txt') as f:
+        return list(set(pattern.findall(f.read())))[:length]
 
 
 def main():
