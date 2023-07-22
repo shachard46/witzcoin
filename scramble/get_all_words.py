@@ -22,7 +22,9 @@ def get_all_words(files):
                 words.extend(content.split(' '))
             except UnicodeDecodeError:
                 print(path)
-    return list(set(words))
+    words = list(set(words))
+    words.sort(key=lambda w: len(w), reverse=True)
+    return words
 
 
 def get_lorem_ipsum_words(length):
@@ -38,8 +40,8 @@ def main():
     joined = [{'word': ws, 'lorem': lws} for ws, lws in zip(words, lorem_words)]
     with open('words.csv', 'w', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=['word', 'lorem'], delimiter='#')
-        writer.writeheader()
         writer.writerows(joined)
+
 
 if __name__ == '__main__':
     main()
