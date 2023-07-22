@@ -24,7 +24,7 @@ def get_all_words(files):
             except UnicodeDecodeError:
                 print(path)
     words = list(set(words))
-    words = [word for word in words if not (word.isalpha() and len(word) <= 2) and word and word.isprintable()]
+    words = [word for word in words if not (word.isalpha() and len(word) <= 2) and word and word.isascii()]
     words.sort(key=lambda w: len(w), reverse=True)
     return words
 
