@@ -38,6 +38,7 @@ def main():
     joined = [{'word': ws, 'lorem': lws} for ws, lws in zip(words, lorem_words)]
     with open('words.csv', 'w', encoding='utf-8') as f:
         writer = csv.DictWriter(f, fieldnames=['word', 'lorem'], delimiter='#')
+        writer.writeheader()
         writer.writerows(joined)
 
 
