@@ -5,7 +5,11 @@ from get_all_words import get_relevant_files
 
 def replace_content(path, words):
     with open(path) as f:
-        content = f.read()
+        try:
+            content = f.read()
+        except UnicodeDecodeError:
+            print(path)
+            return
     for word, lorem in words:
         content = content.replace(word, lorem)
     with open(path, 'w') as f:
