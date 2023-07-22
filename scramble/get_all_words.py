@@ -41,5 +41,5 @@ def main():
         writer.writeheader()
         writer.writerows(joined)
 
-
-main()
+if __name__ == '__main__':
+    main()

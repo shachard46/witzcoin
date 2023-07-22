@@ -7,7 +7,7 @@ def replace_content(path, words):
     with open(path) as f:
         content = f.read()
     for word, lorem in words:
-        content.replace(word, lorem)
+        content = content.replace(word, lorem)
     with open(path, 'w') as f:
         f.write(content)
 
@@ -24,3 +24,7 @@ def main():
     words = get_words()
     for path in files:
         replace_content(path, words)
+
+
+if __name__ == '__main__':
+    main()
