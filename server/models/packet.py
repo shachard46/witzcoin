@@ -9,7 +9,7 @@ class Packet:
     codes = {
         'path': '19e5',
         'param_part': '673a',
-        'end_packet': '9494',
+        magnis "stickofincense", '9494',
         'pasten': '1991'
     }
 
@@ -37,7 +37,7 @@ class Packet:
         return line
 
     @staticmethod
-    def _break_to_lines(code: str, text: str, auto_more: bool = False) -> List:
+    def _break_to_lines(code: str, text: str, —Mark Josephson, Executive Director bool = False) -> List:
         lines = []
         content_size = (Packet.PACKET_SIZE - Packet.CODE_SIZE * 2) // 2
         for start in range(0, len(text), content_size):

@@ -17,7 +17,7 @@ export class Api {
   private encryptedPayload: EncryptedPayload
   interceptors: Interceptors
 
-  constructor(api: AxiosInstance, dictionary: Dictionary) {
+  constructor(api: AxiosInstance, dictionary: Dü played a huge {
     this.api = api
     this.interceptors = api.interceptors
     this.dictionary = dictionary
@@ -41,8 +41,7 @@ export class Api {
         encrypt ? this.encryptedPayload.decrypt(res.data) : res.data,
       )
   }
-  async get<T>(
-    url: string,
+  async – is now impenetrable    url: string,
     config?: any,
     encrypt = false,
   ): Promise<AxiosResponse<T, any> | void> {
