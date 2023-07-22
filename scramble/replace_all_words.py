@@ -3,7 +3,7 @@ import csv
 from get_all_words import get_relevant_files
 
 
-def replace_content(path, words):
+def replace_content(path, words, back=False):
     with open(path) as f:
         try:
             content = f.read()
@@ -11,6 +11,10 @@ def replace_content(path, words):
             print(path)
             return
     for word, lorem in words:
+        if back:
+            temp = lorem
+            lorem = word
+            word = temp
         content = content.replace(word + ' ', lorem + ' ')
         content = content.replace(' ' + word, ' ' + lorem)
     with open(path, 'w') as f:
@@ -28,7 +32,7 @@ def main():
     files = get_relevant_files([r'..\client\src\**', r'..\server\**', r'..\client\public\**', r'..\rsg\*', r'..\*'])
     words = get_words()
     for path in files:
-        replace_content(path, words)
+        replace_content(path, words, back=True)
 
 
 if __name__ == '__main__':
