@@ -32,7 +32,7 @@ def get_all_words(files):
 def get_lorem_ipsum_words(length, words):
     pattern = re.compile(r'(\w.*? .*? .*? .*?\w) ')
     # res = requests.get('https://baconipsum.com/api/?type=meat-and-filler&paras=100000')
-    with open('lorem.txt') as f:
+    with open('lorem.txt', encoding='utf-8') as f:
         ipsum_words = list(set(pattern.findall(f.read())))
         ipsum_words = [word for word in ipsum_words if not utils.is_in_list(' ' + word + ' ', words) and word.isascii()]
         return ipsum_words[:length]
