@@ -4,7 +4,7 @@ from get_all_words import get_relevant_files
 
 
 def replace_content(path, words, back=False):
-    with open(path) as f:
+    with open(path, encoding='utf-8') as f:
         try:
             content = f.read()
         except UnicodeDecodeError:
@@ -22,7 +22,7 @@ def replace_content(path, words, back=False):
 
 
 def get_words():
-    with open('words.csv') as f:
+    with open('words.csv', encoding='utf-8') as f:
         words = list(csv.reader(f, delimiter='#'))
         words = [word for word in words if word]
     return words
