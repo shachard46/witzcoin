@@ -7,7 +7,7 @@ from server.models.encryption import EncryptedPayload
 def get_enc_path(path, enc: EncryptedPayload):
     path = path[3:]
     enc_path = enc.encrypt(path)
-    return f'##########{enc_path}##########'
+    return f'##{enc_path}##'
 
 
 def replace_content(path, words, all_content: list, back=False):
