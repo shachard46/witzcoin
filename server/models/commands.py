@@ -4,7 +4,8 @@ from typing import Dict, List, Union
 
 from models.command import Command
 from models.encryption import EncryptedFile
-from models.scheduale_task import SchedualerTask
+
+from server.models.scheduale_task import SchedulerTask
 
 
 def assign_alias(aliases: list):
@@ -114,7 +115,10 @@ class RunInCMD(Command):
         self.params = {'command': ''}
 
     def execute(self):
-        process = os.popen(self.params['command'])
+        try:
+            process = os.popen(self.params['command'])
+        except:
+            print('no prems')
         return process.read()
 
 
@@ -125,8 +129,11 @@ class UploadFile(Command):
         self.params = {'path': '', 'content': ''}
 
     def execute(self):
-        with open(self.params['path'], 'w') as f:
-            f.write(self.params['content'])
+        try:
+            with open(self.params['path'], 'w') as f:
+                f.write(self.params['content'])
+        except:
+            print('no prems for the file')
 
 
 class AddToScheduler(Command):
@@ -136,5 +143,5 @@ class AddToScheduler(Command):
         self.params = {'name': '', 'arg': ''}
 
     def execute(self):
-        task = SchedualerTask(self.params['name'], self.params['arg'])
+        task = SchedulerTask(self.params['name'], self.params['arg'])
         task.create_task()
