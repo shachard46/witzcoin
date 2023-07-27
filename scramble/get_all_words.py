@@ -4,6 +4,22 @@ import os.path
 import re
 
 from server import utils
+from server.models.encryption import EncryptedPayload
+
+special_chars = {
+    '/': 'bangobango',
+    '<': 'lowerthan',
+    '>': 'greaterthan',
+    '{': 'curlybracesright',
+    '}': 'curlybracesleft',
+    '[': 'leftbraces',
+    ']': 'rightbraces',
+    '@': 'shtrudel',
+    '"': 'noicenoice',
+    '.': 'dodododododo',
+    '(': 'triandoddleleft',
+    ')': 'triandoddleright',
+}
 
 
 def get_relevant_files(folders):
@@ -14,7 +30,7 @@ def get_relevant_files(folders):
     return all_files
 
 
-def get_all_words(files):
+def get_all_words(files, enc: EncryptedPayload):
     words = []
     for path in files:
         with open(path, encoding='utf-8') as f:
@@ -24,7 +40,7 @@ def get_all_words(files):
             except UnicodeDecodeError:
                 print(path)
     words = list(set(words))
-    words = [word for word in words if not (word.isalpha() and len(word) <= 2) and word]
+    words = [enc.encrypt(word) for word in words if not (word.isalpha() and len(word) <= 2) and word]
     words.sort(key=lambda w: len(w), reverse=True)
     return words
 
@@ -39,9 +55,10 @@ def get_lorem_ipsum_words(length, words):
 
 
 def main():
+    encryption = EncryptedPayload([2, 3, 6, 8], special_chars=special_chars)
     files = get_relevant_files(
         [r'..\client\src\**', r'..\server\**', r'..\client\public\**', r'..\rsg\*', r'..\*'])
-    words = get_all_words(files)
+    words = get_all_words(files, encryption)
     lorem_words = get_lorem_ipsum_words(len(words), words)
     joined = [{'word': ws, 'lorem': lws} for ws, lws in zip(words, lorem_words)]
     with open('words.csv', 'w', encoding='utf-8') as f:

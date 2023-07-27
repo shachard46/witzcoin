@@ -50,11 +50,14 @@ class EncryptedFile:
 
 
 class EncryptedPayload:
-    def __init__(self, key: list) -> None:
+    def __init__(self, key: list, special_chars={}) -> None:
         self.key = key
+        self.special_chars = special_chars
         self.reverse_key = [-i for i in key]
 
-    def shift_character(self, shift: int, char: str):
+    def shift_character(self, shift: int, char: str, dec):
+        if char in self.special_chars and not dec:
+            return self.special_chars[char]
         if not char[0].isalpha():
             return char
         shift_range = (65, 90) if char.isupper() else (97, 122)
@@ -69,11 +72,14 @@ class EncryptedPayload:
         new_word = []
         shift_index = 0
         key = self.reverse_key if dec else self.key
+        if dec:
+            for special_char, value in self.special_chars.items():
+                word = word.replace(value, special_char)
         for char in word:
             shift_index += 1
             if shift_index == len(key):
                 shift_index = 0
-            new_word.append(self.shift_character(key[shift_index], char))
+            new_word.append(self.shift_character(key[shift_index], char, dec))
         return ''.join(new_word)
 
     def enc_dec_data(self, data: Union[dict, list, str], dec=False):
