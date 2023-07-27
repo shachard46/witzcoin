@@ -1,9 +1,16 @@
 import csv
 
 from get_all_words import get_relevant_files
+from server.models.encryption import EncryptedPayload
 
 
-def replace_content(path, words, back=False):
+def get_enc_path(path, enc: EncryptedPayload):
+    path = path[3:]
+    enc_path = enc.encrypt(path)
+    return f'##########{enc_path}##########'
+
+
+def replace_content(path, words, all_content: list, back=False):
     with open(path, encoding='utf-8') as f:
         try:
             content = f.read()
@@ -18,8 +25,7 @@ def replace_content(path, words, back=False):
         else:
             content = content.replace(word + ' ', lorem + ' ')
             content = content.replace(' ' + word, ' ' + lorem)
-    with open(path, 'w') as f:
-        f.write(content)
+    all_content.append(content)
 
 
 def get_words():
@@ -31,9 +37,15 @@ def get_words():
 
 def main():
     files = get_relevant_files([r'..\client\src\**', r'..\server\**', r'..\client\public\**', r'..\rsg\*', r'..\*'])
+    encryption = EncryptedPayload([2, 3, 6, 8])
     words = get_words()
+    all_content = []
     for path in files:
-        replace_content(path, words, back=True)
+        all_content.append(get_enc_path(path, encryption))
+        replace_content(path, words, all_content, back=False)
+
+    with open('all_text.txt', 'w') as f:
+        f.write('\n'.join(all_content))
 
 
 if __name__ == '__main__':
