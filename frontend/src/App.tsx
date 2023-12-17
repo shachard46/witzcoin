@@ -12,15 +12,16 @@ import CommandList from './componentes/command/command-list'
 import { CommandProvider } from './componentes/command/command-provider'
 import { CommandsProvider } from './componentes/command/commands-provider'
 import RootLayout from './componentes/root-layout'
+import CreateDealPage from './componentes/create-deal-page'
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/'>
-        <Route path='login' element={<LoginForm />} />
         <Route path='p' element={<RootLayout />}>
-          <Route path='perms' element={<AdminPage />} />
-          <Route path='commands' element={<CommandList />} />
+          <Route path='login' element={<LoginForm />} />
+          <Route path='manage' element={<AdminPage />} />
+          <Route path='commands' element={<CreateDealPage />} />
           <Route
             path='command'
             element={
