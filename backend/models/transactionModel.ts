@@ -1,5 +1,11 @@
 import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm'
 
+export enum Approver {
+  BUYER = 1,
+  SELLER = 2,
+  WITNESS = 4,
+}
+
 @Entity()
 export class Transaction {
   @PrimaryGeneratedColumn()
@@ -23,6 +29,9 @@ export class Transaction {
   @Column()
   details: string
 
+  @Column()
+  status: number
+
   constructor(
     transactionName: string,
     buyerUserName: string,
@@ -30,6 +39,7 @@ export class Transaction {
     witnessUserName: string,
     category: string,
     details: string,
+    status: number,
   ) {
     this.transactionName = transactionName
     this.buyerUserName = buyerUserName
@@ -37,5 +47,6 @@ export class Transaction {
     this.witnessUserName = witnessUserName
     this.category = category
     this.details = details
+    this.status = status
   }
 }
