@@ -4,7 +4,7 @@ import { User } from '../models/userModel'
 export class UserService {
   connection: DataSource
   repository: Repository<User>
-  constructor(username: string, password: string, balance: number = 0) {
+  constructor() {
     this.connection = new DataSource({
       type: 'mysql',
       host: 'localhost',

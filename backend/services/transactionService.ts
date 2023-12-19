@@ -1,12 +1,12 @@
-import { DataSource, LessThan, Repository } from 'typeorm'
+import { DataSource, Repository } from 'typeorm'
 import { breakToBase2 } from '../../utils'
 import { Approver, Transaction } from '../models/transactionModel'
 import { User } from '../models/userModel'
 
-export class UserService {
+export class TransactionService {
   connection: DataSource
   repository: Repository<Transaction>
-  constructor(username: string, password: string, balance: number = 0) {
+  constructor() {
     this.connection = new DataSource({
       type: 'mysql',
       host: 'localhost',
@@ -25,27 +25,27 @@ export class UserService {
     return trans
   }
   async getTransactionById(id: number): Promise<Transaction | null> {
-    return this.repository.findOne({ where: { id: id } })
+    return await this.repository.findOne({ where: { id: id } })
   }
 
   async getAllTransnactions(): Promise<Transaction[]> {
-    return this.repository.find()
+    return await this.repository.find()
   }
 
   async getTransactionsWaintingForApproval(): Promise<Transaction[]> {
-    return this.repository.find({
+    return await this.repository.find({
       where: {
-        status: LessThan(Approver.BUYER + Approver.SELLER + Approver.WITNESS),
+        status: Approver.BUYER + Approver.SELLER + Approver.WITNESS,
       },
     })
   }
   // TODO: define relations between transaction and users
-  async getUsersWaitingByTransactionId(id: number): Promise<string[]> {
+  async getUsersWaitingByTransactionId(id: number): Promise<User[]> {
     const trans = await this.getTransactionById(id)
     if (!trans) {
       return []
     }
-    const approvers: string[] = []
+    const approvers: User[] = []
     const approver_codes = breakToBase2(trans.status)
     approver_codes.forEach(approver => {
       switch (approver) {
@@ -64,9 +64,22 @@ export class UserService {
     })
     return approvers
   }
-  async changeTransactionStatus(id: number): Promise<boolean> {
-    return this.repository.exist({
-      where: { username: username, password: password },
-    })
+
+  async getUserRoleInTransaction(
+    id: number,
+    user: User,
+  ): Promise<Approver | null> {
+    const transaction = await this.getTransactionById(id)
+    if (transaction?.buyerUserName === user) return Approver.BUYER
+    if (transaction?.sellerUserName === user) return Approver.SELLER
+    if (transaction?.witnessUserName === user) return Approver.WITNESS
+    return null
+  }
+
+  async updateTransactionStatus(id: number, user: User): Promise<boolean> {
+    const role = this.getUserRoleInTransaction(id, user)
+    if (!role) return false
+    this.repository.update(id, { status: () => `status - ${role}` })
+    return true
   }
 }
