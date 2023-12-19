@@ -50,13 +50,13 @@ export class TransactionService {
     approver_codes.forEach(approver => {
       switch (approver) {
         case Approver.BUYER:
-          approvers.push(trans.buyerUserName)
+          approvers.push(trans.buyerUser)
           break
         case Approver.SELLER:
-          approvers.push(trans.sellerUserName)
+          approvers.push(trans.sellerUser)
           break
         case Approver.WITNESS:
-          approvers.push(trans.witnessUserName)
+          approvers.push(trans.witnessUser)
           break
         default:
           break
@@ -70,9 +70,9 @@ export class TransactionService {
     user: User,
   ): Promise<Approver | null> {
     const transaction = await this.getTransactionById(id)
-    if (transaction?.buyerUserName === user) return Approver.BUYER
-    if (transaction?.sellerUserName === user) return Approver.SELLER
-    if (transaction?.witnessUserName === user) return Approver.WITNESS
+    if (transaction?.buyerUser === user) return Approver.BUYER
+    if (transaction?.sellerUser === user) return Approver.SELLER
+    if (transaction?.witnessUser === user) return Approver.WITNESS
     return null
   }
 

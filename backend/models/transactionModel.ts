@@ -1,4 +1,4 @@
-import { Column, Entity, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm'
 import { User } from './userModel'
 
 export enum Approver {
@@ -15,14 +15,17 @@ export class Transaction {
   @Column()
   transactionName: string
 
-  @ManyToOne(type => User, user => user.bought)
-  buyerUserName: User
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'buyerUserId' })
+  buyerUser: User
 
-  @ManyToOne(type => User, user => user.sold)
-  sellerUserName: User
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'sellerUserId' })
+  sellerUser: User
 
-  @ManyToOne(type => User, user => user.witnessed)
-  witnessUserName: User
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'witnessUserId' })
+  witnessUser: User
 
   @Column()
   category: string
@@ -35,17 +38,17 @@ export class Transaction {
 
   constructor(
     transactionName: string,
-    buyerUserName: User,
-    sellerUserName: User,
-    witnessUserName: User,
+    buyerUser: User,
+    sellerUser: User,
+    witnessUser: User,
     category: string,
     details: string,
     status: number,
   ) {
     this.transactionName = transactionName
-    this.buyerUserName = buyerUserName
-    this.sellerUserName = sellerUserName
-    this.witnessUserName = witnessUserName
+    this.buyerUser = buyerUser
+    this.sellerUser = sellerUser
+    this.witnessUser = witnessUser
     this.category = category
     this.details = details
     this.status = status
