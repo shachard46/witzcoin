@@ -4,6 +4,7 @@ import {
   OnGatewayConnection,
   OnGatewayDisconnect,
   SubscribeMessage,
+  MessageBody,
 } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
 import { User } from 'src/interfaces/user.interface'
@@ -25,10 +26,7 @@ export class ApproveTransactionGateway
     this.server.emit('connection', 'A client has disconnected.')
   }
   @SubscribeMessage('new_transaction')
-  SendNewApprovingUsers(
-    client: Socket,
-    payload: { id: number },
-  ): Promise<User[]> {
-    return this.transactionService.getUsersWaitingByTransactionId(payload.id)
+  SendNewApprovingUsers(@MessageBody() id: number): Promise<User[]> {
+    return this.transactionService.getUsersWaitingByTransactionId(id)
   }
 }
