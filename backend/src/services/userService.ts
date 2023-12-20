@@ -1,6 +1,8 @@
 import { DataSource, Repository } from 'typeorm';
 import { User } from '../models/userModel';
+import { Injectable } from '@nestjs/common';
 
+@Injectable()
 export class UserService {
   connection: DataSource;
   repository: Repository<User>;
