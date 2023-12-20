@@ -1,7 +1,7 @@
 import { DataSource, Repository } from 'typeorm'
 import { breakToBase2 } from '../../../utils'
-import { Approver, Transaction } from '../interfaces/transactionInterface'
-import { User } from '../interfaces/userInterface'
+import { Approver, Transaction } from '../interfaces/transaction.interface'
+import { User } from '../interfaces/user.interface'
 
 export class TransactionService {
   connection: DataSource

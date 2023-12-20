@@ -1,6 +1,6 @@
 import { Request, Response } from 'express'
-import { User } from '../interfaces/userInterface'
-import { UserService } from '../services/userService'
+import { User } from '../interfaces/user.interface'
+import { UserService } from '../services/user.service'
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 
 @Controller('/api/users')
