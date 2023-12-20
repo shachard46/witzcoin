@@ -1,5 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
-import { Transaction } from './transactionModel'
+import { Transaction } from './transactionInterface'
 
 @Entity()
 export class User {
@@ -12,12 +12,7 @@ export class User {
   @Column()
   balance: number
 
-
-  constructor(
-    username: string,
-    password: string,
-    balance: number = 0
-  ) {
+  constructor(username: string, password: string, balance: number = 0) {
     this.username = username
     this.password = password
     this.balance = balance

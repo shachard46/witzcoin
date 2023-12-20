@@ -1,11 +1,11 @@
-import { DataSource, Repository } from 'typeorm';
-import { breakToBase2 } from '../../../utils';
-import { Approver, Transaction } from '../models/transactionModel';
-import { User } from '../models/userModel';
+import { DataSource, Repository } from 'typeorm'
+import { breakToBase2 } from '../../../utils'
+import { Approver, Transaction } from '../interfaces/transactionInterface'
+import { User } from '../interfaces/userInterface'
 
 export class TransactionService {
-  connection: DataSource;
-  repository: Repository<Transaction>;
+  connection: DataSource
+  repository: Repository<Transaction>
   constructor() {
     this.connection = new DataSource({
       type: 'mysql',
@@ -17,19 +17,19 @@ export class TransactionService {
       synchronize: true,
       logging: true,
       entities: [Transaction],
-    });
-    this.repository = this.connection.getRepository(Transaction);
+    })
+    this.repository = this.connection.getRepository(Transaction)
   }
   async createTransaction(trans: Transaction): Promise<Transaction> {
-    await this.repository.save(trans);
-    return trans;
+    await this.repository.save(trans)
+    return trans
   }
   async getTransactionById(id: number): Promise<Transaction | null> {
-    return await this.repository.findOne({ where: { id: id } });
+    return await this.repository.findOne({ where: { id: id } })
   }
 
   async getAllTransactions(): Promise<Transaction[]> {
-    return await this.repository.find();
+    return await this.repository.find()
   }
 
   async getTransactionsWaintingForApproval(): Promise<Transaction[]> {
@@ -37,49 +37,49 @@ export class TransactionService {
       where: {
         status: Approver.BUYER + Approver.SELLER + Approver.WITNESS,
       },
-    });
+    })
   }
   // TODO: define relations between transaction and users
   async getUsersWaitingByTransactionId(id: number): Promise<User[]> {
-    const trans = await this.getTransactionById(id);
+    const trans = await this.getTransactionById(id)
     if (!trans) {
-      return [];
+      return []
     }
-    const approvers: User[] = [];
-    const approver_codes = breakToBase2(trans.status);
-    approver_codes.forEach((approver) => {
+    const approvers: User[] = []
+    const approver_codes = breakToBase2(trans.status)
+    approver_codes.forEach(approver => {
       switch (approver) {
         case Approver.BUYER:
-          approvers.push(trans.buyerUser);
-          break;
+          approvers.push(trans.buyerUser)
+          break
         case Approver.SELLER:
-          approvers.push(trans.sellerUser);
-          break;
+          approvers.push(trans.sellerUser)
+          break
         case Approver.WITNESS:
-          approvers.push(trans.witnessUser);
-          break;
+          approvers.push(trans.witnessUser)
+          break
         default:
-          break;
+          break
       }
-    });
-    return approvers;
+    })
+    return approvers
   }
 
   async getUserRoleInTransaction(
     id: number,
     user: User,
   ): Promise<Approver | null> {
-    const transaction = await this.getTransactionById(id);
-    if (transaction?.buyerUser === user) return Approver.BUYER;
-    if (transaction?.sellerUser === user) return Approver.SELLER;
-    if (transaction?.witnessUser === user) return Approver.WITNESS;
-    return null;
+    const transaction = await this.getTransactionById(id)
+    if (transaction?.buyerUser === user) return Approver.BUYER
+    if (transaction?.sellerUser === user) return Approver.SELLER
+    if (transaction?.witnessUser === user) return Approver.WITNESS
+    return null
   }
 
   async updateTransactionStatus(id: number, user: User): Promise<boolean> {
-    const role = this.getUserRoleInTransaction(id, user);
-    if (!role) return false;
-    this.repository.update(id, { status: () => `status - ${role}` });
-    return true;
+    const role = this.getUserRoleInTransaction(id, user)
+    if (!role) return false
+    this.repository.update(id, { status: () => `status - ${role}` })
+    return true
   }
 }

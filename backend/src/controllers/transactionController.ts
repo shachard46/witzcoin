@@ -1,8 +1,8 @@
 import { Request, Response } from 'express'
-import { Transaction } from '../models/transactionModel'
+import { Transaction } from '../interfaces/transactionInterface'
 import { TransactionService } from '../services/transactionService'
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
-import { User } from '../models/userModel'
+import { User } from '../interfaces/userInterface'
 
 @Controller('/api/transactions')
 export class TransactionController {

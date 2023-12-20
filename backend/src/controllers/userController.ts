@@ -1,5 +1,5 @@
 import { Request, Response } from 'express'
-import { User } from '../models/userModel'
+import { User } from '../interfaces/userInterface'
 import { UserService } from '../services/userService'
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 
