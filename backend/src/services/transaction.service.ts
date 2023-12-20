@@ -1,5 +1,5 @@
 import { DataSource, Repository } from 'typeorm'
-import { breakToBase2 } from '../../../utils'
+import { breakToBase2 } from '../utils'
 import { Approver, Transaction } from '../interfaces/transaction.interface'
 import { User } from '../interfaces/user.interface'
 

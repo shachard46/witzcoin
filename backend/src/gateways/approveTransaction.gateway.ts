@@ -7,8 +7,8 @@ import {
   MessageBody,
 } from '@nestjs/websockets'
 import { Server, Socket } from 'socket.io'
-import { User } from 'src/interfaces/user.interface'
-import { TransactionService } from 'src/services/transaction.service'
+import { User } from '../interfaces/user.interface'
+import { TransactionService } from '../services/transaction.service'
 
 @WebSocketGateway()
 export class ApproveTransactionGateway
