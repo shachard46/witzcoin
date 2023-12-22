@@ -4,17 +4,25 @@ import { AuthController } from 'auth/auth.controller'
 import { AuthService } from 'auth/auth.service'
 import { JwtModule } from '@nestjs/jwt'
 import { jwtConstants } from 'backend-constants'
+import { APP_GUARD } from '@nestjs/core'
+import { AuthGuard } from './auth.guard'
 
 @Module({
   imports: [
-    UserModule,
     JwtModule.register({
       global: true,
       secret: jwtConstants.secret,
-      signOptions: { expiresIn: '60s' },
+      signOptions: { expiresIn: '10m' },
     }),
+    UserModule,
   ],
   controllers: [AuthController],
-  providers: [AuthService],
+  providers: [
+    AuthService,
+    {
+      provide: APP_GUARD,
+      useClass: AuthGuard,
+    },
+  ],
 })
 export class AuthModule {}

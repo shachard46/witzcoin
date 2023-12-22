@@ -1,4 +1,5 @@
 import { SetMetadata } from '@nestjs/common'
+
 export const breakToBase2 = (num: number): number[] => {
   const powers: number[] = []
   let max = 1
@@ -14,5 +15,3 @@ export const breakToBase2 = (num: number): number[] => {
   return powers
 }
 
-export const IS_PUBLIC_KEY = 'isPublic'
-export const Public = () => SetMetadata(IS_PUBLIC_KEY, true)

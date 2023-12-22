@@ -1,5 +1,6 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
 import { Transaction } from 'transaction/transaction.interface'
+import { Role } from 'auth/auth.interfaces'
 
 @Entity()
 export class User {
@@ -12,14 +13,23 @@ export class User {
   @Column()
   balance: number
 
-  constructor(username: string, password: string, balance: number = 0) {
+  @Column()
+  role: Role
+  constructor(
+    username: string,
+    password: string,
+    balance: number = 0,
+    role: Role,
+  ) {
     this.username = username
     this.password = password
     this.balance = balance
+    this.role = role
   }
 }
 
 export class AuthUserDto {
   username: string
   password: string
+  role: Role
 }

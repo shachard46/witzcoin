@@ -4,13 +4,13 @@ import { Injectable, UnauthorizedException } from '@nestjs/common'
 import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
 import { Transaction } from 'transaction/transaction.interface'
 import { JwtService } from '@nestjs/jwt'
+import { log } from 'console'
 
 @Injectable()
 export class AuthService {
   connection: DataSource
   repository: Repository<User>
-  jwtService: JwtService
-  constructor() {
+  constructor(private jwtService: JwtService) {
     this.initializeDatabaseConnection()
   }
   private async initializeDatabaseConnection(): Promise<void> {
@@ -34,7 +34,10 @@ export class AuthService {
       where: { username: user.username, password: user.password },
     })
     if (!authorized) return new UnauthorizedException()
-    const payload = { sub: user.username, username: user.username }
+    const payload = {
+      sub: { username: user.username, role: user.role },
+      username: user.username,
+    }
     return {
       access_token: await this.jwtService.signAsync(payload),
     }
