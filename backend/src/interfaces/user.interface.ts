@@ -18,3 +18,8 @@ export class User {
     this.balance = balance
   }
 }
+
+export class AuthUserDto {
+  username: string
+  password: string
+}

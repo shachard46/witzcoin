@@ -9,7 +9,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
     if (typeof Reflect === "object" && typeof Reflect.metadata === "function") return Reflect.metadata(k, v);
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.User = void 0;
+exports.AuthUserDto = exports.User = void 0;
 const typeorm_1 = require("typeorm");
 let User = class User {
     constructor(username, password, balance = 0) {
@@ -35,4 +35,7 @@ exports.User = User = __decorate([
     (0, typeorm_1.Entity)(),
     __metadata("design:paramtypes", [String, String, Number])
 ], User);
+class AuthUserDto {
+}
+exports.AuthUserDto = AuthUserDto;
 //# sourceMappingURL=user.interface.js.map
