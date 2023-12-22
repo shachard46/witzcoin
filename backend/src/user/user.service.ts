@@ -37,10 +37,4 @@ export class UserService {
   async getAllUsers(): Promise<User[]> {
     return await this.repository.find()
   }
-
-  async auth(username: string, password: string): Promise<boolean> {
-    return await this.repository.exist({
-      where: { username: username, password: password },
-    })
-  }
 }

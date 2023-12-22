@@ -21,7 +21,4 @@ export class UserController {
   async getAllUsers(): Promise<User[]> {
     return await this.userService.getAllUsers()
   }
-  async auth(req: Request, res: Response): Promise<void> {
-    res.json(await this.userService.auth(req.body.username, req.body.password))
-  }
 }
