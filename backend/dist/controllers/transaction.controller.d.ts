@@ -5,8 +5,8 @@ export declare class TransactionController {
     private transactionService;
     constructor(transactionService: TransactionService);
     createTransaction(trans: Transaction): Promise<Transaction>;
-    getTransactionById(id: number): Promise<Transaction | null>;
-    getAllTransactions(): Promise<Transaction[]>;
     getTransactionsWaintingForApproval(): Promise<Transaction[]>;
     getUsersWaitingByTransactionId(id: number): Promise<User[]>;
+    getTransactionById(id: number): Promise<Transaction | null>;
+    getAllTransactions(): Promise<Transaction[]>;
 }

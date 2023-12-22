@@ -24,17 +24,17 @@ let TransactionController = class TransactionController {
         const newTrans = trans;
         return await this.transactionService.createTransaction(trans);
     }
-    async getTransactionById(id) {
-        return await this.transactionService.getTransactionById(id);
-    }
-    async getAllTransactions() {
-        return await this.transactionService.getAllTransactions();
-    }
     async getTransactionsWaintingForApproval() {
         return await this.transactionService.getTransactionsWaintingForApproval();
     }
     async getUsersWaitingByTransactionId(id) {
         return await this.transactionService.getUsersWaitingByTransactionId(id);
+    }
+    async getTransactionById(id) {
+        return await this.transactionService.getTransactionById(id);
+    }
+    async getAllTransactions() {
+        return await this.transactionService.getAllTransactions();
     }
 };
 exports.TransactionController = TransactionController;
@@ -45,19 +45,6 @@ __decorate([
     __metadata("design:paramtypes", [transaction_interface_1.Transaction]),
     __metadata("design:returntype", Promise)
 ], TransactionController.prototype, "createTransaction", null);
-__decorate([
-    (0, common_1.Get)(':id'),
-    __param(0, (0, common_1.Param)('id')),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Number]),
-    __metadata("design:returntype", Promise)
-], TransactionController.prototype, "getTransactionById", null);
-__decorate([
-    (0, common_1.Get)(),
-    __metadata("design:type", Function),
-    __metadata("design:paramtypes", []),
-    __metadata("design:returntype", Promise)
-], TransactionController.prototype, "getAllTransactions", null);
 __decorate([
     (0, common_1.Get)('waiting'),
     __metadata("design:type", Function),
@@ -71,6 +58,19 @@ __decorate([
     __metadata("design:paramtypes", [Number]),
     __metadata("design:returntype", Promise)
 ], TransactionController.prototype, "getUsersWaitingByTransactionId", null);
+__decorate([
+    (0, common_1.Get)(':id'),
+    __param(0, (0, common_1.Param)('id')),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", [Number]),
+    __metadata("design:returntype", Promise)
+], TransactionController.prototype, "getTransactionById", null);
+__decorate([
+    (0, common_1.Get)(),
+    __metadata("design:type", Function),
+    __metadata("design:paramtypes", []),
+    __metadata("design:returntype", Promise)
+], TransactionController.prototype, "getAllTransactions", null);
 exports.TransactionController = TransactionController = __decorate([
     (0, common_1.Controller)('/api/transactions'),
     __metadata("design:paramtypes", [transaction_service_1.TransactionService])

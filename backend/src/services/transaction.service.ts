@@ -19,7 +19,7 @@ export class TransactionService {
       password: DB_PASSWORD,
       database: DB_NAME,
       logging: true,
-      entities: [Transaction],
+      entities: [Transaction, User],
       synchronize: true,
     })
     await this.connection.initialize()
@@ -52,6 +52,7 @@ export class TransactionService {
     }
     const approvers: User[] = []
     const approver_codes = breakToBase2(trans.status)
+    console.log(approver_codes)
     approver_codes.forEach(approver => {
       switch (approver) {
         case Approver.BUYER:

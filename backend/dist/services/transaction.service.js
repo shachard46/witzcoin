@@ -4,6 +4,7 @@ exports.TransactionService = void 0;
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 const transaction_interface_1 = require("../interfaces/transaction.interface");
+const user_interface_1 = require("../interfaces/user.interface");
 const backend_constants_1 = require("../backend-constants");
 class TransactionService {
     constructor() {
@@ -18,7 +19,7 @@ class TransactionService {
             password: backend_constants_1.DB_PASSWORD,
             database: backend_constants_1.DB_NAME,
             logging: true,
-            entities: [transaction_interface_1.Transaction],
+            entities: [transaction_interface_1.Transaction, user_interface_1.User],
             synchronize: true,
         });
         await this.connection.initialize();
@@ -48,6 +49,7 @@ class TransactionService {
         }
         const approvers = [];
         const approver_codes = (0, utils_1.breakToBase2)(trans.status);
+        console.log(approver_codes);
         approver_codes.forEach(approver => {
             switch (approver) {
                 case transaction_interface_1.Approver.BUYER:

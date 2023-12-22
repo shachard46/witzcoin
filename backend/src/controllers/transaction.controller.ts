@@ -12,16 +12,6 @@ export class TransactionController {
     const newTrans: Transaction = trans
     return await this.transactionService.createTransaction(trans)
   }
-  @Get(':id')
-  async getTransactionById(
-    @Param('id') id: number,
-  ): Promise<Transaction | null> {
-    return await this.transactionService.getTransactionById(id)
-  }
-  @Get()
-  async getAllTransactions(): Promise<Transaction[]> {
-    return await this.transactionService.getAllTransactions()
-  }
   @Get('waiting')
   async getTransactionsWaintingForApproval(): Promise<Transaction[]> {
     return await this.transactionService.getTransactionsWaintingForApproval()
@@ -31,5 +21,15 @@ export class TransactionController {
     @Param('id') id: number,
   ): Promise<User[]> {
     return await this.transactionService.getUsersWaitingByTransactionId(id)
+  }
+  @Get(':id')
+  async getTransactionById(
+    @Param('id') id: number,
+  ): Promise<Transaction | null> {
+    return await this.transactionService.getTransactionById(id)
+  }
+  @Get()
+  async getAllTransactions(): Promise<Transaction[]> {
+    return await this.transactionService.getAllTransactions()
   }
 }
