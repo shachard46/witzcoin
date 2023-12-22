@@ -2,6 +2,7 @@ import { DataSource, Repository } from 'typeorm'
 import { breakToBase2 } from '../utils'
 import { Approver, Transaction } from '../interfaces/transaction.interface'
 import { User } from '../interfaces/user.interface'
+import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
 
 export class TransactionService {
   connection: DataSource
@@ -10,10 +11,10 @@ export class TransactionService {
     this.connection = new DataSource({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'password',
-      database: 'test',
+      port: DB_PORT,
+      username: DB_USERNAME,
+      password: DB_PASSWORD,
+      database: DB_NAME,
       synchronize: true,
       logging: true,
       entities: [Transaction],

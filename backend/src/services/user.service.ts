@@ -1,6 +1,7 @@
 import { DataSource, Repository } from 'typeorm'
 import { User } from '../interfaces/user.interface'
 import { Injectable } from '@nestjs/common'
+import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
 
 @Injectable()
 export class UserService {
@@ -10,10 +11,10 @@ export class UserService {
     this.connection = new DataSource({
       type: 'mysql',
       host: 'localhost',
-      port: 3306,
-      username: 'root',
-      password: 'password',
-      database: 'test',
+      port: DB_PORT,
+      username: DB_USERNAME,
+      password: DB_PASSWORD,
+      database: DB_NAME,
       synchronize: true,
       logging: true,
       entities: [User],
