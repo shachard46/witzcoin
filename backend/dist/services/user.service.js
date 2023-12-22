@@ -13,19 +13,24 @@ exports.UserService = void 0;
 const typeorm_1 = require("typeorm");
 const user_interface_1 = require("../interfaces/user.interface");
 const common_1 = require("@nestjs/common");
+const backend_constants_1 = require("../backend-constants");
 let UserService = class UserService {
     constructor() {
+        this.initializeDatabaseConnection();
+    }
+    async initializeDatabaseConnection() {
         this.connection = new typeorm_1.DataSource({
             type: 'mysql',
             host: 'localhost',
-            port: 3306,
-            username: 'root',
-            password: 'password',
-            database: 'test',
-            synchronize: true,
+            port: backend_constants_1.DB_PORT,
+            username: backend_constants_1.DB_USERNAME,
+            password: backend_constants_1.DB_PASSWORD,
+            database: backend_constants_1.DB_NAME,
             logging: true,
             entities: [user_interface_1.User],
+            synchronize: true,
         });
+        await this.connection.initialize();
         this.repository = this.connection.getRepository(user_interface_1.User);
     }
     async createUser(user) {
@@ -33,13 +38,13 @@ let UserService = class UserService {
         return user;
     }
     async getUserByUsername(username) {
-        return this.repository.findOne({ where: { username: username } });
+        return await this.repository.findOne({ where: { username: username } });
     }
     async getAllUsers() {
-        return this.repository.find();
+        return await this.repository.find();
     }
     async auth(username, password) {
-        return this.repository.exist({
+        return await this.repository.exist({
             where: { username: username, password: password },
         });
     }

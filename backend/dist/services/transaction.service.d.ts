@@ -5,6 +5,7 @@ export declare class TransactionService {
     connection: DataSource;
     repository: Repository<Transaction>;
     constructor();
+    private initializeDatabaseConnection;
     createTransaction(trans: Transaction): Promise<Transaction>;
     getTransactionById(id: number): Promise<Transaction | null>;
     getAllTransactions(): Promise<Transaction[]>;

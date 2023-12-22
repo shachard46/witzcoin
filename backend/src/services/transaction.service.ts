@@ -8,6 +8,9 @@ export class TransactionService {
   connection: DataSource
   repository: Repository<Transaction>
   constructor() {
+    this.initializeDatabaseConnection()
+  }
+  private async initializeDatabaseConnection(): Promise<void> {
     this.connection = new DataSource({
       type: 'mysql',
       host: 'localhost',
@@ -15,10 +18,11 @@ export class TransactionService {
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      synchronize: true,
       logging: true,
       entities: [Transaction],
+      synchronize: true,
     })
+    await this.connection.initialize()
     this.repository = this.connection.getRepository(Transaction)
   }
   async createTransaction(trans: Transaction): Promise<Transaction> {

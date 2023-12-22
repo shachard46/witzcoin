@@ -4,6 +4,7 @@ export declare class UserService {
     connection: DataSource;
     repository: Repository<User>;
     constructor();
+    private initializeDatabaseConnection;
     createUser(user: User): Promise<User>;
     getUserByUsername(username: string): Promise<User | null>;
     getAllUsers(): Promise<User[]>;

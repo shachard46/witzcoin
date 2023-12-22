@@ -4,19 +4,24 @@ exports.TransactionService = void 0;
 const typeorm_1 = require("typeorm");
 const utils_1 = require("../utils");
 const transaction_interface_1 = require("../interfaces/transaction.interface");
+const backend_constants_1 = require("../backend-constants");
 class TransactionService {
     constructor() {
+        this.initializeDatabaseConnection();
+    }
+    async initializeDatabaseConnection() {
         this.connection = new typeorm_1.DataSource({
             type: 'mysql',
             host: 'localhost',
-            port: 3306,
-            username: 'root',
-            password: 'password',
-            database: 'test',
-            synchronize: true,
+            port: backend_constants_1.DB_PORT,
+            username: backend_constants_1.DB_USERNAME,
+            password: backend_constants_1.DB_PASSWORD,
+            database: backend_constants_1.DB_NAME,
             logging: true,
             entities: [transaction_interface_1.Transaction],
+            synchronize: true,
         });
+        await this.connection.initialize();
         this.repository = this.connection.getRepository(transaction_interface_1.Transaction);
     }
     async createTransaction(trans) {

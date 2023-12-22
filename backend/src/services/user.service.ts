@@ -8,17 +8,21 @@ export class UserService {
   connection: DataSource
   repository: Repository<User>
   constructor() {
-    this.connection = new DataSource({
+    this.initializeDatabaseConnection()
+  }
+  private async initializeDatabaseConnection(): Promise<void> {
+    this.connection =  new DataSource({
       type: 'mysql',
       host: 'localhost',
       port: DB_PORT,
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      synchronize: true,
       logging: true,
       entities: [User],
+      synchronize: true,
     })
+    await this.connection.initialize()
     this.repository = this.connection.getRepository(User)
   }
   async createUser(user: User): Promise<User> {
@@ -26,15 +30,15 @@ export class UserService {
     return user
   }
   async getUserByUsername(username: string): Promise<User | null> {
-    return this.repository.findOne({ where: { username: username } })
+    return await this.repository.findOne({ where: { username: username } })
   }
 
   async getAllUsers(): Promise<User[]> {
-    return this.repository.find()
+    return await this.repository.find()
   }
 
   async auth(username: string, password: string): Promise<boolean> {
-    return this.repository.exist({
+    return await this.repository.exist({
       where: { username: username, password: password },
     })
   }
