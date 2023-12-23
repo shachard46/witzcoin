@@ -3,6 +3,7 @@ import { User } from '../user/user.interface'
 import { Injectable } from '@nestjs/common'
 import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
 import {
+  Price,
   Transaction,
   UserWaitingTransactions,
 } from 'transaction/transaction.interface'
@@ -50,6 +51,7 @@ export class UserService {
     await this.repository.update(username, {
       balance: () => `balance + ${price * income}`,
     })
+    await this.changePendingByUsername(username, price, income * -1)
   }
 
   async changePendingByUsername(
@@ -60,5 +62,17 @@ export class UserService {
     await this.repository.update(username, {
       pending: () => `pending + ${price * income}`,
     })
+  }
+  async updateUsersOnceTransactionApproved(trans: Transaction) {
+    this.changeBalanceByUsername(
+      trans.buyerUser.username,
+      trans.price,
+      Price.EXPENSE,
+    )
+    this.changeBalanceByUsername(
+      trans.sellerUser.username,
+      trans.price,
+      Price.INCOME,
+    )
   }
 }

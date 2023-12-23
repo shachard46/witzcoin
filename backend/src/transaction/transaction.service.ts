@@ -102,10 +102,14 @@ export class TransactionService {
   }
 
   async updateTransactionStatus(id: number, user: User): Promise<boolean> {
-    const role = this.getUserRoleInTransaction(id, user)
+    const role = await this.getUserRoleInTransaction(id, user)
     if (!role) return false
-    await this.repository.update(id, { status: () => `status - ${role}` })
-    return true
+    const trans = await this.getTransactionById(id)
+    trans.status -= role
+    const result = await this.repository.update(id, trans)
+    if (trans.status === 0)
+      await this.userService.updateUsersOnceTransactionApproved(trans)
+    return result.affected > 0
   }
 
   async getWaitingTransactionsByUser(user: User): Promise<Transaction[]> {
