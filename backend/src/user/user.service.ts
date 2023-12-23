@@ -2,7 +2,11 @@ import { DataSource, Repository } from 'typeorm'
 import { User } from '../user/user.interface'
 import { Injectable } from '@nestjs/common'
 import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
-import { Transaction } from 'transaction/transaction.interface'
+import {
+  Transaction,
+  UserWaitingTransactions,
+} from 'transaction/transaction.interface'
+import { TransactionService } from 'transaction/transaction.service'
 
 @Injectable()
 export class UserService {
@@ -38,9 +42,23 @@ export class UserService {
     return await this.repository.find()
   }
 
-  async changeBalanceByUsername(username: string, price, income: number) {
+  async changeBalanceByUsername(
+    username: string,
+    price: number,
+    income: number,
+  ): Promise<void> {
     await this.repository.update(username, {
       balance: () => `balance + ${price * income}`,
+    })
+  }
+
+  async changePendingByUsername(
+    username: string,
+    price: number,
+    income: number,
+  ): Promise<void> {
+    await this.repository.update(username, {
+      pending: () => `pending + ${price * income}`,
     })
   }
 }

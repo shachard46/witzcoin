@@ -68,3 +68,8 @@ export class UserWaitingTransactions {
   bought: number = 0
   sold: number = 0
 }
+
+export enum Price {
+  INCOME = 1,
+  EXPENSE = -1,
+}

@@ -1,13 +1,19 @@
 import { DataSource, Repository } from 'typeorm'
 import { breakToBase2 } from '../utils'
-import { Approver, Transaction } from '../transaction/transaction.interface'
+import {
+  Approver,
+  Price,
+  Transaction,
+  UserWaitingTransactions,
+} from '../transaction/transaction.interface'
 import { User } from '../user/user.interface'
 import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
+import { UserService } from 'user/user.service'
 
 export class TransactionService {
   connection: DataSource
   repository: Repository<Transaction>
-  constructor() {
+  constructor(private userService: UserService) {
     this.initializeDatabaseConnection()
   }
   private async initializeDatabaseConnection(): Promise<void> {
@@ -26,6 +32,19 @@ export class TransactionService {
     this.repository = this.connection.getRepository(Transaction)
   }
   async createTransaction(trans: Transaction): Promise<Transaction> {
+    if (trans.buyerUser.pending + trans.buyerUser.balance - trans.price < 0) {
+      return null
+    }
+    this.userService.changePendingByUsername(
+      trans.buyerUser.username,
+      trans.price,
+      Price.EXPENSE,
+    )
+    this.userService.changePendingByUsername(
+      trans.sellerUser.username,
+      trans.price,
+      Price.INCOME,
+    )
     await this.repository.save(trans)
     return trans
   }
@@ -85,7 +104,13 @@ export class TransactionService {
   async updateTransactionStatus(id: number, user: User): Promise<boolean> {
     const role = this.getUserRoleInTransaction(id, user)
     if (!role) return false
-    this.repository.update(id, { status: () => `status - ${role}` })
+    await this.repository.update(id, { status: () => `status - ${role}` })
     return true
+  }
+
+  async getWaitingTransactionsByUser(user: User): Promise<Transaction[]> {
+    return (await this.getTransactionsWaintingForApproval()).filter(
+      trans => trans.buyerUser === user || trans.sellerUser === user,
+    )
   }
 }
