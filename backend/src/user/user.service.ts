@@ -19,7 +19,7 @@ export class UserService {
   connection: DataSource
   repository: Repository<User>
   constructor() {
-    // this.initializeDatabaseConnection()
+    this.initializeDatabaseConnection()
   }
   async initializeDatabaseConnection(): Promise<void> {
     this.connection = new DataSource({

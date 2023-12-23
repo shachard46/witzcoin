@@ -20,7 +20,7 @@ export class TransactionService {
   connection: DataSource
   repository: Repository<Transaction>
   constructor(private userService: UserService) {
-    // this.initializeDatabaseConnection()
+    this.initializeDatabaseConnection()
   }
   async initializeDatabaseConnection(): Promise<void> {
     this.connection = new DataSource({
