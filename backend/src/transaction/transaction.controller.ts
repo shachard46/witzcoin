@@ -30,7 +30,7 @@ export class TransactionController {
     @Param('id') id: number,
     @Body() statusUpdateDto: TransStatusUpdateDto,
   ) {
-    return this.transactionService.updateTransactionStatus(
+    this.transactionService.updateTransactionStatus(
       id,
       statusUpdateDto.approvingUser,
       statusUpdateDto.decline,
