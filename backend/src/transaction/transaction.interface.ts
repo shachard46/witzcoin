@@ -11,7 +11,8 @@ export enum Approver {
   BUYER = 1,
   SELLER = 2,
   WITNESS = 4,
-  NOT = 0,
+  DECLINE = 1000,
+  NON = 0,
   ALL = 7,
 }
 
@@ -75,8 +76,11 @@ export enum Price {
   INCOME = 1,
   EXPENSE = -1,
 }
-
+export class TransStatusUpdateDto {
+  approvingUser: User
+  decline: boolean
+}
 export class TransactionCreationDto {
   transaction: Transaction
-  issuing_user: User
+  issuingUser: User
 }

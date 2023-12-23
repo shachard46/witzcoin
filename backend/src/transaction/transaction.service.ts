@@ -70,7 +70,7 @@ export class TransactionService {
   async getTransactionsWaintingForApproval(): Promise<Transaction[]> {
     return await this.repository.find({
       where: {
-        status: MoreThan(Approver.NOT),
+        status: MoreThan(Approver.NON),
       },
     })
   }
@@ -112,13 +112,19 @@ export class TransactionService {
       return Approver.SELLER
     if (transaction?.witnessUser.username === user.username)
       return Approver.WITNESS
-    return Approver.NOT
+    return Approver.NON
   }
 
-  async updateTransactionStatus(id: number, user: User): Promise<boolean> {
+  async updateTransactionStatus(
+    id: number,
+    user: User,
+    decline: boolean = false,
+  ): Promise<boolean> {
+    if (decline) this.repository.delete(id)
+
     const role = await this.getUserRoleInTransaction(id, user)
-    log(role)
     if (!role) return false
+
     const trans = await this.getTransactionById(id)
     if (trans.status == 0) return false
     trans.status -= role

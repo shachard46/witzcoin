@@ -1,10 +1,11 @@
 import { Request, Response } from 'express'
 import {
+  TransStatusUpdateDto,
   Transaction,
   TransactionCreationDto,
 } from '../transaction/transaction.interface'
 import { TransactionService } from './transaction.service'
-import { Body, Controller, Get, Param, Post } from '@nestjs/common'
+import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
 import { User } from '../user/user.interface'
 
 @Controller('/api/transactions')
@@ -17,12 +18,23 @@ export class TransactionController {
     const newTrans: Transaction = transDto.transaction
     return await this.transactionService.createTransaction(
       newTrans,
-      transDto.issuing_user,
+      transDto.issuingUser,
     )
   }
   @Get('waiting')
   async getTransactionsWaintingForApproval(): Promise<Transaction[]> {
     return await this.transactionService.getTransactionsWaintingForApproval()
+  }
+  @Put('waiting/:id')
+  async updateTransactionStatus(
+    @Param('id') id: number,
+    @Body() statusUpdateDto: TransStatusUpdateDto,
+  ) {
+    return this.transactionService.updateTransactionStatus(
+      id,
+      statusUpdateDto.approvingUser,
+      statusUpdateDto.decline,
+    )
   }
   @Get('waiting/:id')
   async getUsersWaitingByTransactionId(
