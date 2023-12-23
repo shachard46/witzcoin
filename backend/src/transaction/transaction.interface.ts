@@ -32,7 +32,8 @@ export class Transaction {
   @ManyToOne(() => User)
   @JoinColumn({ name: 'witnessUserId' })
   witnessUser: User
-
+  @Column()
+  price: number
   @Column()
   category: string
 
@@ -47,6 +48,7 @@ export class Transaction {
     buyerUser: User,
     sellerUser: User,
     witnessUser: User,
+    price: number,
     category: string,
     details: string,
     status: number,
@@ -55,8 +57,14 @@ export class Transaction {
     this.buyerUser = buyerUser
     this.sellerUser = sellerUser
     this.witnessUser = witnessUser
+    this.price = price
     this.category = category
     this.details = details
     this.status = status
   }
+}
+
+export class UserWaitingTransactions {
+  bought: number = 0
+  sold: number = 0
 }
