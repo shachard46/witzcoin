@@ -12,18 +12,21 @@ export class User {
 
   @Column()
   balance: number
-
+  @Column()
+  pending: number
   @Column()
   role: Role
   constructor(
     username: string,
     password: string,
     balance: number = 0,
+    pending: number = 0,
     role: Role,
   ) {
     this.username = username
     this.password = password
     this.balance = balance
+    this.pending = pending
     this.role = role
   }
 }
