@@ -1,4 +1,4 @@
-import { DataSource, Repository } from 'typeorm'
+import { DataSource, MoreThan, Repository } from 'typeorm'
 import { breakToBase2 } from '../utils'
 import {
   Approver,
@@ -37,10 +37,15 @@ export class TransactionService {
     await this.connection.initialize()
     this.repository = this.connection.getRepository(Transaction)
   }
-  async createTransaction(trans: Transaction): Promise<Transaction> {
+  async createTransaction(
+    trans: Transaction,
+    issueing_user: User,
+  ): Promise<Transaction> {
     if (trans.buyerUser.pending + trans.buyerUser.balance - trans.price < 0) {
       return null
     }
+    trans.status =
+      Approver.ALL - (await this.getUserRoleInTransaction(trans, issueing_user))
     this.userService.changePendingByUsername(
       trans.buyerUser.username,
       trans.price,
@@ -65,7 +70,7 @@ export class TransactionService {
   async getTransactionsWaintingForApproval(): Promise<Transaction[]> {
     return await this.repository.find({
       where: {
-        status: Approver.BUYER + Approver.SELLER + Approver.WITNESS,
+        status: MoreThan(Approver.NOT),
       },
     })
   }
@@ -97,16 +102,17 @@ export class TransactionService {
   }
 
   async getUserRoleInTransaction(
-    id: number,
+    id: number | Transaction,
     user: User,
-  ): Promise<Approver | null> {
-    const transaction = await this.getTransactionById(id)
+  ): Promise<Approver> {
+    const transaction =
+      typeof id === 'number' ? await this.getTransactionById(id) : id
     if (transaction?.buyerUser.username === user.username) return Approver.BUYER
     if (transaction?.sellerUser.username === user.username)
       return Approver.SELLER
     if (transaction?.witnessUser.username === user.username)
       return Approver.WITNESS
-    return null
+    return Approver.NOT
   }
 
   async updateTransactionStatus(id: number, user: User): Promise<boolean> {

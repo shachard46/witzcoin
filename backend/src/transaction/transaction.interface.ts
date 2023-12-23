@@ -11,6 +11,8 @@ export enum Approver {
   BUYER = 1,
   SELLER = 2,
   WITNESS = 4,
+  NOT = 0,
+  ALL = 7,
 }
 
 @Entity()
