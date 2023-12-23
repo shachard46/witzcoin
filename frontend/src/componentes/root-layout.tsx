@@ -1,5 +1,5 @@
-import { makeStyles } from '@material-ui/core/styles'
-import { ClassNameMap } from '@material-ui/styles'
+import { makeStyles } from '@mui/material/styles'
+import { ClassNameMap } from '@mui/material/styles'
 import React, { createContext } from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { ProtectedPage } from './protected/protected-page'

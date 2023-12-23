@@ -33,5 +33,4 @@ export class User {
 export class AuthUserDto {
   username: string
   password: string
-  role: Role
 }

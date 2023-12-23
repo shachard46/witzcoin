@@ -1,3 +1,4 @@
+import { Visibility, VisibilityOff } from '@mui/icons-material'
 import {
   Button,
   Container,
@@ -8,21 +9,22 @@ import {
   OutlinedInput,
   TextField,
   Typography,
-} from '@material-ui/core'
-import { Visibility, VisibilityOff } from '@material-ui/icons'
+} from '@mui/material'
+import { AxiosInstance } from 'axios'
+// import * as bcrypt from 'bcrypt'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
-import { Api } from '../api/api'
 import { useApi } from '../api/api-provider'
 import { ThemeContext } from '../root-layout'
+import { LoginUser } from './models'
 import { useToken } from './token-provider'
 
-const login = async (api: Api, username: string, password: string) => {
+const login = async (api: AxiosInstance, loginUser: LoginUser) => {
   const form = new FormData()
-  form.append('username', username)
-  form.append('password', password)
+  form.append('username', loginUser.username)
+  form.append('password', loginUser.password) //await bcrypt.hash(loginUser.password, 10)
   try {
-    const res = await api.post('login', form, {}, false)
+    const res = await api.post('login', form, {})
     return res
   } catch (error) {
     alert('False Creds')
@@ -33,7 +35,7 @@ const login = async (api: Api, username: string, password: string) => {
 const LoginForm: React.FC = () => {
   const classes = useContext(ThemeContext)
   const api = useApi()
-  const [token, refreshToken] = useToken()
+  const [, refreshToken] = useToken()
 
   const navigate = useNavigate()
   const [username, setUsername] = useState('')
@@ -54,7 +56,8 @@ const LoginForm: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    const res = await login(api, username, password)
+    const loginUser: LoginUser = { username: username, password: password }
+    const res = await login(api, loginUser)
     if (res) {
       refreshToken(JSON.stringify(res))
       navigate('/p/commands')
@@ -98,7 +101,6 @@ const LoginForm: React.FC = () => {
                   </IconButton>
                 </InputAdornment>
               }
-              labelWidth={70}
             />
           </FormControl>
           <Button

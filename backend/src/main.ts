@@ -12,7 +12,7 @@ import { log } from 'console'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.useWebSocketAdapter(new IoAdapter(app))
-  await app.listen(3000)
+  await app.listen(3001)
   // const user1: User = {
   //   username: 'shachar',
   //   password: 'gg',

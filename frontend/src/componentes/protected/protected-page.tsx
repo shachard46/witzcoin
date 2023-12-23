@@ -12,9 +12,9 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
     return null
   }
   if (isAutonticated) {
-    if (level < scope) {
-      return null
-    }
+    // if (level < scope) {
+    //   return null
+    // }
     return <div className={className ? className : ''}>{children}</div>
   }
   return <NotFoundPage />
