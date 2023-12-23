@@ -24,7 +24,7 @@ export class TransactionService {
   }
   async initializeDatabaseConnection(): Promise<void> {
     this.connection = new DataSource({
-      type: 'mysql',
+      type: 'postgres',
       host: 'localhost',
       port: DB_PORT,
       username: DB_USERNAME,

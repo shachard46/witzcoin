@@ -1,12 +1,10 @@
-version: '3.1'
-
+version: '3'
 services:
-
-  db:
-    image: mysql
-    restart: always
-    environment:
-      MYSQL_ROOT_PASSWORD: password
-      MYSQL_DATABASE: test
+  postgres:
+    image: postgres:alpine
     ports:
-      - 3306:3306
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: test

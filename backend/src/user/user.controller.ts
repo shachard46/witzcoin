@@ -1,11 +1,12 @@
 import { User } from '../user/user.interface'
 import { UserService } from './user.service'
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
-import { Role, Roles } from '../auth/auth.interfaces'
+import { Public, Role, Roles } from '../auth/auth.interfaces'
 
 @Controller('/api/users')
 export class UserController {
-  constructor(private userService: UserService) {}
+  constructor(private userService: UserService) { }
+  @Public()
   @Post()
   async createUser(@Body() user: User): Promise<User> {
     const newUser: User = user

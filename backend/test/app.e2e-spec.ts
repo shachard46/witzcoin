@@ -62,9 +62,9 @@ describe('AppController (e2e)', () => {
     await app.init()
   })
 
-  it('/createuser (POST)', async () => {
+  it('/api/users (POST)', async () => {
     const response = await request(app.getHttpServer())
-      .post('/users')
+      .post('/api/users')
       .send(user1)
       .expect(201) // Assuming you return status 201 for successful creation
 

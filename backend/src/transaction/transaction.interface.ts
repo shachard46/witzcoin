@@ -75,3 +75,8 @@ export enum Price {
   INCOME = 1,
   EXPENSE = -1,
 }
+
+export class TransactionCreationDto {
+  transaction: Transaction
+  issuing_user: User
+}
