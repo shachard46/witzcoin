@@ -21,15 +21,15 @@ export class Transaction {
   @Column()
   transactionName: string
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'buyerUserId' })
   buyerUser: User
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'sellerUserId' })
   sellerUser: User
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => User, { eager: true })
   @JoinColumn({ name: 'witnessUserId' })
   witnessUser: User
   @Column()

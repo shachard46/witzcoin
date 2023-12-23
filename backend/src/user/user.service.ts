@@ -19,9 +19,9 @@ export class UserService {
   connection: DataSource
   repository: Repository<User>
   constructor() {
-    this.initializeDatabaseConnection()
+    // this.initializeDatabaseConnection()
   }
-  private async initializeDatabaseConnection(): Promise<void> {
+  async initializeDatabaseConnection(): Promise<void> {
     this.connection = new DataSource({
       type: 'mysql',
       host: 'localhost',
@@ -69,12 +69,12 @@ export class UserService {
     })
   }
   async updateUsersOnceTransactionApproved(trans: Transaction) {
-    this.changeBalanceByUsername(
+    await this.changeBalanceByUsername(
       trans.buyerUser.username,
       trans.price,
       Price.EXPENSE,
     )
-    this.changeBalanceByUsername(
+    await this.changeBalanceByUsername(
       trans.sellerUser.username,
       trans.price,
       Price.INCOME,

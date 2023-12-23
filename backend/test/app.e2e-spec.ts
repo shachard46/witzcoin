@@ -6,7 +6,9 @@ import { User } from '../src/user/user.interface'
 import { Role } from '../src/auth/auth.interfaces'
 import { Approver, Transaction } from '../src/transaction/transaction.interface'
 
+
 describe('AppController (e2e)', () => {
+  require('iconv-lite').encodingExists('foo')
   let app: INestApplication
   const user1: User = {
     username: 'shachar',

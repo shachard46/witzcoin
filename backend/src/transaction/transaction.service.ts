@@ -14,14 +14,15 @@ import {
   DB_PORT,
 } from '../backend-constants'
 import { UserService } from '../user/user.service'
+import { log } from 'console'
 
 export class TransactionService {
   connection: DataSource
   repository: Repository<Transaction>
   constructor(private userService: UserService) {
-    this.initializeDatabaseConnection()
+    // this.initializeDatabaseConnection()
   }
-  private async initializeDatabaseConnection(): Promise<void> {
+  async initializeDatabaseConnection(): Promise<void> {
     this.connection = new DataSource({
       type: 'mysql',
       host: 'localhost',
@@ -100,16 +101,20 @@ export class TransactionService {
     user: User,
   ): Promise<Approver | null> {
     const transaction = await this.getTransactionById(id)
-    if (transaction?.buyerUser === user) return Approver.BUYER
-    if (transaction?.sellerUser === user) return Approver.SELLER
-    if (transaction?.witnessUser === user) return Approver.WITNESS
+    if (transaction?.buyerUser.username === user.username) return Approver.BUYER
+    if (transaction?.sellerUser.username === user.username)
+      return Approver.SELLER
+    if (transaction?.witnessUser.username === user.username)
+      return Approver.WITNESS
     return null
   }
 
   async updateTransactionStatus(id: number, user: User): Promise<boolean> {
     const role = await this.getUserRoleInTransaction(id, user)
+    log(role)
     if (!role) return false
     const trans = await this.getTransactionById(id)
+    if (trans.status == 0) return false
     trans.status -= role
     const result = await this.repository.update(id, trans)
     if (trans.status === 0)
