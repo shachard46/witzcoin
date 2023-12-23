@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import { User } from 'user/user.interface'
+import { User } from '../user/user.interface'
 
 export enum Approver {
   BUYER = 1,

@@ -1,7 +1,7 @@
 import { User } from '../user/user.interface'
 import { UserService } from './user.service'
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
-import { Role, Roles } from 'auth/auth.interfaces'
+import { Role, Roles } from '../auth/auth.interfaces'
 
 @Controller('/api/users')
 export class UserController {

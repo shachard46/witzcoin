@@ -1,13 +1,18 @@
 import { DataSource, Repository } from 'typeorm'
 import { User } from '../user/user.interface'
 import { Injectable } from '@nestjs/common'
-import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
+import {
+  DB_NAME,
+  DB_PASSWORD,
+  DB_USERNAME,
+  DB_PORT,
+} from '../backend-constants'
 import {
   Price,
   Transaction,
   UserWaitingTransactions,
-} from 'transaction/transaction.interface'
-import { TransactionService } from 'transaction/transaction.service'
+} from '../transaction/transaction.interface'
+import { TransactionService } from '../transaction/transaction.service'
 
 @Injectable()
 export class UserService {

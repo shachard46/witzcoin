@@ -1,9 +1,9 @@
 import { Module } from '@nestjs/common'
-import { UserModule } from 'user/user.module'
-import { AuthController } from 'auth/auth.controller'
-import { AuthService } from 'auth/auth.service'
+import { UserModule } from '../user/user.module'
+import { AuthController } from './auth.controller'
+import { AuthService } from './auth.service'
 import { JwtModule } from '@nestjs/jwt'
-import { jwtConstants } from 'backend-constants'
+import { jwtConstants } from '../backend-constants'
 import { APP_GUARD } from '@nestjs/core'
 import { AuthGuard } from './auth.guard'
 

@@ -1,8 +1,13 @@
 import { DataSource, Repository } from 'typeorm'
 import { AuthUserDto, User } from '../user/user.interface'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
-import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
-import { Transaction } from 'transaction/transaction.interface'
+import {
+  DB_NAME,
+  DB_PASSWORD,
+  DB_USERNAME,
+  DB_PORT,
+} from '../backend-constants'
+import { Transaction } from '../transaction/transaction.interface'
 import { JwtService } from '@nestjs/jwt'
 import { log } from 'console'
 

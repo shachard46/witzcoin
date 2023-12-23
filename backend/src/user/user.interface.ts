@@ -1,6 +1,5 @@
 import { Column, Entity, OneToMany, PrimaryColumn } from 'typeorm'
-import { Transaction } from 'transaction/transaction.interface'
-import { Role } from 'auth/auth.interfaces'
+import { Role } from '../auth/auth.interfaces'
 
 @Entity()
 export class User {

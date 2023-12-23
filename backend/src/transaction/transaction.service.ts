@@ -7,8 +7,13 @@ import {
   UserWaitingTransactions,
 } from '../transaction/transaction.interface'
 import { User } from '../user/user.interface'
-import { DB_NAME, DB_PASSWORD, DB_USERNAME, DB_PORT } from 'backend-constants'
-import { UserService } from 'user/user.service'
+import {
+  DB_NAME,
+  DB_PASSWORD,
+  DB_USERNAME,
+  DB_PORT,
+} from '../backend-constants'
+import { UserService } from '../user/user.service'
 
 export class TransactionService {
   connection: DataSource
