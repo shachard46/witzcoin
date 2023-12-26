@@ -1,15 +1,14 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import {jwtDecode} from 'jwt-decode'
+import { jwtDecode } from 'jwt-decode'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { deepEqual } from '../../utils'
 import { useApi } from '../api/api-provider'
 import Provider from '../provider-model'
 import { Token } from './models'
 
-const TokenContext = createContext<[Token | undefined, unknown]>([
-  undefined,
-  () => {},
-])
+const TokenContext = createContext<
+  [Token | undefined, (token: Token | undefined) => void]
+>([undefined, () => {}])
 export const TokenProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
   const [token, setToken] = useState<Token | undefined>(undefined)
@@ -49,7 +48,7 @@ const getTokenFromStorage = () => {
 
 const refreshToken = (
   state_token: Token | undefined,
-  setToken: (token: object) => void,
+  setToken: (token: Token) => void,
 ) => {
   const storage_token = getTokenFromStorage()
   if (
@@ -60,7 +59,7 @@ const refreshToken = (
   }
 }
 
-export const useToken = (): [Token | undefined, unknown] => {
+export const useToken = (): [Token | undefined, (value: string) => void] => {
   const [state_token, setToken] = useContext(TokenContext)
   return [
     state_token,

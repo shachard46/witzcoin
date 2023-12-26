@@ -11,8 +11,8 @@ import {
   Typography,
 } from '@mui/material'
 import { AxiosInstance } from 'axios'
-// import * as bcrypt from 'bcrypt'
-import React, { useContext, useState } from 'react'
+import * as bcrypt from 'bcrypt'
+import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
 import { LoginUser } from './models'
@@ -21,7 +21,7 @@ import { useToken } from './token-provider'
 const login = async (api: AxiosInstance, loginUser: LoginUser) => {
   const form = new FormData()
   form.append('username', loginUser.username)
-  form.append('password', loginUser.password) //await bcrypt.hash(loginUser.password, 10)
+  form.append('password', await bcrypt.hash(loginUser.password, 10))
   try {
     const res = await api.post('login', form, {})
     return res

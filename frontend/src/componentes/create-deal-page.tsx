@@ -22,7 +22,7 @@ const CreateDealPage: React.FC = () => {
   const [dealName, setDealName] = useState('')
   const [category, setCategory] = React.useState<string[]>([])
   const [dealInfo, setDealInfo] = useState('')
-  const handleInputChange = (set: Function) => {
+  const handleInputChange = (set: (param: any)=>void) => {
     return (event: React.ChangeEvent<HTMLInputElement>) => {
       set(event.target.value)
     }
@@ -153,7 +153,8 @@ const CreateDealPage: React.FC = () => {
             variant='contained'
             color='primary'
             className='submit'
-            onClick={props => {}}
+            onClick={props => {console.log(4);
+            }}
           >
             לחיצת ידיים
           </Button>

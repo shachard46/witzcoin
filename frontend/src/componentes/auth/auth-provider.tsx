@@ -10,7 +10,7 @@ const AuthContext = createContext<Auth>({
 })
 
 export const AuthProvider: React.FC<Provider> = ({ children }) => {
-  const [token, refreshToken] = useToken()
+  const [token, ] = useToken()
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     setIsLoading(true)
