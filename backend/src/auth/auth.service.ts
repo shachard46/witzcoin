@@ -39,16 +39,18 @@ export class AuthService {
   }
 
   async signIn(user: AuthUserDto): Promise<any> {
-    const authorized = await this.repository.exist({
+    if (!user.username) return new UnauthorizedException()
+    const authorized = await this.repository.findOne({
       where: { username: user.username, password: user.password },
     })
-    console.log(authorized);
     if (!authorized) return new UnauthorizedException()
     const exitsingUser = await this.userService.getUserByUsername(user.username)
     const payload = {
-     acsses_token: {sub: { username: user.username, role: exitsingUser.role },}
+      access_token: {
+        sub: { username: user.username, role: exitsingUser.role },
+      },
     }
-    
+
     return {
       access_token: await this.jwtService.signAsync(payload),
     }

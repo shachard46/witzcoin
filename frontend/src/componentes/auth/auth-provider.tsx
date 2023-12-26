@@ -16,7 +16,6 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
     setIsLoading(true)
     setIsLoading(false)
   }, [])
-  console.log(token)
 
   return (
     <AuthContext.Provider

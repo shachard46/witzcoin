@@ -5,7 +5,7 @@ import { Public, Role, Roles } from '../auth/auth.interfaces'
 
 @Controller('/api/users')
 export class UserController {
-  constructor(private userService: UserService) { }
+  constructor(private userService: UserService) {}
   @Public()
   @Post()
   async createUser(@Body() user: User): Promise<User> {
@@ -18,7 +18,7 @@ export class UserController {
   ): Promise<User | null> {
     return await this.userService.getUserByUsername(username)
   }
-  @Roles([Role.ADMIN])
+  @Public()
   @Get()
   async getAllUsers(): Promise<User[]> {
     return await this.userService.getAllUsers()
