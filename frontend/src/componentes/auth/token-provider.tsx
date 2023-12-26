@@ -1,10 +1,10 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
-import jwtDecode from 'jwt-decode'
+import {jwtDecode} from 'jwt-decode'
 import { createContext, useContext, useEffect, useState } from 'react'
 import { deepEqual } from '../../utils'
 import { useApi } from '../api/api-provider'
 import Provider from '../provider-model'
-import { Token } from '../auth/models'
+import { Token } from './models'
 
 const TokenContext = createContext<[Token | undefined, unknown]>([
   undefined,
@@ -47,7 +47,10 @@ const getTokenFromStorage = () => {
   return {}
 }
 
-const refreshToken = (state_token: Token | undefined, setToken: (token: object)=> void) => {
+const refreshToken = (
+  state_token: Token | undefined,
+  setToken: (token: object) => void,
+) => {
   const storage_token = getTokenFromStorage()
   if (
     !deepEqual(storage_token, state_token) &&

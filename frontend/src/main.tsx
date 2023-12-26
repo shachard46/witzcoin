@@ -1,10 +1,10 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
-import App from './App'
-import { ApiProvider } from './componentes/api/api-provider'
-import { AuthProvider } from './componentes/auth/auth-provider'
-import { TokenProvider } from './componentes/auth/token-provider'
+import App from './App.tsx'
 import './index.css'
+import { ApiProvider } from './componentes/api/api-provider.tsx'
+import { TokenProvider } from './componentes/auth/token-provider.tsx'
+import { AuthProvider } from './componentes/auth/auth-provider.tsx'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>

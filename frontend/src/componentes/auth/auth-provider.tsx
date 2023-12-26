@@ -1,5 +1,5 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { useToken } from '../../../token-provider'
+import { useToken } from './token-provider'
 import Provider from '../provider-model'
 import { Auth } from './models'
 const AuthContext = createContext<Auth>({
