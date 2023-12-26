@@ -6,8 +6,8 @@ import {
 } from 'react-router-dom'
 import './App.css'
 import LoginForm from './componentes/auth/login-form'
-import CreateDealPage from './componentes/create-deal-page'
 import RootLayout from './componentes/root-layout'
+import CreateDealPage from './componentes/transaction/create-transaction-page'
 
 function App() {
   const router = createBrowserRouter(

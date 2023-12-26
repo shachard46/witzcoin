@@ -12,6 +12,9 @@ import { log } from 'console'
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
   app.useWebSocketAdapter(new IoAdapter(app))
+  app.enableCors({
+    origin: '*', 
+  })
   await app.listen(3001)
   // const user1: User = {
   //   username: 'shachar',

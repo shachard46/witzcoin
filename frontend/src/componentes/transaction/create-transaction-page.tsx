@@ -12,41 +12,61 @@ import {
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 import React, { useState } from 'react'
+import { useApi } from '../api/api-provider'
+import { Transaction } from './models'
 
 const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
 const CreateDealPage: React.FC = () => {
-  const [buyerUsername, setBuyerUsername] = useState('')
-  const [sellerUsername, setSellerUsername] = useState('')
-  const [witnessusername, setWitnessUsername] = useState('')
-  const [dealName, setDealName] = useState('')
-  const [category, setCategory] = React.useState<string[]>([])
-  const [dealInfo, setDealInfo] = useState('')
-  const handleInputChange = (set: (param: any)=>void) => {
+  const api = useApi()
+  const [transaction, setTrasaction] = useState<Transaction>({
+    buyerUsername: '',
+    sellerUsername: '',
+    witnessUsername: '',
+    category: [],
+    details: '',
+    price: 0,
+    transactionName: '',
+  })
+  const handleInputChange = (fieldName: string) => {
     return (event: React.ChangeEvent<HTMLInputElement>) => {
-      set(event.target.value)
+      {
+        setTrasaction((prev) => ({
+          ...prev,
+          [fieldName]: event.target.value,
+        }))
+    }
     }
   }
-  const handleBuyerUsernameChange = handleInputChange(setBuyerUsername)
-  const handleSellerUsernameChange = handleInputChange(setSellerUsername)
-  const handleWitnessUsernameChange = handleInputChange(setWitnessUsername)
-  const handleDealNameChange = handleInputChange(setDealName)
-  const handleDealInfoChange = handleInputChange(setDealInfo)
+  const handleBuyerUsernameChange = handleInputChange('buyerUsername')
+  const handleSellerUsernameChange = handleInputChange('sellerUsername')
+  const handleWitnessUsernameChange = handleInputChange('witnessUsername')
+  const handleTransactionNameChange = handleInputChange('transactionName')
+  const handleDetailsChange = handleInputChange('details')
+  const handlePriceChange = handleInputChange('price')
   const handleCategoryChange = (
     event: SelectChangeEvent<typeof categories>,
   ) => {
     const {
       target: { value },
     } = event
-    setCategory(
-          typeof value === 'string' ? value.split(',') : value,
+    setTrasaction((prev) => ({
+      ...prev,
+      category:typeof value === 'string' ? value.split(',') : value,
+    })
     )
   }
-
+  const handleSubmit = async (event: React.FormEvent)=> {
+    event.preventDefault()
+    const res = await api.post('/transactions', transaction)
+    if (res)
+      return
+    // need to add socket.io.emit
+  }
   const categories_items = categories.map(item => {
     return (
       <MenuItem value={item}>
-        <Checkbox checked={category.indexOf(item) > -1} />{' '}
+        <Checkbox checked={transaction.category.indexOf(item) > -1} />{' '}
         <ListItemText primary={item} />{' '}
       </MenuItem>
     )
@@ -64,13 +84,13 @@ const CreateDealPage: React.FC = () => {
             required
             className='textField'
             fullWidth
-            id='deal_name'
+            id='transaction_name'
             label='שם העסקה'
-            name='deal_name'
+            name='transaction_name'
             autoComplete='שם העסקה'
             autoFocus
-            value={dealName}
-            onChange={handleDealNameChange}
+            value={transaction.transactionName}
+            onChange={handleTransactionNameChange}
           />
           <div className='usernames-row row'>
             <TextField
@@ -84,7 +104,7 @@ const CreateDealPage: React.FC = () => {
               name='buyer_username'
               autoComplete='שם הקונה'
               autoFocus
-              value={buyerUsername}
+              value={transaction.buyerUsername}
               onChange={handleBuyerUsernameChange}
             />
             <TextField
@@ -98,7 +118,7 @@ const CreateDealPage: React.FC = () => {
               name='witness_username'
               autoComplete='שם העד'
               autoFocus
-              value={witnessusername}
+              value={transaction.witnessUsername}
               onChange={handleWitnessUsernameChange}
             />
             <TextField
@@ -112,7 +132,7 @@ const CreateDealPage: React.FC = () => {
               name='seller_username'
               autoComplete='שם המוכר'
               autoFocus
-              value={sellerUsername}
+              value={transaction.sellerUsername}
               onChange={handleSellerUsernameChange}
             />
           </div>
@@ -122,7 +142,7 @@ const CreateDealPage: React.FC = () => {
               labelId='category-label'
               id='category-select'
               className='row'
-              value={category}
+              value={transaction.category}
               multiple
               renderValue={selected => selected.join(', ')}
               label='קטגוריה'
@@ -131,6 +151,22 @@ const CreateDealPage: React.FC = () => {
               {categories_items}
             </Select>
           </FormControl>
+         < TextField
+            variant='outlined'
+            margin='normal'
+            required
+            className='deal-notes row'
+            fullWidth
+            multiline
+            minRows={5}
+            id='price'
+            label='מחיר'
+            name='price'
+            autoComplete='0'
+            autoFocus
+            value={transaction.details}
+            onChange={handlePriceChange}
+          />
           <TextField
             variant='outlined'
             margin='normal'
@@ -139,13 +175,13 @@ const CreateDealPage: React.FC = () => {
             fullWidth
             multiline
             minRows={5}
-            id='deal_elab'
+            id='details'
             label='פירוט העסקה'
-            name='deal_elab'
+            name='details'
             autoComplete='פירוט העסקה'
             autoFocus
-            value={dealInfo}
-            onChange={handleDealInfoChange}
+            value={transaction.details}
+            onChange={handleDetailsChange}
           />
           <Button
             type='submit'
@@ -153,8 +189,8 @@ const CreateDealPage: React.FC = () => {
             variant='contained'
             color='primary'
             className='submit'
-            onClick={props => {console.log(4);
-            }}
+            onClick={handleSubmit
+            }
           >
             לחיצת ידיים
           </Button>

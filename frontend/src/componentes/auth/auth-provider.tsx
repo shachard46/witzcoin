@@ -1,7 +1,7 @@
 import { createContext, useContext, useEffect, useState } from 'react'
-import { useToken } from './token-provider'
 import Provider from '../provider-model'
 import { Auth } from './models'
+import { useToken } from './token-provider'
 const AuthContext = createContext<Auth>({
   isAutonticated: false,
   user: '',
@@ -10,12 +10,14 @@ const AuthContext = createContext<Auth>({
 })
 
 export const AuthProvider: React.FC<Provider> = ({ children }) => {
-  const [token, ] = useToken()
+  const [token] = useToken()
   const [isLoading, setIsLoading] = useState(true)
   useEffect(() => {
     setIsLoading(true)
     setIsLoading(false)
   }, [])
+  console.log(token)
+
   return (
     <AuthContext.Provider
       value={{

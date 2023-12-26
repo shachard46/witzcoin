@@ -21,7 +21,7 @@ import { useToken } from './token-provider'
 const login = async (api: AxiosInstance, loginUser: LoginUser) => {
   const form = new FormData()
   form.append('username', loginUser.username)
-  form.append('password', await bcrypt.hash(loginUser.password, 10))
+  form.append('password', loginUser.password) //await bcrypt.hash(loginUser.password, 10))
   try {
     const res = await api.post('login', form, {})
     return res

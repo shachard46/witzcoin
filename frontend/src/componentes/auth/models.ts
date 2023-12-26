@@ -1,6 +1,5 @@
 export interface Token {
   access_token: TokenData
-  token_type: string
 }
 
 export interface TokenData {
