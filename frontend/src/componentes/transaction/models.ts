@@ -5,5 +5,6 @@ witnessUsername: string
 transactionName: string
     category: string[]
     price: number
-details: string
+    details: string
+    status: number
 }
