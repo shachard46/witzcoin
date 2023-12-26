@@ -1,6 +1,4 @@
-import { makeStyles } from '@mui/styles'
-import { ClassNameMap } from '@mui/styles'
-import React, { createContext } from 'react'
+import React from 'react'
 import { NavLink, Outlet } from 'react-router-dom'
 import { ProtectedPage } from './protected/protected-page'
 
@@ -12,7 +10,7 @@ const RootLayout: React.FC = () => {
         <nav>
           <ul className='nav-links'>
             <li className='nav-link'>
-              <NavLink to='/p/deal'>צור עסקה</NavLink>
+              <NavLink to='/p/transaction'>צור עסקה</NavLink>
             </li>
             <ProtectedPage className='nav-link' level={0}>
               <li>

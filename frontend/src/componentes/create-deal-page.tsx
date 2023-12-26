@@ -11,7 +11,7 @@ import {
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
-import React, { useContext, useState } from 'react'
+import React, { useState } from 'react'
 
 const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 

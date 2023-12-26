@@ -8,6 +8,7 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
   children,
 }) => {
   const { isAutonticated, user, scope, isLoading } = useAuth()
+  return null
   if (isLoading) {
     return null
   }
