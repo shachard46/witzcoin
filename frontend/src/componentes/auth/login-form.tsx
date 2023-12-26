@@ -15,7 +15,6 @@ import { AxiosInstance } from 'axios'
 import React, { useContext, useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
-import { ThemeContext } from '../root-layout'
 import { LoginUser } from './models'
 import { useToken } from './token-provider'
 
@@ -33,7 +32,6 @@ const login = async (api: AxiosInstance, loginUser: LoginUser) => {
 }
 
 const LoginForm: React.FC = () => {
-  const classes = useContext(ThemeContext)
   const api = useApi()
   const [, refreshToken] = useToken()
 
@@ -66,7 +64,7 @@ const LoginForm: React.FC = () => {
 
   return (
     <div className='container'>
-      <Container component='main' maxWidth='xs' className={classes.root}>
+      <Container component='main' maxWidth='xs' className='root'>
         <div>
           <Typography component='h1' variant='h5' align='center'>
             Log In
@@ -75,7 +73,7 @@ const LoginForm: React.FC = () => {
             variant='outlined'
             margin='normal'
             required
-            className={classes.textField}
+            className='textField'
             fullWidth
             id='username'
             label='Username'
@@ -90,7 +88,7 @@ const LoginForm: React.FC = () => {
             <OutlinedInput
               id='password'
               name='password'
-              className={classes.textField}
+              className='textField'
               type={showPassword ? 'text' : 'password'}
               value={password}
               onChange={handlePasswordChange}
@@ -108,7 +106,7 @@ const LoginForm: React.FC = () => {
             fullWidth
             variant='contained'
             color='primary'
-            className={classes.submit}
+            className='submit'
             onClick={handleSubmit}
           >
             Log In

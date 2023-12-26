@@ -12,12 +12,10 @@ import {
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 import React, { useContext, useState } from 'react'
-import { ThemeContext } from './root-layout'
 
 const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
 const CreateDealPage: React.FC = () => {
-  const classes = useContext(ThemeContext)
   const [buyerUsername, setBuyerUsername] = useState('')
   const [sellerUsername, setSellerUsername] = useState('')
   const [witnessusername, setWitnessUsername] = useState('')
@@ -55,7 +53,7 @@ const CreateDealPage: React.FC = () => {
   })
   return (
     <div className='deal-container'>
-      <Container component='main' maxWidth='md' className={classes.root}>
+      <Container component='main' maxWidth='md' className='root'>
         <div>
           <Typography component='h1' variant='h5' align='center'>
             יצירת עסקה
@@ -64,7 +62,7 @@ const CreateDealPage: React.FC = () => {
             variant='outlined'
             margin='normal'
             required
-            className={classes.textField}
+            className='textField'
             fullWidth
             id='deal_name'
             label='שם העסקה'
@@ -154,7 +152,7 @@ const CreateDealPage: React.FC = () => {
             fullWidth
             variant='contained'
             color='primary'
-            className={classes.submit}
+            className='submit'
             onClick={props => {}}
           >
             לחיצת ידיים
