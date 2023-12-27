@@ -37,6 +37,8 @@ export class UserService {
     this.repository = this.connection.getRepository(User)
   }
   async createUser(user: User): Promise<User> {
+    if (await this.repository.findOne({ where: { username: user.username } }))
+      return user
     await this.repository.save(user)
     return user
   }
