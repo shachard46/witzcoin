@@ -26,9 +26,11 @@ export interface LoginUser {
   password: string
 }
 
+
 export interface RegisterUser {
   username: string
   password: string
   balance: number
+  pending: number
   role: Role
 }

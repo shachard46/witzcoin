@@ -19,10 +19,10 @@ const RootLayout: React.FC = () => {
                 </li>
               </ProtectedPage>
               <li className='nav-link'>
-                <NavLink to='/p/login'>הירשם</NavLink>
+                <NavLink to='/register'>הירשם</NavLink>
               </li>
               <li className='nav-link'>
-                <NavLink to='/p/login'>התחבר</NavLink>
+                <NavLink to='/login'>התחבר</NavLink>
               </li>
               <li className='nav-link'>
                 <NavLink to='/p/profile'>הפרופיל שלך</NavLink>

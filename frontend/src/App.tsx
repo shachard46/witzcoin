@@ -11,12 +11,14 @@ import { ProtectedPage } from './componentes/protected/protected-page'
 import RootLayout from './componentes/root-layout'
 import CreateDealPage from './componentes/transaction/create-transaction-page'
 import { TransactionHistoryPage } from './componentes/transaction/transactions-history-page'
+import RegisterPage from './componentes/auth/register-page'
 
 function App() {
   const router = createBrowserRouter(
     createRoutesFromElements(
       <Route path='/'>
         <Route path='login' element={<LoginForm />} />
+          <Route path='register' element={<RegisterPage />} />
         <Route path='p' element={<RootLayout />}>
           <Route path='transaction' element={<CreateDealPage />} />
           <Route path='history' element={<TransactionHistoryPage />} />
