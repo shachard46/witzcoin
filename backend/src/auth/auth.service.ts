@@ -47,6 +47,7 @@ export class AuthService {
     const exitsingUser = await this.userService.getUserByUsername(user.username)
     const payload = {
       access_token: {
+        username: user.username,
         sub: { username: user.username, role: exitsingUser.role },
       },
     }

@@ -14,11 +14,13 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 import React, { useState } from 'react'
 import { useApi } from '../api/api-provider'
 import { Approver, Transaction } from './models'
+import { useToken } from '../auth/token-provider'
 
 const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
 const CreateDealPage: React.FC = () => {
   const api = useApi()
+  const [token,] = useToken()
   const [transaction, setTrasaction] = useState<Transaction>({
     buyerUsername: '',
     sellerUsername: '',
@@ -59,7 +61,7 @@ const CreateDealPage: React.FC = () => {
   }
   const handleSubmit = async (event: React.FormEvent)=> {
     event.preventDefault()
-    const res = await api.post('/transactions', transaction)
+    const res = await api.post('/transactions', {transaction: transaction, issuing_username: token? token.access_token.username : ''})
     if (res)
       return
     // need to add socket.io.emit
