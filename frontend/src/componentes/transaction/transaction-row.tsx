@@ -4,7 +4,7 @@ import { Collapse, IconButton, TableCell, TableRow } from "@mui/material";
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 
-export const TransactionRow: React.FC<Transaction> = (transaction: Transaction) => {
+export const TransactionRow: React.FC<{transaction: Transaction}> = ({transaction}) => {
       const [open, setOpen] = React.useState(false);
 
     return <React.Fragment>
@@ -24,7 +24,7 @@ export const TransactionRow: React.FC<Transaction> = (transaction: Transaction) 
             <TableCell align="center">{transaction.sellerUsername}</TableCell>
             <TableCell align="center">{transaction.witnessUsername}</TableCell>
             <TableCell align="center">{transaction.price}</TableCell>
-            <TableCell align="center">{transaction.category.reduce((a, b)=> a+'\n'+b)}</TableCell> {/*need to expand to list */}
+            <TableCell align="center">{transaction.category}</TableCell> {/*need to expand to list */}
         </TableRow>
         <TableRow>
             <Collapse in={open}>

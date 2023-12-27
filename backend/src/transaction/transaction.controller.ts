@@ -7,6 +7,7 @@ import {
 import { TransactionService } from './transaction.service'
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
 import { User } from '../user/user.interface'
+import { Public } from 'auth/auth.interfaces'
 
 @Controller('/api/transactions')
 export class TransactionController {
@@ -48,6 +49,7 @@ export class TransactionController {
   ): Promise<Transaction | null> {
     return await this.transactionService.getTransactionById(id)
   }
+  @Public()
   @Get()
   async getAllTransactions(): Promise<Transaction[]> {
     return await this.transactionService.getAllTransactions()

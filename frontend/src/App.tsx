@@ -10,6 +10,7 @@ import { Role } from './componentes/auth/models'
 import { ProtectedPage } from './componentes/protected/protected-page'
 import RootLayout from './componentes/root-layout'
 import CreateDealPage from './componentes/transaction/create-transaction-page'
+import { TransactionHistoryPage } from './componentes/transaction/transactions-history-page'
 
 function App() {
   const router = createBrowserRouter(
@@ -17,7 +18,8 @@ function App() {
       <Route path='/'>
         <Route path='login' element={<LoginForm />} />
         <Route path='p' element={<RootLayout />}>
-            <Route path='transaction' element={<CreateDealPage />} />
+          <Route path='transaction' element={<CreateDealPage />} />
+          <Route path='history' element={<TransactionHistoryPage />} />
         </Route>
       </Route>,
     ),
