@@ -8,9 +8,7 @@ export const TransactionsProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
     const [transactions, setTrasactions] = useState<Transaction[]>([])
   useEffect(() => {
-      api.get<Transaction[]>('transactions').then((res) => setTrasactions(res.data.map((t) => {
-        
-    })))
+      api.get<Transaction[]>('transactions').then((res) => setTrasactions(res.data))
   }, [api])
 
   return (

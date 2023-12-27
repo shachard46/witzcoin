@@ -10,11 +10,12 @@ export const TransactionHistoryPage: React.FC = () => {
         <TableHead>
           <TableRow>
             <TableCell />
-            <TableCell>Dessert (100g serving)</TableCell>
-            <TableCell align="right">Calories</TableCell>
-            <TableCell align="right">Fat&nbsp;(g)</TableCell>
-            <TableCell align="right">Carbs&nbsp;(g)</TableCell>
-            <TableCell align="right">Protein&nbsp;(g)</TableCell>
+            <TableCell>שם העסקה</TableCell>
+            <TableCell align="center">שם הקונה</TableCell>
+            <TableCell align="center">שם המוכר</TableCell>
+            <TableCell align="center">שם העד</TableCell>
+            <TableCell align="center">מחיר</TableCell>
+            <TableCell align="center">קטגוריות</TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
