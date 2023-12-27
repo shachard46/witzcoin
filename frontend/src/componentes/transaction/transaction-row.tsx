@@ -8,7 +8,7 @@ export const TransactionRow: React.FC<{transaction: Transaction}> = ({transactio
       const [open, setOpen] = React.useState(false);
 
     return <React.Fragment>
-        <TableRow>
+        <TableRow hover role="checkbox" tabIndex={-1} >
 
             <TableCell>
           <IconButton

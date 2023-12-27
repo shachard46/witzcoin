@@ -6,6 +6,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm'
 import { OutUser, User } from '../user/user.interface'
+import { stat } from 'fs'
 
 export enum Approver {
   BUYER = 1,
@@ -47,10 +48,14 @@ export class Transaction {
   status: number
   toOutTransaction(): OutTransaction {
     return {
-      ...this,
       buyerUsername: this.buyerUser.username,
       sellerUsername: this.sellerUser.username,
       witnessUsername: this.witnessUser.username,
+      price: this.price,
+      category: this.category,
+      details: this.details,
+      status: this.status,
+      transactionName: this.transactionName,
     }
   }
   constructor(
