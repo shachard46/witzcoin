@@ -18,7 +18,7 @@ export class TransactionController {
     const newTrans: Transaction = transDto.transaction
     return await this.transactionService.createTransaction(
       newTrans,
-      transDto.issuingUser,
+      transDto.issuingUsername,
     )
   }
   @Get('waiting')

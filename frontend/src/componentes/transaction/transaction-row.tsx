@@ -24,7 +24,7 @@ export const TransactionRow: React.FC<Transaction> = (transaction: Transaction) 
             <TableCell align="center">{transaction.sellerUsername}</TableCell>
             <TableCell align="center">{transaction.witnessUsername}</TableCell>
             <TableCell align="center">{transaction.price}</TableCell>
-            <TableCell align="center">{transaction.category}</TableCell> {/*need to expand to list */}
+            <TableCell align="center">{transaction.category.reduce((a, b)=> a+'\n'+b)}</TableCell> {/*need to expand to list */}
         </TableRow>
         <TableRow>
             <Collapse in={open}>

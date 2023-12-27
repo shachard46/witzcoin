@@ -39,8 +39,10 @@ export class TransactionService {
   }
   async createTransaction(
     trans: Transaction,
-    issueing_user: User,
+    issueing_username: string,
   ): Promise<Transaction> {
+    const issueing_user =
+      await this.userService.getUserByUsername(issueing_username)
     if (trans.buyerUser.pending + trans.buyerUser.balance - trans.price < 0) {
       return null
     }

@@ -13,7 +13,7 @@ import Select, { SelectChangeEvent } from '@mui/material/Select'
 
 import React, { useState } from 'react'
 import { useApi } from '../api/api-provider'
-import { Transaction } from './models'
+import { Approver, Transaction } from './models'
 
 const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
@@ -26,6 +26,7 @@ const CreateDealPage: React.FC = () => {
     category: [],
     details: '',
     price: 0,
+    status: Approver.ALL,
     transactionName: '',
   })
   const handleInputChange = (fieldName: string) => {

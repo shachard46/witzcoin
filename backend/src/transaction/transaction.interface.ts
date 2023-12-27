@@ -82,5 +82,5 @@ export class TransStatusUpdateDto {
 }
 export class TransactionCreationDto {
   transaction: Transaction
-  issuingUser: User
+  issuingUsername: string
 }
