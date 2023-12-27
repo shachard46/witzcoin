@@ -15,6 +15,15 @@ export class User {
   pending: number
   @Column()
   role: Role
+
+  toOutUser(): OutUser {
+    return {
+      username: this.username,
+      balance: this.balance,
+      pending: this.pending,
+      role: this.role,
+    }
+  }
   constructor(
     username: string,
     password: string,
@@ -33,4 +42,11 @@ export class User {
 export class AuthUserDto {
   username: string
   password: string
+}
+
+export interface OutUser {
+  username: string
+  balance: number
+  pending: number
+  role: Role
 }

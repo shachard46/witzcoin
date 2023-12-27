@@ -5,7 +5,7 @@ import {
   ManyToOne,
   PrimaryGeneratedColumn,
 } from 'typeorm'
-import { User } from '../user/user.interface'
+import { OutUser, User } from '../user/user.interface'
 
 export enum Approver {
   BUYER = 1,
@@ -45,7 +45,14 @@ export class Transaction {
 
   @Column()
   status: number
-
+  toOutTransaction(): OutTransaction {
+    return {
+      ...this,
+      buyerUser: this.buyerUser.toOutUser(),
+      sellerUser: this.sellerUser.toOutUser(),
+      witnessUser: this.witnessUser.toOutUser(),
+    }
+  }
   constructor(
     transactionName: string,
     buyerUser: User,
@@ -83,4 +90,15 @@ export class TransStatusUpdateDto {
 export class TransactionCreationDto {
   transaction: Transaction
   issuingUsername: string
+}
+
+export interface OutTransaction {
+  transactionName: string
+  buyerUser: OutUser
+  sellerUser: OutUser
+  witnessUser: OutUser
+  price: number
+  category: string
+  details: string
+  status: number
 }

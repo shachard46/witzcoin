@@ -1,12 +1,13 @@
 import { Request, Response } from 'express'
 import {
+  OutTransaction,
   TransStatusUpdateDto,
   Transaction,
   TransactionCreationDto,
 } from '../transaction/transaction.interface'
 import { TransactionService } from './transaction.service'
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
-import { User } from '../user/user.interface'
+import { OutUser, User } from '../user/user.interface'
 import { Public } from 'auth/auth.interfaces'
 
 @Controller('/api/transactions')
@@ -23,8 +24,10 @@ export class TransactionController {
     )
   }
   @Get('waiting')
-  async getTransactionsWaintingForApproval(): Promise<Transaction[]> {
-    return await this.transactionService.getTransactionsWaintingForApproval()
+  async getTransactionsWaintingForApproval(): Promise<OutTransaction[]> {
+    return (
+      await this.transactionService.getTransactionsWaintingForApproval()
+    ).map(t => t.toOutTransaction())
   }
   @Put('waiting/:id')
   async updateTransactionStatus(
@@ -40,18 +43,24 @@ export class TransactionController {
   @Get('waiting/:id')
   async getUsersWaitingByTransactionId(
     @Param('id') id: number,
-  ): Promise<User[]> {
-    return await this.transactionService.getUsersWaitingByTransactionId(id)
+  ): Promise<OutUser[]> {
+    return (
+      await this.transactionService.getUsersWaitingByTransactionId(id)
+    ).map(user => user.toOutUser())
   }
   @Get(':id')
   async getTransactionById(
     @Param('id') id: number,
-  ): Promise<Transaction | null> {
-    return await this.transactionService.getTransactionById(id)
+  ): Promise<OutTransaction | null> {
+    return (
+      await this.transactionService.getTransactionById(id)
+    ).toOutTransaction()
   }
   @Public()
   @Get()
-  async getAllTransactions(): Promise<Transaction[]> {
-    return await this.transactionService.getAllTransactions()
+  async getAllTransactions(): Promise<OutTransaction[]> {
+    return (await this.transactionService.getAllTransactions()).map(trans =>
+      trans.toOutTransaction(),
+    )
   }
 }

@@ -14,7 +14,6 @@ import {
   DB_PORT,
 } from '../backend-constants'
 import { UserService } from '../user/user.service'
-import { log } from 'console'
 
 export class TransactionService {
   connection: DataSource
