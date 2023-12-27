@@ -1,3 +1,5 @@
+import { Role } from "../auth/models"
+
 export interface Transaction {
 buyerUsername: string
 sellerUsername: string
@@ -16,4 +18,11 @@ export enum Approver {
   DECLINE = 1000,
   NON = 0,
   ALL = 7,
+}
+
+export interface User {
+  username: string
+  balance: number
+  pending: number
+  role: Role
 }

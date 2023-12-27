@@ -48,9 +48,9 @@ export class Transaction {
   toOutTransaction(): OutTransaction {
     return {
       ...this,
-      buyerUser: this.buyerUser.toOutUser(),
-      sellerUser: this.sellerUser.toOutUser(),
-      witnessUser: this.witnessUser.toOutUser(),
+      buyerUsername: this.buyerUser.username,
+      sellerUsername: this.sellerUser.username,
+      witnessUsername: this.witnessUser.username,
     }
   }
   constructor(
@@ -94,9 +94,9 @@ export class TransactionCreationDto {
 
 export interface OutTransaction {
   transactionName: string
-  buyerUser: OutUser
-  sellerUser: OutUser
-  witnessUser: OutUser
+  buyerUsername: string
+  sellerUsername: string
+  witnessUsername: string
   price: number
   category: string
   details: string
