@@ -35,7 +35,7 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
   )
 }
 
-const getTokenFromStorage = () => {
+const getTokenFromStorage = (): Token | undefined => {
   const storage_token = localStorage.getItem('token')
   if (storage_token) {
     const verified_token = jwtDecode<Token>(storage_token)
@@ -43,14 +43,17 @@ const getTokenFromStorage = () => {
       return verified_token
     }
   }
-  return {}
+  return undefined
 }
 
 const refreshToken = (
   state_token: Token | undefined,
-  setToken: (token: Token) => void,
+  setToken: (token: Token | undefined) => void,
 ) => {
   const storage_token = getTokenFromStorage()
+  if (!storage_token) {
+    return setToken(storage_token)
+  }
   if (
     !deepEqual(storage_token, state_token) &&
     Object.keys(storage_token).length > 1

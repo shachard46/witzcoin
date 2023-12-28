@@ -11,7 +11,6 @@ import {
   Typography,
 } from '@mui/material'
 import { AxiosInstance } from 'axios'
-import * as bcrypt from 'bcrypt'
 import React, { useState } from 'react'
 import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'

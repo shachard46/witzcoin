@@ -1,6 +1,6 @@
 import { useAuth } from '../auth/auth-provider'
 import { Role } from '../auth/models'
-import NotFoundPage from '../not-found-page'
+// import NotFoundPage from '../not-found-page'
 import { ProtectedPageParams } from './model'
 
 export const ProtectedPage: React.FC<ProtectedPageParams> = ({
