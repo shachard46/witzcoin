@@ -58,13 +58,18 @@ const refreshToken = (
     setToken(storage_token)
   }
 }
-
-export const useToken = (): [Token | undefined, (value: string) => void] => {
+export const removeToken = () => {
+  localStorage.removeItem('token')
+}
+export const useToken = (): [
+  Token | undefined,
+  (value: string | undefined) => void,
+] => {
   const [state_token, setToken] = useContext(TokenContext)
   return [
     state_token,
-    (value: string) => {
-      localStorage.setItem('token', value)
+    (value: string | undefined) => {
+      if (value) localStorage.setItem('token', value)
       refreshToken(state_token, setToken)
     },
   ]

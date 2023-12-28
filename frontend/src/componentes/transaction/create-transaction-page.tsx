@@ -15,6 +15,8 @@ import React, { useState } from 'react'
 import { useApi } from '../api/api-provider'
 import { Approver, Transaction } from './models'
 import { useToken } from '../auth/token-provider'
+import { ProtectedPage } from '../protected/protected-page'
+import { Role } from '../auth/models'
 
 const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
@@ -75,6 +77,7 @@ const CreateDealPage: React.FC = () => {
     )
   })
   return (
+    <ProtectedPage reqScope={Role.USER}>
     <div className='deal-container'>
       <Container component='main' maxWidth='md' className='root'>
         <div>
@@ -200,6 +203,7 @@ const CreateDealPage: React.FC = () => {
         </div>
       </Container>
     </div>
+    </ProtectedPage>
   )
 }
 

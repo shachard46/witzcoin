@@ -17,7 +17,7 @@ import { useApi } from '../api/api-provider'
 import { LoginUser, RegisterUser, Role } from './models'
 import { useToken } from './token-provider'
 
-const login = async (api: AxiosInstance, registerUser: RegisterUser) => {
+const register = async (api: AxiosInstance, registerUser: RegisterUser) => {
   try {
     const res = await api.post('users', registerUser)
     return res
@@ -61,10 +61,7 @@ const RegisterPage: React.FC = () => {
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
     const registerUser: RegisterUser = { username: username, password: password, balance:balance,pending:0, role:Role.USER }
-    const res = await login(api, registerUser)
-    if (res) {
-      refreshToken(JSON.stringify(res))
-    }
+    await register(api, registerUser)
   }
 
   return (

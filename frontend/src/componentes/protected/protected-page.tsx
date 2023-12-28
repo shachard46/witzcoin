@@ -13,10 +13,15 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
     return null
   }
   if (isAutonticated) {
-    if (reqScope === Role.ADMIN && scope !== Role.ADMIN) {
+    if (
+      (reqScope === Role.ADMIN && scope !== Role.ADMIN) ||
+      reqScope == Role.OUT
+    ) {
       return null
     }
     return <div className={className ? className : ''}>{children}</div>
   }
-  return <NotFoundPage />
+  if (!isAutonticated && reqScope == Role.OUT)
+    return <div className={className ? className : ''}>{children}</div>
+  return null //<NotFoundPage />
 }

@@ -3,6 +3,8 @@ import { Paper, Table, TableBody, TableCell, TableContainer, TableHead, TableRow
 import { useTransactions } from "./transactions-provider";
 import { TransactionRow } from "./transaction-row";
 import { TablePagination } from "@mui/base";
+import { ProtectedPage } from "../protected/protected-page";
+import { Role } from "../auth/models";
 
 export const TransactionHistoryPage: React.FC = () => {
     const transactions = useTransactions()
@@ -18,7 +20,8 @@ export const TransactionHistoryPage: React.FC = () => {
     setPage(0);
   };
 
-    return  <Paper><TableContainer component={Paper}>
+    return (<ProtectedPage reqScope={Role.USER}>
+     <Paper><TableContainer component={Paper}>
       <Table stickyHeader aria-label="sticky collapsible table">
         <TableHead>
           <TableRow>
@@ -40,7 +43,6 @@ export const TransactionHistoryPage: React.FC = () => {
     </TableContainer>
                   <TablePagination
                 rowsPerPageOptions={[10, 25, 100]}
-                component='div'
         count={transactions.length}
         rowsPerPage={rowsPerPage}
         page={page}
@@ -48,4 +50,4 @@ export const TransactionHistoryPage: React.FC = () => {
         onRowsPerPageChange={handleChangeRowsPerPage}
         />
         </Paper>
-}
+</ProtectedPage>)}
