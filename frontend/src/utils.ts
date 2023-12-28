@@ -1,4 +1,7 @@
-export const deepEqual = (obj1: object | string | Array<object  |string> | number | undefined , obj2: object | string | Array<object  |string> | number | undefined) => {
+export const deepEqual = (
+  obj1: object | string | Array<object | string> | number | undefined,
+  obj2: object | string | Array<object | string> | number | undefined,
+) => {
   // Check if both objects are of the same type
   if (typeof obj1 !== typeof obj2) {
     return false

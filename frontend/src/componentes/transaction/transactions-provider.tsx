@@ -6,15 +6,13 @@ const TransactionsContext = createContext<Transaction[]>([])
 
 export const TransactionsProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
-    const [transactions, setTrasactions] = useState<Transaction[]>([])
+  const [transactions, setTrasactions] = useState<Transaction[]>([])
   useEffect(() => {
-      api.get<Transaction[]>('transactions').then((res) => setTrasactions(res.data))
+    api.get<Transaction[]>('transactions').then(res => setTrasactions(res.data))
   }, [api])
 
   return (
-    <TransactionsContext.Provider
-      value={transactions}
-    >
+    <TransactionsContext.Provider value={transactions}>
       {children}
     </TransactionsContext.Provider>
   )

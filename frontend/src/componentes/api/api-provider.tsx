@@ -9,9 +9,7 @@ export const ApiProvider: React.FC<{ children: ReactNode }> = ({
     baseURL: 'http://localhost:3001/api',
   })
 
-  return (
-    <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
-  )
+  return <ApiContext.Provider value={api}>{children}</ApiContext.Provider>
 }
 
 export const useApi = () => {

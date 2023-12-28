@@ -20,13 +20,12 @@ export interface Auth {
 export enum Role {
   ADMIN = 'admin',
   USER = 'user',
-  OUT = 'out'
+  OUT = 'out',
 }
 export interface LoginUser {
   username: string
   password: string
 }
-
 
 export interface RegisterUser {
   username: string

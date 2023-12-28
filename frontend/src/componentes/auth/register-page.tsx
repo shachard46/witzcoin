@@ -12,10 +12,8 @@ import {
 } from '@mui/material'
 import { AxiosInstance } from 'axios'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
-import { LoginUser, RegisterUser, Role } from './models'
-import { useToken } from './token-provider'
+import { RegisterUser, Role } from './models'
 
 const register = async (api: AxiosInstance, registerUser: RegisterUser) => {
   try {
@@ -29,9 +27,6 @@ const register = async (api: AxiosInstance, registerUser: RegisterUser) => {
 
 const RegisterPage: React.FC = () => {
   const api = useApi()
-  const [, refreshToken] = useToken()
-
-  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [balance, setBalance] = useState(0)
@@ -44,14 +39,13 @@ const RegisterPage: React.FC = () => {
   const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     setPassword(event.target.value)
   }
-    const handleBalanceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-        try {
-          
-            setBalance(parseInt(event.target.value)) 
-        } catch {
-            setBalance(0)
-            alert('only numbers')
-      }
+  const handleBalanceChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    try {
+      setBalance(parseInt(event.target.value))
+    } catch {
+      setBalance(0)
+      alert('only numbers')
+    }
   }
 
   const handleShowPasswordToggle = () => {
@@ -60,7 +54,13 @@ const RegisterPage: React.FC = () => {
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    const registerUser: RegisterUser = { username: username, password: password, balance:balance,pending:0, role:Role.USER }
+    const registerUser: RegisterUser = {
+      username: username,
+      password: password,
+      balance: balance,
+      pending: 0,
+      role: Role.USER,
+    }
     await register(api, registerUser)
   }
 
@@ -102,8 +102,8 @@ const RegisterPage: React.FC = () => {
                 </InputAdornment>
               }
             />
-                  </FormControl>
-                            <TextField
+          </FormControl>
+          <TextField
             variant='outlined'
             margin='normal'
             required
