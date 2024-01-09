@@ -164,8 +164,6 @@ const CreateDealPage: React.FC = () => {
               required
               className='deal-notes row'
               fullWidth
-              multiline
-              minRows={5}
               id='price'
               label='מחיר'
               name='price'

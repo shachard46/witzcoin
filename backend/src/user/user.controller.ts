@@ -1,4 +1,4 @@
-import { User } from '../user/user.interface'
+import { OutUser, User } from '../user/user.interface'
 import { UserService } from './user.service'
 import { Body, Controller, Get, Param, Post } from '@nestjs/common'
 import { Public, Role, Roles } from '../auth/auth.interfaces'
@@ -15,8 +15,8 @@ export class UserController {
   @Get(':username')
   async getUserByUsername(
     @Param('usernanme') username: string,
-  ): Promise<User | null> {
-    return await this.userService.getUserByUsername(username)
+  ): Promise<OutUser | null> {
+    return (await this.userService.getUserByUsername(username)).toOutUser()
   }
   @Public()
   @Get()
