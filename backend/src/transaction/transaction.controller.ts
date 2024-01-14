@@ -64,7 +64,6 @@ export class TransactionController {
       t => t.toOutTransaction(),
     )
   }
-  @Public()
   @Get()
   async getAllTransactions(): Promise<OutTransaction[]> {
     return (await this.transactionService.getAllTransactions()).map(trans =>

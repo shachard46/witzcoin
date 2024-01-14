@@ -11,6 +11,7 @@ import CreateDealPage from './componentes/transaction/create-transaction-page'
 import { TransactionHistoryPage } from './componentes/transaction/transactions-history-page'
 import RegisterPage from './componentes/auth/register-page'
 import { LogoutPage } from './componentes/auth/logout-page'
+import ProfilePage from './componentes/your-profile'
 
 function App() {
   const router = createBrowserRouter(
@@ -21,6 +22,7 @@ function App() {
         <Route path='register' element={<RegisterPage />} />
         <Route path='p/transaction' element={<CreateDealPage />} />
         <Route path='p/history' element={<TransactionHistoryPage />} />
+        <Route path='p/profile' element={<ProfilePage />} />
       </Route>,
     ),
   )

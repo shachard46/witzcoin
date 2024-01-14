@@ -23,7 +23,7 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
       return
     }
     api
-      .get(`user/${token?.access_token.username}`)
+      .get(`users/${token?.data.username}`)
       .then(res => setUser(res.data))
   }, [api, token, user])
 

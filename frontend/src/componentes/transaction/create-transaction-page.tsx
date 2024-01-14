@@ -64,7 +64,7 @@ const CreateDealPage: React.FC = () => {
     event.preventDefault()
     const res = await api.post('/transactions', {
       transaction: transaction,
-      issuing_username: token ? token.access_token.username : '',
+      issuing_username: token ? token.data  .username : '',
     })
     if (res) return
     // need to add socket.io.emit

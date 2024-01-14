@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect } from 'react'
 import {
   Paper,
   Table,
@@ -8,14 +8,15 @@ import {
   TableHead,
   TableRow,
 } from '@mui/material'
-import { useTransactions } from './transactions-provider'
 import { TransactionRow } from './transaction-row'
 import { TablePagination } from '@mui/base'
+import { useTransactions } from './transactions-hook'
 
 export const TransactionsList: React.FC<{ user: boolean }> = ({
   user = false,
 }) => {
-  const transactions = useTransactions(user)
+  const [transactions, refreshTransactions] = useTransactions(user)
+
   const [page, setPage] = React.useState(0)
 
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
@@ -29,7 +30,7 @@ export const TransactionsList: React.FC<{ user: boolean }> = ({
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
-
+  useEffect(() => refreshTransactions(), [])
   return (
     <Paper>
       <TableContainer component={Paper}>

@@ -1,7 +1,8 @@
 import { User } from "../transaction/models"
 
 export interface Token {
-  access_token: TokenData
+  access_token: string
+  data: TokenData
 }
 
 export interface TokenData {

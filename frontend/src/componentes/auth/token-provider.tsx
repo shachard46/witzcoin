@@ -4,7 +4,7 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import { deepEqual } from '../../utils'
 import { useApi } from '../api/api-provider'
 import Provider from '../provider-model'
-import { Token } from './models'
+import { Token, TokenData } from './models'
 
 const TokenContext = createContext<
   [Token | undefined, (token: Token | undefined) => void]
@@ -15,14 +15,10 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
 
   useEffect(() => {
     refreshToken(token, setToken)
-  }, [token])
-
-  useEffect(() => {
     if (token) {
       api.interceptors.request.use(config => {
-        config.headers.Authorization = `Bearer ${JSON.stringify(
-          token.access_token,
-        )}`
+        config.headers.Authorization = `Bearer ${token.access_token}`
+        console.log(config)
         return config
       })
     }
@@ -38,7 +34,13 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
 const getTokenFromStorage = (): Token | undefined => {
   const storage_token = localStorage.getItem('token')
   if (storage_token) {
-    const verified_token = jwtDecode<Token>(storage_token)
+    const verified_token_data = jwtDecode<TokenData>(storage_token)
+
+    const verified_token: Token = {
+      data: verified_token_data,
+      access_token: JSON.parse(storage_token).data.access_token,
+    }
+    console.log(verified_token)
     if (typeof verified_token != 'string') {
       return verified_token
     }
@@ -69,6 +71,7 @@ export const useToken = (): [
   (value: string | undefined) => void,
 ] => {
   const [state_token, setToken] = useContext(TokenContext)
+
   return [
     state_token,
     (value: string | undefined) => {
