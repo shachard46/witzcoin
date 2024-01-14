@@ -140,4 +140,10 @@ export class TransactionService {
       trans => trans.buyerUser === user || trans.sellerUser === user,
     )
   }
+  async getTransactionsByUser(username: string): Promise<Transaction[]> {
+    const user = await this.userService.getUserByUsername(username)
+    return (await this.getAllTransactions()).filter(
+      trans => trans.buyerUser === user || trans.sellerUser === user,
+    )
+  }
 }

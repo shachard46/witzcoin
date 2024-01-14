@@ -56,6 +56,14 @@ export class TransactionController {
       await this.transactionService.getTransactionById(id)
     ).toOutTransaction()
   }
+  @Get('user/:username')
+  async getUsersTransactions(
+    @Param('username') username: string,
+  ): Promise<OutTransaction[] | null> {
+    return (await this.transactionService.getTransactionsByUser(username)).map(
+      t => t.toOutTransaction(),
+    )
+  }
   @Public()
   @Get()
   async getAllTransactions(): Promise<OutTransaction[]> {

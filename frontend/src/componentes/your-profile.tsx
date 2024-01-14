@@ -1,25 +1,10 @@
-import {
-    Container,
-  Typography,
-} from '@mui/material'
-import { useToken } from './auth/token-provider'
-import { useApi } from './api/api-provider'
-import { useEffect, useState } from 'react'
-import { User } from './transaction/models'
+import { Container, Typography } from '@mui/material'
+import { useAuth } from './auth/auth-provider'
+import { useTransactions } from './transaction/transactions-provider'
+import { TransactionsList } from './transaction/transactions-list'
 
 const ProfilePage: React.FC = () => {
-  const [token] = useToken()
-  const api = useApi()
-  const [user, setUser] = useState<User | null>(null)
-  useEffect(() => {
-    if (!token) {
-      setUser(null)
-      return
-    }
-    api
-      .get(`user/${token?.access_token.username}`)
-      .then(res => setUser(res.data))
-  }, [user, setUser, token, api])
+  const { user } = useAuth()
   return (
     <div className='container'>
       <Container component='main' maxWidth='xs' className='root'>
@@ -37,8 +22,9 @@ const ProfilePage: React.FC = () => {
           </Typography>
 
           <Typography component='h1' variant='h5' align='center'>
-            הפרופיל שלך
+            עסקאות:
           </Typography>
+          <TransactionsList user={true} />
         </div>
       </Container>
     </div>
