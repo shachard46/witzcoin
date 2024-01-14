@@ -8,13 +8,13 @@ export const ProtectedPage: React.FC<ProtectedPageParams> = ({
   className,
   children,
 }) => {
-  const { isAutonticated, scope, isLoading } = useAuth()
+  const { isAutonticated, user, isLoading } = useAuth()
   if (isLoading) {
     return null
   }
   if (isAutonticated) {
     if (
-      (reqScope === Role.ADMIN && scope !== Role.ADMIN) ||
+      (reqScope === Role.ADMIN && user?.role !== Role.ADMIN) ||
       reqScope == Role.OUT
     ) {
       return null

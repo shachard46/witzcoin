@@ -2,27 +2,36 @@ import { createContext, useContext, useEffect, useState } from 'react'
 import Provider from '../provider-model'
 import { Auth } from './models'
 import { useToken } from './token-provider'
+import { User } from '../transaction/models'
+import { useApi } from '../api/api-provider'
 const AuthContext = createContext<Auth>({
   isAutonticated: false,
-  user: '',
-  scope: '',
+  user: null,
   isLoading: true,
 })
 
 export const AuthProvider: React.FC<Provider> = ({ children }) => {
-  const [token] = useToken()
+  const [token,] = useToken()
+  const api = useApi()
   const [isLoading, setIsLoading] = useState(true)
+  const [user, setUser] = useState<User | null>(null)
   useEffect(() => {
     setIsLoading(true)
     setIsLoading(false)
-  }, [])
+    if (!token) {
+      setUser(null)
+      return
+    }
+    api
+      .get(`user/${token?.access_token.username}`)
+      .then(res => setUser(res.data))
+  }, [api, token, user])
 
   return (
     <AuthContext.Provider
       value={{
         isAutonticated: token ? true : false,
-        user: token ? token.access_token.sub.username : '',
-        scope: token ? token.access_token.sub.role : '',
+        user: user,
         isLoading,
       }}
     >

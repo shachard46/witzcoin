@@ -1,3 +1,5 @@
+import { User } from "../transaction/models"
+
 export interface Token {
   access_token: TokenData
 }
@@ -12,8 +14,7 @@ export interface TokenSub {
 }
 export interface Auth {
   isAutonticated: boolean
-  user: string
-  scope: string
+  user: User | null
   isLoading: boolean
 }
 
