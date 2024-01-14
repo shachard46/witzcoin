@@ -18,7 +18,6 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
     if (token) {
       api.interceptors.request.use(config => {
         config.headers.Authorization = `Bearer ${token.access_token}`
-        console.log(config)
         return config
       })
     }

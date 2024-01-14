@@ -15,7 +15,7 @@ export const TransactionsProvider: React.FC<Provider> = ({ children }) => {
     console.log(user)
     refreshTransactions(api, setTransactions, setUserTransactions, user)
   }, [user, isAutonticated])
-
+  
   return (
     <TransactionsContext.Provider
       value={[

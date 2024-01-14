@@ -11,7 +11,7 @@ const AuthContext = createContext<Auth>({
 })
 
 export const AuthProvider: React.FC<Provider> = ({ children }) => {
-  const [token,] = useToken()
+  const [token] = useToken()
   const api = useApi()
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
@@ -22,9 +22,9 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
       setUser(null)
       return
     }
-    api
-      .get(`users/${token?.data.username}`)
-      .then(res => setUser(res.data))
+    
+    api.get(`users/${token?.data.username}`).then(res => setUser(res.data))
+    console.log('usertoken', token)
   }, [api, token, user])
 
   return (

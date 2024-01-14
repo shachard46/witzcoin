@@ -1,10 +1,9 @@
-import { AxiosInstance } from "axios"
-import { Transaction, User } from "./models"
-import { createContext, useContext } from "react"
-export const TransactionsContext = createContext<[Transaction[][], () => void]>([
-  [],
-  () => {},
-])
+import { AxiosInstance } from 'axios'
+import { Transaction, User } from './models'
+import { createContext, useContext } from 'react'
+export const TransactionsContext = createContext<[Transaction[][], () => void]>(
+  [[], () => {}],
+)
 
 export const refreshTransactions = (
   api: AxiosInstance,
@@ -13,6 +12,8 @@ export const refreshTransactions = (
   user: User | null,
 ) => {
   api.get<Transaction[]>('transactions').then(res => setTransactions(res.data))
+  console.log(user)
+
   api
     .get<Transaction[]>(`transactions/user/${user?.username}`)
     .then(res => setUserTransactions(res.data))
