@@ -1,7 +1,12 @@
 /* eslint-disable @typescript-eslint/no-empty-function */
 import { jwtDecode } from 'jwt-decode'
-import { createContext, useContext, useEffect, useState } from 'react'
-import { deepEqual } from '../../utils'
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useState,
+} from 'react'
 import { useApi } from '../api/api-provider'
 import Provider from '../provider-model'
 import { Token, TokenData } from './models'
@@ -12,16 +17,20 @@ const TokenContext = createContext<
 export const TokenProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
   const [token, setToken] = useState<Token | undefined>(undefined)
-
+  const refreshTokenCallback = useCallback(
+    () => refreshToken(setToken),
+    [setToken],
+  )
   useEffect(() => {
-    refreshToken(token, setToken)
+    refreshTokenCallback()
     if (token) {
       api.interceptors.request.use(config => {
         config.headers.Authorization = `Bearer ${token.access_token}`
+        console.log('nanananan ', config)
         return config
       })
     }
-  }, [api, token])
+  })
 
   return (
     <TokenContext.Provider value={[token, setToken]}>
@@ -47,20 +56,9 @@ const getTokenFromStorage = (): Token | undefined => {
   return undefined
 }
 
-const refreshToken = (
-  state_token: Token | undefined,
-  setToken: (token: Token | undefined) => void,
-) => {
+const refreshToken = (setToken: (token: Token | undefined) => void) => {
   const storage_token = getTokenFromStorage()
-  if (!storage_token) {
-    return setToken(storage_token)
-  }
-  if (
-    !deepEqual(storage_token, state_token) &&
-    Object.keys(storage_token).length > 1
-  ) {
-    setToken(storage_token)
-  }
+  setToken(storage_token)
 }
 export const removeToken = () => {
   localStorage.removeItem('token')
@@ -75,7 +73,7 @@ export const useToken = (): [
     state_token,
     (value: string | undefined) => {
       if (value) localStorage.setItem('token', value)
-      refreshToken(state_token, setToken)
+      refreshToken(setToken)
     },
   ]
 }

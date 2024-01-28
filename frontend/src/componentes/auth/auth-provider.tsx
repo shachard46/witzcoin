@@ -22,9 +22,9 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
       setUser(null)
       return
     }
+    console.log('im first');
     
-    api.get(`users/${token?.data.username}`).then(res => setUser(res.data))
-    console.log('usertoken', token)
+    api.get(`users/nickholden123`).then(res => setUser(res.data)) // ${token?.data?.sub?.username}
   }, [api, token, user])
 
   return (
