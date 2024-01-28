@@ -1,10 +1,11 @@
-import { createContext, useContext, useEffect, useState } from 'react'
+import { createContext, useCallback, useEffect, useState } from 'react'
 import Provider from '../provider-model'
 import { Auth } from './models'
 import { useToken } from './token-provider'
 import { User } from '../transaction/models'
 import { useApi } from '../api/api-provider'
-const AuthContext = createContext<Auth>({
+import { AxiosInstance } from 'axios'
+export const AuthContext = createContext<Auth>({
   isAutonticated: false,
   user: null,
   isLoading: true,
@@ -15,17 +16,21 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
+  const getUserCallback = useCallback(
+    () => getUser(api, setUser),
+    [api, user, setUser, token],
+  )
   useEffect(() => {
     setIsLoading(true)
-    setIsLoading(false)
     if (!token) {
       setUser(null)
       return
     }
-    console.log('im first');
-    
-    api.get(`users/nickholden123`).then(res => setUser(res.data)) // ${token?.data?.sub?.username}
-  }, [api, token, user])
+    console.log('im first')
+    getUserCallback().finally(() => setIsLoading(false))
+
+    // ${token?.data?.sub?.username}
+  }, [api, token])
 
   return (
     <AuthContext.Provider
@@ -39,7 +44,8 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
     </AuthContext.Provider>
   )
 }
-
-export const useAuth = () => {
-  return useContext(AuthContext)
+const getUser = (api: AxiosInstance, setUser: (user: User) => void) => {
+  return api.get(`users/nickholden123`).then(res => {
+    setUser(res.data)
+  })
 }

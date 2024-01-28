@@ -2,7 +2,7 @@ import { useEffect, useState } from 'react'
 import Provider from '../provider-model'
 import { Transaction } from './models'
 import { useApi } from '../api/api-provider'
-import { useAuth } from '../auth/auth-provider'
+import { useAuth } from '../auth/auth-hook'
 import { TransactionsContext, refreshTransactions } from './transactions-hook'
 
 export const TransactionsProvider: React.FC<Provider> = ({ children }) => {

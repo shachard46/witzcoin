@@ -1,5 +1,5 @@
 import { Container, Typography } from '@mui/material'
-import { useAuth } from './auth/auth-provider'
+import { useAuth } from './auth/auth-hook'
 import { TransactionsList } from './transaction/transactions-list'
 import { ProtectedPage } from './protected/protected-page'
 import { Role } from './auth/models'

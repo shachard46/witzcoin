@@ -10,6 +10,7 @@ import {
 import { useApi } from '../api/api-provider'
 import Provider from '../provider-model'
 import { Token, TokenData } from './models'
+import { AxiosInstance } from 'axios'
 
 const TokenContext = createContext<
   [Token | undefined, (token: Token | undefined) => void]
@@ -19,18 +20,16 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
   const [token, setToken] = useState<Token | undefined>(undefined)
   const refreshTokenCallback = useCallback(
     () => refreshToken(setToken),
-    [setToken],
+    [token, setToken],
+  )
+  const setInterceptorsCallback = useCallback(
+    () => setInterceptors(api, token),
+    [api, token],
   )
   useEffect(() => {
     refreshTokenCallback()
-    if (token) {
-      api.interceptors.request.use(config => {
-        config.headers.Authorization = `Bearer ${token.access_token}`
-        console.log('nanananan ', config)
-        return config
-      })
-    }
-  })
+    setInterceptorsCallback()
+  }, [])
 
   return (
     <TokenContext.Provider value={[token, setToken]}>
@@ -55,7 +54,13 @@ const getTokenFromStorage = (): Token | undefined => {
   }
   return undefined
 }
-
+const setInterceptors = (api: AxiosInstance, token: Token | undefined) => {
+  api.interceptors.request.use(config => {
+    config.headers.Authorization = `Bearer ${token?.access_token}`
+    console.log('nanananan ', config)
+    return config
+  })
+}
 const refreshToken = (setToken: (token: Token | undefined) => void) => {
   const storage_token = getTokenFromStorage()
   setToken(storage_token)
