@@ -4,11 +4,16 @@ import { TransactionsList } from './transaction/transactions-list'
 import { ProtectedPage } from './protected/protected-page'
 import { Role } from './auth/models'
 import { useToken } from './auth/token-provider'
+import { SetStateAction, useEffect, useState } from 'react'
+import { User } from './transaction/models'
+import { useApi } from './api/api-provider'
 
 const ProfilePage: React.FC = () => {
-  const { user } = useAuth()
+  //   const { user } = useAuth()
+  const api = useApi()
   const [token] = useToken()
-//   console.log('tokendata '+ token?.data.sub.username)
+  const [user, setUser] = useState<User | null>(null)
+
   return (
     <ProtectedPage reqScope={Role.USER}>
       <div className='container'>

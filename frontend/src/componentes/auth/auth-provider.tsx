@@ -30,7 +30,7 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
     getUserCallback().finally(() => setIsLoading(false))
 
     // ${token?.data?.sub?.username}
-  }, [api, token])
+  }, [token])
 
   return (
     <AuthContext.Provider

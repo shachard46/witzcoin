@@ -11,6 +11,7 @@ import { useApi } from '../api/api-provider'
 import Provider from '../provider-model'
 import { Token, TokenData } from './models'
 import { AxiosInstance } from 'axios'
+import { deepEqual } from '../../utils'
 
 const TokenContext = createContext<
   [Token | undefined, (token: Token | undefined) => void]
@@ -19,8 +20,8 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
   const api = useApi()
   const [token, setToken] = useState<Token | undefined>(undefined)
   const refreshTokenCallback = useCallback(
-    () => refreshToken(setToken),
-    [token, setToken],
+    () => refreshToken(token, setToken),
+    [JSON.stringify(token)],
   )
   const setInterceptorsCallback = useCallback(
     () => setInterceptors(api, token),
@@ -29,7 +30,7 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
   useEffect(() => {
     refreshTokenCallback()
     setInterceptorsCallback()
-  }, [])
+  }, [token])
 
   return (
     <TokenContext.Provider value={[token, setToken]}>
@@ -55,15 +56,22 @@ const getTokenFromStorage = (): Token | undefined => {
   return undefined
 }
 const setInterceptors = (api: AxiosInstance, token: Token | undefined) => {
-  api.interceptors.request.use(config => {
-    config.headers.Authorization = `Bearer ${token?.access_token}`
-    console.log('nanananan ', config)
-    return config
-  })
+  if (token) {
+    api.interceptors.request.use(config => {
+      config.headers.Authorization = `Bearer ${token.access_token}`
+      console.log('nanananan ', config)
+      return config
+    })
+  }
 }
-const refreshToken = (setToken: (token: Token | undefined) => void) => {
+const refreshToken = (
+  token: Token | undefined,
+  setToken: (token: Token | undefined) => void,
+) => {
   const storage_token = getTokenFromStorage()
-  setToken(storage_token)
+  if (storage_token && !deepEqual(token, storage_token)) {
+    setToken(storage_token)
+  }
 }
 export const removeToken = () => {
   localStorage.removeItem('token')
@@ -71,6 +79,7 @@ export const removeToken = () => {
 export const useToken = (): [
   Token | undefined,
   (value: string | undefined) => void,
+  string,
 ] => {
   const [state_token, setToken] = useContext(TokenContext)
 
@@ -78,7 +87,8 @@ export const useToken = (): [
     state_token,
     (value: string | undefined) => {
       if (value) localStorage.setItem('token', value)
-      refreshToken(setToken)
+      refreshToken(state_token, setToken)
     },
+    JSON.stringify(state_token),
   ]
 }
