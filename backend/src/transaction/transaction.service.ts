@@ -14,7 +14,9 @@ import {
   DB_PORT,
 } from '../backend-constants'
 import { UserService } from '../user/user.service'
+import { Injectable } from '@nestjs/common'
 
+@Injectable()
 export class TransactionService {
   connection: DataSource
   repository: Repository<Transaction>
@@ -142,6 +144,7 @@ export class TransactionService {
   }
   async getTransactionsByUser(username: string): Promise<Transaction[]> {
     const user = await this.userService.getUserByUsername(username)
+    console.log('user: ', user)
     return (await this.getAllTransactions()).filter(
       trans => trans.buyerUser === user || trans.sellerUser === user,
     )

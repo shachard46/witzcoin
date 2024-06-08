@@ -27,12 +27,13 @@ export class AuthGuard implements CanActivate {
       context.getClass(),
     ]) ?? [Role.USER]
     if (isPublic) {
-      console.log('aaaaaaaaaaa');
-      
+      console.log('aaaaaaaaaaa')
+
       return true
     }
     const request = context.switchToHttp().getRequest()
     const token = this.extractTokenFromHeader(request)
+
     if (!token) {
       throw new UnauthorizedException()
     }
@@ -40,10 +41,9 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: jwtConstants.secret,
       })
-      
+
       const user = payload['access_token']['sub']
-      console.log(user);
-      if (!roles.includes(user.role)) {
+      if (!roles.includes(user.role) && user.role != Role.ADMIN) {
         throw new UnauthorizedException()
       }
     } catch {

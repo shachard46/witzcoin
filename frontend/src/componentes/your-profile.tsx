@@ -9,10 +9,9 @@ import { User } from './transaction/models'
 import { useApi } from './api/api-provider'
 
 const ProfilePage: React.FC = () => {
-  //   const { user } = useAuth()
+  const { user } = useAuth()
   const api = useApi()
-  const [token] = useToken()
-  const [user, setUser] = useState<User | null>(null)
+  // const [token] = useToken()
 
   return (
     <ProtectedPage reqScope={Role.USER}>
