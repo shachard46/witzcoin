@@ -12,9 +12,10 @@ import { TransactionRow } from './transaction-row'
 import { TablePagination } from '@mui/base'
 import { useTransactions } from './transactions-hook'
 import { styled } from '@mui/material/styles'
-import { Approver } from './models'
+import { Approver, Transaction, User } from './models'
 import { ProtectedPage } from '../protected/protected-page'
 import { Role } from '../auth/models'
+import { useAuth } from '../auth/auth-hook'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -36,17 +37,35 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
+const isYourPendingTransactions = (user: User | null, t: Transaction) => {
+  let role = Approver.NON
+  if (t.buyerUser == user?.username) role = Approver.BUYER
+  else if (t.sellerUser == user?.username) role = Approver.SELLER
+  else if (t.witnessUser == user?.username) role = Approver.WITNESS
+  else return false
+
+  if (t.status == Approver.ALL) return true
+  if (role == Approver.BUYER && t.status % 2 != 0) return true
+  if (role == Approver.WITNESS && t.status >= 4) return true
+  if (
+    role == Approver.SELLER &&
+    (t.status % 3 == 0 || t.status == Approver.SELLER)
+  )
+    return true
+  return false
+}
+
 export const PendingTransactions: React.FC<{}> = ({}) => {
   const [transactions, refreshTransactions] = useTransactions(true)
-
+  const { user } = useAuth()
   const [page, setPage] = React.useState(0)
 
   const [rowsPerPage, setRowsPerPage] = React.useState(10)
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
   }
-  const pendingTransactionsList = transactions.filter(
-    t => t.status <= Approver.ALL,
+  const pendingTransactionsList = transactions.filter(t =>
+    isYourPendingTransactions(user, t),
   )
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
