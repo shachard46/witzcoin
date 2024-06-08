@@ -46,18 +46,7 @@ export class Transaction {
 
   @Column()
   status: number
-  toOutTransaction(): OutTransaction {
-    return {
-      buyerUsername: this.buyerUser.username,
-      sellerUsername: this.sellerUser.username,
-      witnessUsername: this.witnessUser.username,
-      price: this.price,
-      category: this.category,
-      details: this.details,
-      status: this.status,
-      transactionName: this.transactionName,
-    }
-  }
+
   constructor(
     transactionName: string,
     buyerUser: User,
@@ -106,4 +95,17 @@ export interface OutTransaction {
   category: string
   details: string
   status: number
+}
+
+export const toOutTransaction = (trans: Transaction): OutTransaction => {
+  return {
+    buyerUsername: trans.buyerUser.username,
+    sellerUsername: trans.sellerUser.username,
+    witnessUsername: trans.witnessUser.username,
+    price: trans.price,
+    category: trans.category,
+    details: trans.details,
+    status: trans.status,
+    transactionName: trans.transactionName,
+  }
 }

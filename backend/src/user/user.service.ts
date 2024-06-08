@@ -32,6 +32,7 @@ export class UserService {
       logging: true,
       entities: [User],
       synchronize: true,
+      
     })
     await this.connection.initialize()
     this.repository = this.connection.getRepository(User)

@@ -4,10 +4,11 @@ import {
   TransStatusUpdateDto,
   Transaction,
   TransactionCreationDto,
+  toOutTransaction,
 } from '../transaction/transaction.interface'
 import { TransactionService } from './transaction.service'
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
-import { OutUser, User } from '../user/user.interface'
+import { OutUser, User, toOutUser } from '../user/user.interface'
 import { Public } from 'auth/auth.interfaces'
 
 @Controller('/api/transactions')
@@ -27,7 +28,7 @@ export class TransactionController {
   async getTransactionsWaintingForApproval(): Promise<OutTransaction[]> {
     return (
       await this.transactionService.getTransactionsWaintingForApproval()
-    ).map(t => t.toOutTransaction())
+    ).map(t => toOutTransaction(t))
   }
   @Put('waiting/:id')
   async updateTransactionStatus(
@@ -46,28 +47,28 @@ export class TransactionController {
   ): Promise<OutUser[]> {
     return (
       await this.transactionService.getUsersWaitingByTransactionId(id)
-    ).map(user => user.toOutUser())
+    ).map(user => toOutUser(user))
   }
   @Get(':id')
   async getTransactionById(
     @Param('id') id: number,
   ): Promise<OutTransaction | null> {
-    return (
-      await this.transactionService.getTransactionById(id)
-    ).toOutTransaction()
+    return toOutTransaction(
+      await this.transactionService.getTransactionById(id),
+    )
   }
   @Get('user/:username')
   async getUsersTransactions(
     @Param('username') username: string,
   ): Promise<OutTransaction[] | null> {
     return (await this.transactionService.getTransactionsByUser(username)).map(
-      t => t.toOutTransaction(),
+      t => toOutTransaction(t),
     )
   }
   @Get()
   async getAllTransactions(): Promise<OutTransaction[]> {
     return (await this.transactionService.getAllTransactions()).map(trans =>
-      trans.toOutTransaction(),
+      toOutTransaction(trans),
     )
   }
 }

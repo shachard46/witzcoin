@@ -16,14 +16,6 @@ export class User {
   @Column()
   role: Role
 
-  toOutUser(): OutUser {
-    return {
-      username: this.username,
-      balance: this.balance,
-      pending: this.pending,
-      role: this.role,
-    }
-  }
   constructor(
     username: string,
     password: string,
@@ -49,4 +41,13 @@ export interface OutUser {
   balance: number
   pending: number
   role: Role
+}
+
+export const toOutUser = (user: User): OutUser => {
+  return {
+    username: user.username,
+    balance: user.balance,
+    pending: user.pending,
+    role: user.role,
+  }
 }
