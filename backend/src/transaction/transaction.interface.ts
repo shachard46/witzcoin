@@ -88,9 +88,9 @@ export class TransactionCreationDto {
 
 export interface OutTransaction {
   transactionName: string
-  buyerUsername: string
-  sellerUsername: string
-  witnessUsername: string
+  buyerUser: string
+  sellerUser: string
+  witnessUser: string
   price: number
   category: string
   details: string
@@ -99,9 +99,9 @@ export interface OutTransaction {
 
 export const toOutTransaction = (trans: Transaction): OutTransaction => {
   return {
-    buyerUsername: trans.buyerUser.username,
-    sellerUsername: trans.sellerUser.username,
-    witnessUsername: trans.witnessUser.username,
+    buyerUser: trans.buyerUser.username,
+    sellerUser: trans.sellerUser.username,
+    witnessUser: trans.witnessUser.username,
     price: trans.price,
     category: trans.category,
     details: trans.details,

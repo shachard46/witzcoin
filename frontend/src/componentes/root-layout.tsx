@@ -39,6 +39,9 @@ const RootLayout: React.FC = () => {
             <li className='nav-link'>
               <NavLink to='/p/history'>הסטוריית עסקאות</NavLink>
             </li>
+            <li className='nav-link'>
+              <NavLink to='/p/pending'>עיסקאות ממתינות</NavLink>
+            </li>
           </ul>
         </nav>
       </header>

@@ -1,14 +1,14 @@
 import { Role } from '../auth/models'
 
 export interface Transaction {
-  buyerUsername: string
-  sellerUsername: string
-  witnessUsername: string
+  buyerUser: string
+  sellerUser: string
+  witnessUser: string
   transactionName: string
   category: string[]
   price: number
   details: string
-  status: number
+  status: Approver
 }
 
 export enum Approver {

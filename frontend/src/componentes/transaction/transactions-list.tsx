@@ -3,14 +3,35 @@ import {
   Paper,
   Table,
   TableBody,
-  TableCell,
   TableContainer,
   TableHead,
   TableRow,
 } from '@mui/material'
+import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import { TransactionRow } from './transaction-row'
 import { TablePagination } from '@mui/base'
 import { useTransactions } from './transactions-hook'
+import { styled } from '@mui/material/styles'
+
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+  [`&.${tableCellClasses.head}`]: {
+    backgroundColor: theme.palette.common.black,
+    color: theme.palette.common.white,
+  },
+  [`&.${tableCellClasses.body}`]: {
+    fontSize: 14,
+  },
+}))
+
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+  '&:nth-of-type(odd)': {
+    backgroundColor: theme.palette.action.hover,
+  },
+  // hide last border
+  '&:last-child td, &:last-child th': {
+    border: 0,
+  },
+}))
 
 export const TransactionsList: React.FC<{ user: boolean }> = ({
   user = false,
@@ -30,27 +51,30 @@ export const TransactionsList: React.FC<{ user: boolean }> = ({
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
+
   useEffect(() => refreshTransactions(), [])
   return (
     <Paper>
       <TableContainer component={Paper}>
-        <Table stickyHeader aria-label='sticky collapsible table'>
+        <Table stickyHeader aria-label='sticky collapsible table' dir='rtl'>
           <TableHead>
-            <TableRow>
-              <TableCell />
-              <TableCell>שם העסקה</TableCell>
-              <TableCell align='center'>שם הקונה</TableCell>
-              <TableCell align='center'>שם המוכר</TableCell>
-              <TableCell align='center'>שם העד</TableCell>
-              <TableCell align='center'>מחיר</TableCell>
-              <TableCell align='center'>קטגוריות</TableCell>
-            </TableRow>
+            <StyledTableRow>
+              <StyledTableCell />
+              <StyledTableCell>שם העסקה</StyledTableCell>
+              <StyledTableCell align='center'>שם הקונה</StyledTableCell>
+              <StyledTableCell align='center'>שם המוכר</StyledTableCell>
+              <StyledTableCell align='center'>שם העד</StyledTableCell>
+              <StyledTableCell align='center'>מחיר</StyledTableCell>
+              <StyledTableCell align='center'>קטגוריות</StyledTableCell>
+              {/* {user ? <StyledTableCell align='center'>סטטוס</StyledTableCell> : null} */}
+            </StyledTableRow>
           </TableHead>
           <TableBody>
             {transactions.map(transaction => (
               <TransactionRow
                 key={transactions.indexOf(transaction)}
                 transaction={transaction}
+                pending={false}
               />
             ))}
           </TableBody>

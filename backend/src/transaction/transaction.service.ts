@@ -146,7 +146,9 @@ export class TransactionService {
     const user = await this.userService.getUserByUsername(username)
     console.log('user: ', user)
     return (await this.getAllTransactions()).filter(
-      trans => trans.buyerUser === user || trans.sellerUser === user,
+      trans =>
+        trans.buyerUser.username === username ||
+        trans.sellerUser.username === user.username,
     )
   }
 }

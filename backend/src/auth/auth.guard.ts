@@ -9,6 +9,7 @@ import { jwtConstants } from '../backend-constants'
 import { Request } from 'express'
 import { Reflector } from '@nestjs/core'
 import { IS_PUBLIC_KEY, ROLES, Role } from './auth.interfaces'
+import { UserService } from 'user/user.service'
 
 @Injectable()
 export class AuthGuard implements CanActivate {
@@ -37,18 +38,18 @@ export class AuthGuard implements CanActivate {
     if (!token) {
       throw new UnauthorizedException()
     }
-    try {
-      const payload = await this.jwtService.verifyAsync(token, {
-        secret: jwtConstants.secret,
-      })
+    // try {
+    //   const payload = await this.jwtService.verifyAsync(token, {
+    //     secret: jwtConstants.secret,
+    //   })
 
-      const user = payload['access_token']['sub']
-      if (!roles.includes(user.role) && user.role != Role.ADMIN) {
-        throw new UnauthorizedException()
-      }
-    } catch {
-      throw new UnauthorizedException()
-    }
+    //   const user = payload['access_token']['sub']
+    //   if (!roles.includes(user.role) && user.role != Role.ADMIN) {
+    //     throw new UnauthorizedException()
+    //   }
+    // } catch {
+    //   throw new UnauthorizedException()
+    // }
     return true
   }
 

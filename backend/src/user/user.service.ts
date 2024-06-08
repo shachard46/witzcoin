@@ -32,7 +32,6 @@ export class UserService {
       logging: true,
       entities: [User],
       synchronize: true,
-      
     })
     await this.connection.initialize()
     this.repository = this.connection.getRepository(User)
@@ -44,8 +43,8 @@ export class UserService {
     return user
   }
   async getUserByUsername(username: string): Promise<User | null> {
-    console.log('username', username);
-    
+    console.log('username', username)
+
     return await this.repository.findOne({ where: { username: username } })
   }
 
@@ -69,9 +68,12 @@ export class UserService {
     price: number,
     income: number,
   ): Promise<void> {
-    await this.repository.update(username, {
-      pending: () => `pending + ${price * income}`,
-    })
+    await this.repository
+      .createQueryBuilder()
+      .update(User)
+      .set({ pending: () => `pending + ${price * income}` })
+      .where('username = :username', { username })
+      .execute()
   }
   async updateUsersOnceTransactionApproved(trans: Transaction) {
     await this.changeBalanceByUsername(

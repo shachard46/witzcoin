@@ -24,9 +24,9 @@ const CreateDealPage: React.FC = () => {
   const api = useApi()
   const [token] = useToken()
   const [transaction, setTrasaction] = useState<Transaction>({
-    buyerUsername: '',
-    sellerUsername: '',
-    witnessUsername: '',
+    buyerUser: '',
+    sellerUser: '',
+    witnessUser: '',
     category: [],
     details: '',
     price: 0,
@@ -43,9 +43,9 @@ const CreateDealPage: React.FC = () => {
       }
     }
   }
-  const handleBuyerUsernameChange = handleInputChange('buyerUsername')
-  const handleSellerUsernameChange = handleInputChange('sellerUsername')
-  const handleWitnessUsernameChange = handleInputChange('witnessUsername')
+  const handleBuyerUsernameChange = handleInputChange('buyerUser')
+  const handleSellerUsernameChange = handleInputChange('sellerUser')
+  const handleWitnessUsernameChange = handleInputChange('witnessUser')
   const handleTransactionNameChange = handleInputChange('transactionName')
   const handleDetailsChange = handleInputChange('details')
   const handlePriceChange = handleInputChange('price')
@@ -64,14 +64,14 @@ const CreateDealPage: React.FC = () => {
     event.preventDefault()
     const res = await api.post('/transactions', {
       transaction: transaction,
-      issuing_username: token ? token.data  .username : '',
+      issuing_username: token ? token.data.username : '',
     })
     if (res) return
     // need to add socket.io.emit
   }
   const categories_items = categories.map(item => {
     return (
-      <MenuItem value={item}>
+      <MenuItem value={item} id={categories.indexOf(item).toString()}>
         <Checkbox checked={transaction.category.indexOf(item) > -1} />{' '}
         <ListItemText primary={item} />{' '}
       </MenuItem>
@@ -111,7 +111,7 @@ const CreateDealPage: React.FC = () => {
                 name='buyer_username'
                 autoComplete='שם הקונה'
                 autoFocus
-                value={transaction.buyerUsername}
+                value={transaction.buyerUser}
                 onChange={handleBuyerUsernameChange}
               />
               <TextField
@@ -125,7 +125,7 @@ const CreateDealPage: React.FC = () => {
                 name='witness_username'
                 autoComplete='שם העד'
                 autoFocus
-                value={transaction.witnessUsername}
+                value={transaction.witnessUser}
                 onChange={handleWitnessUsernameChange}
               />
               <TextField
@@ -139,7 +139,7 @@ const CreateDealPage: React.FC = () => {
                 name='seller_username'
                 autoComplete='שם המוכר'
                 autoFocus
-                value={transaction.sellerUsername}
+                value={transaction.sellerUser}
                 onChange={handleSellerUsernameChange}
               />
             </div>
@@ -169,7 +169,7 @@ const CreateDealPage: React.FC = () => {
               name='price'
               autoComplete='0'
               autoFocus
-              value={transaction.details}
+              value={transaction.price}
               onChange={handlePriceChange}
             />
             <TextField
