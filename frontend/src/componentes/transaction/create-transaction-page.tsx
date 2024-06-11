@@ -67,7 +67,8 @@ const CreateDealPage: React.FC = () => {
       transaction: transaction,
       issuing_username: token ? token.data.username : '',
     })
-    if (res) return
+    if (res) window.location.href = '/p/profile'
+    return
     // need to add socket.io.emit
   }
   const categories_items = categories.map(item => {

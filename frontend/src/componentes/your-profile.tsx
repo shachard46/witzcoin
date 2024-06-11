@@ -1,11 +1,9 @@
 import styled from 'styled-components'
-import { Container, Typography } from '@mui/material'
+import { Typography } from '@mui/material'
 import { useAuth } from './auth/auth-hook'
 import { TransactionsList } from './transaction/transactions-list'
 import { ProtectedPage } from './protected/protected-page'
 import { Role } from './auth/models'
-import { useToken } from './auth/token-provider'
-import { useApi } from './api/api-provider'
 
 // Styled-components for styling
 const ProfileContainer = styled.div`
@@ -31,21 +29,22 @@ const UserBalance = styled.p`
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth()
-  const api = useApi()
-  // const [token] = useToken()
-
+  if (!user) return null
   return (
     <ProtectedPage reqScope={Role.USER}>
-      <div className='container'>
+      <div className='container' dir='rtl'>
         <ProfileContainer>
           <div>
             <Typography component='h1' variant='h5' align='center'>
               הפרופיל שלך
             </Typography>
 
-            <UserName>שם: {user?.username}</UserName>
+            <UserName>שם: {user.username}</UserName>
 
-            <UserBalance>עו״ש: {user?.balance}</UserBalance>
+            <UserBalance>עו״ש: {user.balance}</UserBalance>
+            <p style={{ color: user.pending > 0 ? '#28a745' : 'rgb(253 0 0)' }}>
+              סכום מעסקאות ממתינות: {user.pending}
+            </p>
 
             <Typography component='h1' variant='h5' align='center'>
               עסקאות:

@@ -49,13 +49,7 @@ export class TransactionService {
     await this.connection.initialize()
     this.repository = this.connection.getRepository(Transaction)
   }
-  async createTransaction(
-    trans: OutTransaction,
-    issueing_username: string,
-  ): Promise<Transaction> {
-    const issueing_user =
-      await this.userService.getUserByUsername(issueing_username)
-    console.log('balanceafter: ', trans.buyerUser)
+  async createTransactionUsers(trans: OutTransaction) {
     const buyerUser = await this.userService.getUserByUsername(trans.buyerUser)
     if (!buyerUser)
       throw new NotFoundException(`Buyer user not found: ${trans.buyerUser}`)
@@ -73,7 +67,18 @@ export class TransactionService {
       throw new NotFoundException(
         `Witness user not found: ${trans.witnessUser}`,
       )
+    return { buyerUser, sellerUser, witnessUser }
+  }
+  async createTransaction(
+    trans: OutTransaction,
+    issueing_username: string,
+  ): Promise<Transaction> {
+    const issueing_user =
+      await this.userService.getUserByUsername(issueing_username)
+    console.log('balanceafter: ', trans.buyerUser)
 
+    const { buyerUser, sellerUser, witnessUser } =
+      await this.createTransactionUsers(trans)
     const transaction: Transaction = new Transaction(
       trans.transactionName,
       buyerUser,

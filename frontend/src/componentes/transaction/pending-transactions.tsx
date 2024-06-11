@@ -45,6 +45,7 @@ const isYourPendingTransactions = (user: User | null, t: Transaction) => {
   else return false
 
   if (t.status == Approver.ALL) return true
+  if (t.status == Approver.NON) return false
   if (role == Approver.BUYER && t.status % 2 != 0) return true
   if (role == Approver.WITNESS && t.status >= 4) return true
   if (
