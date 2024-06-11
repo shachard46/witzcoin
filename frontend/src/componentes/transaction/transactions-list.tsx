@@ -1,3 +1,7 @@
+import {
+  TablePagination,
+  tablePaginationClasses as classes,
+} from '@mui/base/TablePagination'
 import React, { useEffect } from 'react'
 import {
   Paper,
@@ -9,7 +13,6 @@ import {
 } from '@mui/material'
 import TableCell, { tableCellClasses } from '@mui/material/TableCell'
 import { TransactionRow } from './transaction-row'
-import { TablePagination } from '@mui/base'
 import { useTransactions } from './transactions-hook'
 import { styled } from '@mui/material/styles'
 import { Transaction } from './models'
@@ -62,7 +65,7 @@ export const TransactionsList: React.FC<{
           <TableHead>
             <StyledTableRow>
               <StyledTableCell />
-              <StyledTableCell>שם העסקה</StyledTableCell>
+              <StyledTableCell align='center'>שם העסקה</StyledTableCell>
               <StyledTableCell align='center'>שם הקונה</StyledTableCell>
               <StyledTableCell align='center'>שם המוכר</StyledTableCell>
               <StyledTableCell align='center'>שם העד</StyledTableCell>
@@ -87,8 +90,18 @@ export const TransactionsList: React.FC<{
           </TableBody>
         </Table>
       </TableContainer>
-      <TablePagination
-        rowsPerPageOptions={[10, 25, 100]}
+      <CustomTablePagination
+        rowsPerPageOptions={[5, 10, 25, { label: 'All', value: -1 }]}
+        colSpan={3}
+        slotProps={{
+          select: {
+            'aria-label': 'rows per page',
+          },
+          actions: {
+            showFirstButton: true,
+            showLastButton: true,
+          },
+        }}
         count={transactions.length}
         rowsPerPage={rowsPerPage}
         page={page}
@@ -98,3 +111,38 @@ export const TransactionsList: React.FC<{
     </Paper>
   )
 }
+
+const CustomTablePagination = styled(TablePagination)`
+  & .${classes.toolbar} {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+
+    @media (min-width: 768px) {
+      flex-direction: row;
+      align-items: center;
+    }
+  }
+
+  & .${classes.selectLabel} {
+    margin: 0;
+  }
+
+  & .${classes.displayedRows} {
+    margin: 0;
+
+    @media (min-width: 768px) {
+      margin-left: auto;
+    }
+  }
+
+  & .${classes.spacer} {
+    display: none;
+  }
+
+  & .${classes.actions} {
+    display: flex;
+    gap: 0.25rem;
+  }
+`

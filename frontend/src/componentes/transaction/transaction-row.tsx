@@ -1,11 +1,13 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { Transaction, TransStatusUpdateDto, User } from './models'
 import {
+  Box,
   Button,
   Collapse,
   IconButton,
   TableCell,
   TableRow,
+  Typography,
 } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
@@ -40,6 +42,32 @@ export const TransactionRow: React.FC<{
   const [open, setOpen] = React.useState(false)
   const { user } = useAuth()
   const api = useApi()
+  const [dealStatus, setDealStatus] = useState('')
+
+  useEffect(() => {
+    const getDealStatus = async () => {
+      try {
+        const response = await api.get<User[]>(
+          `transactions/waiting/${transaction.id}`,
+        )
+        const approvers = response.data
+        if (approvers.length === 0) {
+          setDealStatus('העסקה נסגרה')
+        } else {
+          setDealStatus(
+            `המשתמשים שעדיין לא אישרו את העסקה הם: ${approvers
+              .map(a => a.username)
+              .join(', ')}`,
+          )
+        }
+      } catch (error) {
+        setDealStatus(`Error: ${error}`)
+      }
+    }
+
+    getDealStatus()
+  }, [transaction.id])
+
   return (
     <React.Fragment>
       <TableRow hover role='checkbox' tabIndex={-1}>
@@ -90,12 +118,24 @@ export const TransactionRow: React.FC<{
         ) : null}
         {/*need to expand to list */}
       </TableRow>
-      <TableRow>
-        <Collapse in={open}>
-          <div>פרטים נוספים: {transaction.details}</div>
-          <div>סטטוס עסקה: {transaction.status}</div>
+      <TableCell
+        style={{ paddingBottom: 0, paddingTop: 0 }}
+        colSpan={7}
+        align='right'
+      >
+        <Collapse in={open} timeout='auto'>
+          <Box margin={1}>
+            <Typography variant='h6' gutterBottom component='div'>
+              פרטים נוספים
+            </Typography>
+            <div>{transaction.details}</div>
+            <Typography variant='h6' gutterBottom component='div'>
+              סטטוס עסקה
+            </Typography>
+            <div>{dealStatus}</div>
+          </Box>
         </Collapse>
-      </TableRow>
+      </TableCell>
     </React.Fragment>
   )
 }

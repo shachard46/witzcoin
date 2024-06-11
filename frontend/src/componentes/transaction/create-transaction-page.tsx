@@ -67,7 +67,7 @@ const CreateDealPage: React.FC = () => {
     event.preventDefault()
     const res = await api.post('/transactions', {
       transaction: transaction,
-      issuing_username: token ? token.data.username : '',
+      issuingUsername: token ? token.data.username : '',
     })
     if (res) navigate('/p/profile')
     return
@@ -84,7 +84,7 @@ const CreateDealPage: React.FC = () => {
   return (
     <ProtectedPage reqScope={Role.USER}>
       <div className='deal-container'>
-        <Container component='main' maxWidth='md' className='root'>
+        <Container component='main' maxWidth='md' >
           <div>
             <Typography component='h1' variant='h5' align='center'>
               יצירת עסקה

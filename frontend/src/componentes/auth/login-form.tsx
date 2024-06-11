@@ -68,13 +68,13 @@ const LoginForm: React.FC = () => {
           <TextField
             variant='outlined'
             margin='normal'
-            required
             className='textField'
-            fullWidth
             id='username'
             label='Username'
             name='username'
             autoComplete='username'
+            required
+            fullWidth
             autoFocus
             value={username}
             onChange={handleUsernameChange}
@@ -87,6 +87,9 @@ const LoginForm: React.FC = () => {
               className='textField'
               type={showPassword ? 'text' : 'password'}
               value={password}
+              required
+              fullWidth
+              autoFocus
               onChange={handlePasswordChange}
               endAdornment={
                 <InputAdornment position='end'>

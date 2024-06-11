@@ -7,7 +7,17 @@ import { TransactionsList } from './transactions-list'
 export const TransactionHistoryPage: React.FC = () => {
   return (
     <ProtectedPage reqScope={Role.USER}>
-      <TransactionsList user={false} pending={[]}/>
+      <div
+        className='container'
+        style={{ width: '1300px', backgroundColor: '#f8f9fa' }}
+      >
+        <div
+          className='container'
+          style={{ width: '1100px', backgroundColor: '#f8f9fa' }}
+        >
+          <TransactionsList user={false} pending={[]} />
+        </div>
+      </div>
     </ProtectedPage>
   )
 }

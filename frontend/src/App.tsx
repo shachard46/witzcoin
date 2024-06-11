@@ -11,7 +11,7 @@ import CreateDealPage from './componentes/transaction/create-transaction-page'
 import { TransactionHistoryPage } from './componentes/transaction/transactions-history-page'
 import RegisterPage from './componentes/auth/register-page'
 import { LogoutPage } from './componentes/auth/logout-page'
-import ProfilePage from './componentes/your-profile'
+import ProfilePage from './componentes/profile/your-profile'
 import { PendingTransactions } from './componentes/transaction/pending-transactions'
 
 function App() {

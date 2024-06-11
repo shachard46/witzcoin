@@ -9,9 +9,11 @@ const RootLayout: React.FC = () => {
       <header className='header'>
         <nav>
           <ul className='nav-links'>
-            <li className='nav-link'>
-              <NavLink to='/p/transaction'>צור עסקה</NavLink>
-            </li>
+            <ProtectedPage className='nav-link' reqScope={Role.USER}>
+              <li>
+                <NavLink to='/p/transaction'>צור עסקה</NavLink>
+              </li>
+            </ProtectedPage>
             <ProtectedPage className='nav-link' reqScope={Role.ADMIN}>
               <li>
                 <NavLink to='/p/manage'>מנהל</NavLink>
@@ -32,16 +34,21 @@ const RootLayout: React.FC = () => {
                 <NavLink to='/logout'>התנתק</NavLink>
               </li>
             </ProtectedPage>
-            <li className='nav-link'>
-              <NavLink to='/p/profile'>הפרופיל שלך</NavLink>
-            </li>
-
-            <li className='nav-link'>
-              <NavLink to='/p/history'>הסטוריית עסקאות</NavLink>
-            </li>
-            <li className='nav-link'>
-              <NavLink to='/p/pending'>עיסקאות ממתינות</NavLink>
-            </li>
+            <ProtectedPage className='nav-link' reqScope={Role.USER}>
+              <li>
+                <NavLink to='/p/profile'>הפרופיל שלך</NavLink>
+              </li>
+            </ProtectedPage>
+            <ProtectedPage className='nav-link' reqScope={Role.USER}>
+              <li>
+                <NavLink to='/p/history'>הסטוריית עסקאות</NavLink>
+              </li>
+            </ProtectedPage>
+            <ProtectedPage className='nav-link' reqScope={Role.USER}>
+              <li>
+                <NavLink to='/p/pending'>עסקאות ממתינות</NavLink>
+              </li>
+            </ProtectedPage>
           </ul>
         </nav>
       </header>

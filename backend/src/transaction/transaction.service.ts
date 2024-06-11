@@ -88,7 +88,7 @@ export class TransactionService {
   ): Promise<Transaction> {
     const issueing_user =
       await this.userService.getUserByUsername(issueing_username)
-    console.log('balanceafter: ', trans.buyerUser)
+    console.log('balanceafter: ', issueing_user)
 
     const { buyerUser, sellerUser, witnessUser } =
       await this.createTransactionUsers(trans)
