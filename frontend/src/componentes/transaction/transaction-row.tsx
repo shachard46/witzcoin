@@ -1,5 +1,5 @@
 import React from 'react'
-import { Approver, Transaction, TransStatusUpdateDto, User } from './models'
+import { Transaction, TransStatusUpdateDto, User } from './models'
 import {
   Button,
   Collapse,
@@ -18,11 +18,13 @@ const approveTransaction = async (
   user: User | null,
   tId: number,
   decline: boolean,
+  refreshTransactions: () => void,
 ) => {
   try {
     if (!user) return false
     const data: TransStatusUpdateDto = { approvingUser: user, decline: decline }
     const res = await api.put(`transactions/waiting/${tId}`, data)
+    refreshTransactions()
     return res
   } catch (error) {
     alert('False Creds')
@@ -33,7 +35,8 @@ const approveTransaction = async (
 export const TransactionRow: React.FC<{
   transaction: Transaction
   pending: boolean
-}> = ({ transaction, pending }) => {
+  refreshTransactions: () => void
+}> = ({ transaction, pending, refreshTransactions }) => {
   const [open, setOpen] = React.useState(false)
   const { user } = useAuth()
   const api = useApi()
@@ -59,14 +62,26 @@ export const TransactionRow: React.FC<{
           <TableCell align='center'>
             <Button
               onClick={() =>
-                approveTransaction(api, user, transaction.id, false)
+                approveTransaction(
+                  api,
+                  user,
+                  transaction.id,
+                  false,
+                  refreshTransactions,
+                )
               }
             >
               אשר
             </Button>
             <Button
               onClick={() =>
-                approveTransaction(api, user, transaction.id, true)
+                approveTransaction(
+                  api,
+                  user,
+                  transaction.id,
+                  true,
+                  refreshTransactions,
+                )
               }
             >
               דחה

@@ -36,7 +36,7 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
         return
       }
       const userData = await fetchUser(api, token?.data.username)
-      console.log('token in auth', userData, token);
+      console.log('token in auth', userData, token?.data.username);
 
       setUser(userData)
       setIsLoading(false)

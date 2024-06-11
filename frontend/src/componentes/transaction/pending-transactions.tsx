@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import {
   Paper,
   Table,
@@ -55,7 +55,7 @@ const isYourPendingTransactions = (user: User | null, t: Transaction) => {
   return false
 }
 
-export const PendingTransactions: React.FC<{}> = ({}) => {
+export const PendingTransactions: React.FC = () => {
   const [transactions, refreshTransactions] = useTransactions(true)
   const { user } = useAuth()
   const [page, setPage] = React.useState(0)
@@ -64,8 +64,8 @@ export const PendingTransactions: React.FC<{}> = ({}) => {
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
   }
-  const pendingTransactionsList = transactions.filter(t =>
-    isYourPendingTransactions(user, t),
+  const [pendingTransactionsList] = useState<Transaction[]>(
+    transactions.filter(t => isYourPendingTransactions(user, t)),
   )
   const handleChangeRowsPerPage = (
     event: React.ChangeEvent<HTMLInputElement>,
@@ -99,6 +99,7 @@ export const PendingTransactions: React.FC<{}> = ({}) => {
                   key={pendingTransactionsList.indexOf(transaction)}
                   transaction={transaction}
                   pending={true}
+                  refreshTransactions={refreshTransactions}
                 />
               ))}
             </TableBody>

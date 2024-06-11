@@ -14,7 +14,7 @@ export class UserController {
   }
   @Get(':username')
   async getUserByUsername(
-    @Param('usernanme') username: string,
+    @Param('username') username: string,
   ): Promise<OutUser | null> {
     return toOutUser(await this.userService.getUserByUsername(username))
   }
