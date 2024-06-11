@@ -16,6 +16,15 @@ import {
 import { UserService } from '../user/user.service'
 import { Injectable } from '@nestjs/common'
 
+const areUsersDistinct = (trans: Transaction): boolean => {
+  const { buyerUser, sellerUser, witnessUser } = trans
+  return (
+    buyerUser.username !== sellerUser.username &&
+    buyerUser.username !== witnessUser.username &&
+    sellerUser.username !== witnessUser.username
+  )
+}
+
 @Injectable()
 export class TransactionService {
   connection: DataSource
@@ -45,7 +54,10 @@ export class TransactionService {
     const issueing_user =
       await this.userService.getUserByUsername(issueing_username)
     if (trans.buyerUser.pending + trans.buyerUser.balance - trans.price < 0) {
-      return null
+      throw new Error('buyer will be in debt')
+    }
+    if (!areUsersDistinct(trans)) {
+      throw new Error('users need to be distinct')
     }
     trans.status =
       Approver.ALL - (await this.getUserRoleInTransaction(trans, issueing_user))
