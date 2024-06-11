@@ -1,6 +1,7 @@
 import { Role } from '../auth/models'
 
 export interface Transaction {
+  id: number
   buyerUser: string
   sellerUser: string
   witnessUser: string
@@ -9,6 +10,11 @@ export interface Transaction {
   price: number
   details: string
   status: Approver
+}
+
+export interface TransStatusUpdateDto {
+  approvingUser: User
+  decline: boolean
 }
 
 export enum Approver {

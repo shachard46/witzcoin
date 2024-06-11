@@ -24,6 +24,7 @@ const CreateDealPage: React.FC = () => {
   const api = useApi()
   const [token] = useToken()
   const [transaction, setTrasaction] = useState<Transaction>({
+    id: 0,
     buyerUser: '',
     sellerUser: '',
     witnessUser: '',

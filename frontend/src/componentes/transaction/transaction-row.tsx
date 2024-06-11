@@ -1,5 +1,5 @@
 import React from 'react'
-import { Approver, Transaction } from './models'
+import { Approver, Transaction, TransStatusUpdateDto, User } from './models'
 import {
   Button,
   Collapse,
@@ -9,13 +9,34 @@ import {
 } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
+import { AxiosInstance } from 'axios'
+import { useAuth } from '../auth/auth-hook'
+import { useApi } from '../api/api-provider'
+
+const approveTransaction = async (
+  api: AxiosInstance,
+  user: User | null,
+  tId: number,
+  decline: boolean,
+) => {
+  try {
+    if (!user) return false
+    const data: TransStatusUpdateDto = { approvingUser: user, decline: decline }
+    const res = await api.put(`transactions/waiting/${tId}`, data)
+    return res
+  } catch (error) {
+    alert('False Creds')
+    return undefined
+  }
+}
 
 export const TransactionRow: React.FC<{
   transaction: Transaction
   pending: boolean
 }> = ({ transaction, pending }) => {
   const [open, setOpen] = React.useState(false)
-
+  const { user } = useAuth()
+  const api = useApi()
   return (
     <React.Fragment>
       <TableRow hover role='checkbox' tabIndex={-1}>
@@ -36,7 +57,20 @@ export const TransactionRow: React.FC<{
         <TableCell align='center'>{transaction.category}</TableCell>
         {pending ? (
           <TableCell align='center'>
-            <Button>אשר</Button>
+            <Button
+              onClick={() =>
+                approveTransaction(api, user, transaction.id, false)
+              }
+            >
+              אשר
+            </Button>
+            <Button
+              onClick={() =>
+                approveTransaction(api, user, transaction.id, true)
+              }
+            >
+              דחה
+            </Button>
           </TableCell>
         ) : null}
         {/*need to expand to list */}

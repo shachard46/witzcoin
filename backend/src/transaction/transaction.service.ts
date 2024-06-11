@@ -110,6 +110,7 @@ export class TransactionService {
   ): Promise<Approver> {
     const transaction =
       typeof id === 'number' ? await this.getTransactionById(id) : id
+    console.log(transaction)
     if (transaction?.buyerUser.username === user.username) return Approver.BUYER
     if (transaction?.sellerUser.username === user.username)
       return Approver.SELLER
@@ -119,12 +120,12 @@ export class TransactionService {
   }
 
   async updateTransactionStatus(
-    id: number,
+    id: string | number,
     user: User,
     decline: boolean = false,
   ): Promise<boolean> {
+    id = typeof id === 'number' ? id : Number.parseInt(id)
     if (decline) this.repository.delete(id)
-
     const role = await this.getUserRoleInTransaction(id, user)
     if (!role) return false
 
