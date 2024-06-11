@@ -2,6 +2,7 @@ import { DataSource, MoreThan, Repository } from 'typeorm'
 import { breakToBase2 } from '../utils'
 import {
   Approver,
+  OutTransaction,
   Price,
   Transaction,
   UserWaitingTransactions,
@@ -14,7 +15,8 @@ import {
   DB_PORT,
 } from '../backend-constants'
 import { UserService } from '../user/user.service'
-import { Injectable } from '@nestjs/common'
+import { Injectable, NotFoundException } from '@nestjs/common'
+import { ValidationException } from 'exception.filter'
 
 const areUsersDistinct = (trans: Transaction): boolean => {
   const { buyerUser, sellerUser, witnessUser } = trans
@@ -48,31 +50,67 @@ export class TransactionService {
     this.repository = this.connection.getRepository(Transaction)
   }
   async createTransaction(
-    trans: Transaction,
+    trans: OutTransaction,
     issueing_username: string,
   ): Promise<Transaction> {
     const issueing_user =
       await this.userService.getUserByUsername(issueing_username)
-    if (trans.buyerUser.pending + trans.buyerUser.balance - trans.price < 0) {
-      throw new Error('buyer will be in debt')
-    }
-    if (!areUsersDistinct(trans)) {
-      throw new Error('users need to be distinct')
-    }
-    trans.status =
-      Approver.ALL - (await this.getUserRoleInTransaction(trans, issueing_user))
-    this.userService.changePendingByUsername(
-      trans.buyerUser.username,
+    console.log('balanceafter: ', trans.buyerUser)
+    const buyerUser = await this.userService.getUserByUsername(trans.buyerUser)
+    if (!buyerUser)
+      throw new NotFoundException(`Buyer user not found: ${trans.buyerUser}`)
+
+    const sellerUser = await this.userService.getUserByUsername(
+      trans.sellerUser,
+    )
+    if (!sellerUser)
+      throw new NotFoundException(`Seller user not found: ${trans.sellerUser}`)
+
+    const witnessUser = await this.userService.getUserByUsername(
+      trans.witnessUser,
+    )
+    if (!witnessUser)
+      throw new NotFoundException(
+        `Witness user not found: ${trans.witnessUser}`,
+      )
+
+    const transaction: Transaction = new Transaction(
+      trans.transactionName,
+      buyerUser,
+      sellerUser,
+      witnessUser,
       trans.price,
+      trans.category,
+      trans.details,
+      trans.status,
+    )
+
+    if (
+      transaction.buyerUser.pending +
+        transaction.buyerUser.balance -
+        trans.price <
+      0
+    ) {
+      throw new ValidationException('buyer will be in debt')
+    }
+    if (!areUsersDistinct(transaction)) {
+      throw new ValidationException('users need to be distinct')
+    }
+    transaction.status =
+      Approver.ALL -
+      (await this.getUserRoleInTransaction(transaction, issueing_user))
+    this.userService.changePendingByUsername(
+      transaction.buyerUser.username,
+      transaction.price,
       Price.EXPENSE,
     )
     this.userService.changePendingByUsername(
-      trans.sellerUser.username,
-      trans.price,
+      transaction.sellerUser.username,
+      transaction.price,
       Price.INCOME,
     )
-    await this.repository.save(trans)
-    return trans
+    await this.repository.save(transaction)
+    return transaction
   }
   async getTransactionById(id: number): Promise<Transaction | null> {
     return await this.repository.findOne({ where: { id: id } })

@@ -18,7 +18,7 @@ export class TransactionController {
   async createTransaction(
     @Body() transDto: TransactionCreationDto,
   ): Promise<Transaction> {
-    const newTrans: Transaction = transDto.transaction
+    const newTrans: OutTransaction = transDto.transaction
     return await this.transactionService.createTransaction(
       newTrans,
       transDto.issuingUsername,

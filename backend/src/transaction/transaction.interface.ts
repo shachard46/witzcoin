@@ -82,7 +82,7 @@ export class TransStatusUpdateDto {
   decline: boolean
 }
 export class TransactionCreationDto {
-  transaction: Transaction
+  transaction: OutTransaction
   issuingUsername: string
 }
 

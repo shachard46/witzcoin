@@ -8,6 +8,7 @@ import { UserModule } from 'user/user.module'
 import { UserService } from 'user/user.service'
 import { TransactionService } from 'transaction/transaction.service'
 import { log } from 'console'
+import { AllExceptionsFilter } from 'exception.filter'
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule)
@@ -15,6 +16,7 @@ async function bootstrap() {
   app.enableCors({
     origin: '*',
   })
+  app.useGlobalFilters(new AllExceptionsFilter())
   await app.listen(3001)
   const user1: User = {
     username: 'shachar',
