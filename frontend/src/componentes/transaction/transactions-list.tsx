@@ -12,6 +12,7 @@ import { TransactionRow } from './transaction-row'
 import { TablePagination } from '@mui/base'
 import { useTransactions } from './transactions-hook'
 import { styled } from '@mui/material/styles'
+import { Transaction } from './models'
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
   [`&.${tableCellClasses.head}`]: {
@@ -33,9 +34,10 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
   },
 }))
 
-export const TransactionsList: React.FC<{ user: boolean }> = ({
-  user = false,
-}) => {
+export const TransactionsList: React.FC<{
+  user: boolean
+  pending: Transaction[]
+}> = ({ user = false, pending = [] }) => {
   const [transactions, refreshTransactions] = useTransactions(user)
 
   const [page, setPage] = React.useState(0)
@@ -66,15 +68,20 @@ export const TransactionsList: React.FC<{ user: boolean }> = ({
               <StyledTableCell align='center'>שם העד</StyledTableCell>
               <StyledTableCell align='center'>מחיר</StyledTableCell>
               <StyledTableCell align='center'>קטגוריות</StyledTableCell>
+              {pending.length > 0 ? (
+                <StyledTableCell align='center'>אישור</StyledTableCell>
+              ) : null}
+
               {/* {user ? <StyledTableCell align='center'>סטטוס</StyledTableCell> : null} */}
             </StyledTableRow>
           </TableHead>
           <TableBody>
-            {transactions.map(transaction => (
+            {(pending.length > 0 ? pending : transactions).map(transaction => (
               <TransactionRow
                 key={transactions.indexOf(transaction)}
                 transaction={transaction}
-                pending={false}
+                pending={pending.length > 0 ? true : false}
+                refreshTransactions={refreshTransactions}
               />
             ))}
           </TableBody>

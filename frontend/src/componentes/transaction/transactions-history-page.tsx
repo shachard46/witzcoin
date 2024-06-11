@@ -7,7 +7,7 @@ import { TransactionsList } from './transactions-list'
 export const TransactionHistoryPage: React.FC = () => {
   return (
     <ProtectedPage reqScope={Role.USER}>
-      <TransactionsList user={false} />
+      <TransactionsList user={false} pending={[]}/>
     </ProtectedPage>
   )
 }

@@ -10,6 +10,7 @@ import {
   Typography,
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
+import { useNavigate } from 'react-router-dom'
 
 import React, { useState } from 'react'
 import { useApi } from '../api/api-provider'
@@ -22,6 +23,7 @@ const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מב
 
 const CreateDealPage: React.FC = () => {
   const api = useApi()
+  const navigate = useNavigate()
   const [token] = useToken()
   const [transaction, setTrasaction] = useState<Transaction>({
     id: 0,
@@ -67,7 +69,7 @@ const CreateDealPage: React.FC = () => {
       transaction: transaction,
       issuing_username: token ? token.data.username : '',
     })
-    if (res) window.location.href = '/p/profile'
+    if (res) navigate('/p/profile')
     return
     // need to add socket.io.emit
   }

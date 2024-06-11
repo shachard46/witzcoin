@@ -56,35 +56,46 @@ export class UserService {
     username: string,
     price: number,
     income: number,
+    decline: boolean,
   ): Promise<void> {
-    await this.repository.update(username, {
-      balance: () => `balance + ${price * income}`,
-    })
-    await this.changePendingByUsername(username, price, income * -1)
+    if (!decline) {
+      await this.repository.update(username, {
+        balance: () => `balance + ${price * income}`,
+      })
+    }
+    await this.changePendingByUsername(username, price, income * -1, decline)
   }
 
   async changePendingByUsername(
     username: string,
     price: number,
     income: number,
+    decline: boolean,
   ): Promise<void> {
     await this.repository
       .createQueryBuilder()
       .update(User)
-      .set({ pending: () => `pending + ${price * income}` })
+      .set({
+        pending: () => `pending + ${price * income * (decline ? -1 : 1)}`,
+      })
       .where('username = :username', { username })
       .execute()
   }
-  async updateUsersOnceTransactionApproved(trans: Transaction) {
+  async updateUsersOnceTransactionDone(
+    trans: Transaction,
+    decline: boolean,
+  ) {
     await this.changeBalanceByUsername(
       trans.buyerUser.username,
       trans.price,
       Price.EXPENSE,
+      decline,
     )
     await this.changeBalanceByUsername(
       trans.sellerUser.username,
       trans.price,
       Price.INCOME,
+      decline,
     )
   }
 }

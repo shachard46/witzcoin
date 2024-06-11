@@ -13,11 +13,11 @@ code {
 }
 
 .container {
-  max-width: 1100px;
+  max-width: 1700px;
   margin: 2% auto;
-  height: 100%;
+  height: fit-content;
   padding: 20px;
-  padding-bottom: 50px;
+  /* padding-bottom: 50px; */
   border-radius: 10px;
   background-color: #ebeaea;
 }
@@ -171,8 +171,8 @@ code {
 }
 
 .root {
-  margin-top: 100px;
-  width: 'wrap-content';
+  margin-top: 40px;
+  width: 'wrap-content' !important;
   padding-top: 100px;
   padding-bottom: 200px;
   background-color: '#e0e0e0';

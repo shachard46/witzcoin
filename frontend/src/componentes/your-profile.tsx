@@ -49,7 +49,7 @@ const ProfilePage: React.FC = () => {
             <Typography component='h1' variant='h5' align='center'>
               עסקאות:
             </Typography>
-            <TransactionsList user={true} />
+            <TransactionsList user={true} pending={[]} />
           </div>
         </ProfileContainer>
       </div>

@@ -27,6 +27,19 @@ const areUsersDistinct = (trans: Transaction): boolean => {
   )
 }
 
+const userAlreadyApproved = (t: Transaction, role: Approver) => {
+  if (t.status == Approver.ALL) return false
+  if (t.status == Approver.NON) return true
+  if (role == Approver.WITNESS && t.status >= 4) return false
+  if (role == Approver.BUYER && t.status % 2 != 0) return false
+  if (
+    role == Approver.SELLER &&
+    (t.status % 3 == 0 || t.status == Approver.SELLER)
+  )
+    return false
+  return true
+}
+
 @Injectable()
 export class TransactionService {
   connection: DataSource
@@ -108,11 +121,13 @@ export class TransactionService {
       transaction.buyerUser.username,
       transaction.price,
       Price.EXPENSE,
+      false,
     )
     this.userService.changePendingByUsername(
       transaction.sellerUser.username,
       transaction.price,
       Price.INCOME,
+      false,
     )
     await this.repository.save(transaction)
     return transaction
@@ -165,7 +180,7 @@ export class TransactionService {
   ): Promise<Approver> {
     const transaction =
       typeof id === 'number' ? await this.getTransactionById(id) : id
-    console.log(transaction)
+    console.log('transaction', transaction, 'user', user)
     if (transaction?.buyerUser.username === user.username) return Approver.BUYER
     if (transaction?.sellerUser.username === user.username)
       return Approver.SELLER
@@ -180,16 +195,23 @@ export class TransactionService {
     decline: boolean = false,
   ): Promise<boolean> {
     id = typeof id === 'number' ? id : Number.parseInt(id)
-    if (decline) this.repository.delete(id)
+    const trans = await this.getTransactionById(id)
+    if (decline) {
+      await this.userService.updateUsersOnceTransactionDone(trans, decline)
+      return (await this.repository.delete(id)).affected > 0
+    }
     const role = await this.getUserRoleInTransaction(id, user)
     if (!role) return false
 
-    const trans = await this.getTransactionById(id)
+    if (userAlreadyApproved(trans, role)) {
+      throw new ValidationException('user already approved transaction')
+    }
     if (trans.status == 0) return false
+
     trans.status -= role
     const result = await this.repository.update(id, trans)
     if (trans.status === 0)
-      await this.userService.updateUsersOnceTransactionApproved(trans)
+      await this.userService.updateUsersOnceTransactionDone(trans, decline)
     return result.affected > 0
   }
 
@@ -200,11 +222,13 @@ export class TransactionService {
   }
   async getTransactionsByUser(username: string): Promise<Transaction[]> {
     const user = await this.userService.getUserByUsername(username)
+    if (!user) throw new ValidationException('user doesnt exists')
     console.log('user: ', user)
     return (await this.getAllTransactions()).filter(
       trans =>
         trans.buyerUser.username === username ||
-        trans.sellerUser.username === user.username,
+        trans.sellerUser.username === username ||
+        trans.witnessUser.username === username,
     )
   }
 }
