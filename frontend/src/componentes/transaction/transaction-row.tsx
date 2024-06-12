@@ -22,16 +22,24 @@ const approveTransaction = async (
   decline: boolean,
   refreshTransactions: () => void,
 ) => {
-  try {
-    if (!user) return false
-    const data: TransStatusUpdateDto = { approvingUser: user, decline: decline }
-    const res = await api.put(`transactions/waiting/${tId}`, data)
-    refreshTransactions()
-    return res
-  } catch (error) {
-    alert('False Creds')
-    return undefined
-  }
+  if (
+    window.confirm(
+      `Are you sure you wish to ${decline ? 'reject' : 'approve'} this item?`,
+    )
+  )
+    try {
+      if (!user) return false
+      const data: TransStatusUpdateDto = {
+        approvingUser: user,
+        decline: decline,
+      }
+      const res = await api.put(`transactions/waiting/${tId}`, data)
+      refreshTransactions()
+      return res
+    } catch (error) {
+      alert('False Creds')
+      return undefined
+    }
 }
 const invalidateTransaction = async (
   api: AxiosInstance,
@@ -39,16 +47,17 @@ const invalidateTransaction = async (
   tId: number,
   refreshTransactions: () => void,
 ) => {
-  try {
-    if (!user) return false
-    const data: { user: User } = { user: user }
-    const res = await api.put(`transactions/invalidate/${tId}`, data)
-    refreshTransactions()
-    return res
-  } catch (error) {
-    alert('False Creds')
-    return undefined
-  }
+  if (window.confirm(`Are you sure you wish to invalidate this item?`))
+    try {
+      if (!user) return false
+      const data: { user: User } = { user: user }
+      const res = await api.put(`transactions/invalidate/${tId}`, data)
+      refreshTransactions()
+      return res
+    } catch (error) {
+      alert('False Creds')
+      return undefined
+    }
 }
 
 export const TransactionRow: React.FC<{
