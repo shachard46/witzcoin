@@ -4,7 +4,6 @@ import {
   Approver,
   OutTransaction,
   Price,
-  Transaction,
   UserWaitingTransactions,
 } from '../transaction/transaction.interface'
 import { User } from '../user/user.interface'
@@ -17,6 +16,7 @@ import {
 import { UserService } from '../user/user.service'
 import { Injectable, NotFoundException } from '@nestjs/common'
 import { ValidationException } from 'exception.filter'
+import { Transaction } from './transaction.interface'
 
 const areUsersDistinct = (trans: Transaction): boolean => {
   const { buyerUser, sellerUser, witnessUser } = trans
@@ -80,19 +80,7 @@ export class TransactionService {
       throw new NotFoundException(
         `Witness user not found: ${trans.witnessUser}`,
       )
-    return { buyerUser, sellerUser, witnessUser }
-  }
-  async createTransaction(
-    trans: OutTransaction,
-    issueing_username: string,
-  ): Promise<Transaction> {
-    const issueing_user =
-      await this.userService.getUserByUsername(issueing_username)
-    console.log('balanceafter: ', issueing_user)
-
-    const { buyerUser, sellerUser, witnessUser } =
-      await this.createTransactionUsers(trans)
-    const transaction: Transaction = new Transaction(
+    return new Transaction(
       trans.transactionName,
       buyerUser,
       sellerUser,
@@ -102,6 +90,16 @@ export class TransactionService {
       trans.details,
       trans.status,
     )
+  }
+  async createTransaction(
+    trans: OutTransaction,
+    issueing_username: string,
+  ): Promise<Transaction> {
+    const issueing_user =
+      await this.userService.getUserByUsername(issueing_username)
+    console.log('balanceafter: ', issueing_user)
+
+    const transaction = await this.createTransactionUsers(trans)
 
     if (
       transaction.buyerUser.pending +
@@ -188,12 +186,11 @@ export class TransactionService {
       return Approver.WITNESS
     return Approver.NON
   }
-
-  async updateTransactionStatus(
+  async updateTransactionStatusByAction(
     id: string | number,
     user: User,
     decline: boolean = false,
-  ): Promise<boolean> {
+  ) {
     id = typeof id === 'number' ? id : Number.parseInt(id)
     const trans = await this.getTransactionById(id)
     if (decline) {
@@ -207,11 +204,17 @@ export class TransactionService {
       throw new ValidationException('user already approved transaction')
     }
     if (trans.status == 0) return false
-
-    trans.status -= role
-    const result = await this.repository.update(id, trans)
+    this.updateTransactionStatus(trans, role)
     if (trans.status === 0)
       await this.userService.updateUsersOnceTransactionDone(trans, decline)
+  }
+  async updateTransactionStatus(
+    trans: Transaction,
+    role: Approver,
+  ): Promise<boolean> {
+    trans.status -= role
+    const result = await this.repository.update(trans.id, trans)
+
     return result.affected > 0
   }
 
@@ -230,5 +233,14 @@ export class TransactionService {
         trans.sellerUser.username === username ||
         trans.witnessUser.username === username,
     )
+  }
+
+  async invalidateTransaction(user: User, id: number) {
+    const transaction = await this.getTransactionById(id)
+    if (!transaction) throw new ValidationException('transaction doesnt exists')
+    if (user.username != transaction.witnessUser.username)
+      throw new ValidationException('user is not the witness')
+    await this.updateTransactionStatus(transaction, -Approver.WITNESS)
+    this.userService.updateUsersOnceTransactionInvalidated(transaction)
   }
 }

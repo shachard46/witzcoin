@@ -81,10 +81,7 @@ export class UserService {
       .where('username = :username', { username })
       .execute()
   }
-  async updateUsersOnceTransactionDone(
-    trans: Transaction,
-    decline: boolean,
-  ) {
+  async updateUsersOnceTransactionDone(trans: Transaction, decline: boolean) {
     await this.changeBalanceByUsername(
       trans.buyerUser.username,
       trans.price,
@@ -96,6 +93,20 @@ export class UserService {
       trans.price,
       Price.INCOME,
       decline,
+    )
+  }
+  async updateUsersOnceTransactionInvalidated(trans: Transaction) {
+    await this.changeBalanceByUsername(
+      trans.buyerUser.username,
+      -trans.price,
+      Price.EXPENSE,
+      false,
+    )
+    await this.changeBalanceByUsername(
+      trans.sellerUser.username,
+      -trans.price,
+      Price.INCOME,
+      false,
     )
   }
 }

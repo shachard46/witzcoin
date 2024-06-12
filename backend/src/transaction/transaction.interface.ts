@@ -85,7 +85,9 @@ export class TransactionCreationDto {
   transaction: OutTransaction
   issuingUsername: string
 }
-
+export class TransInvalidationUpdateDto {
+  user: User
+}
 export interface OutTransaction {
   id: number
   transactionName: string

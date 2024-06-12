@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import {
   OutTransaction,
+  TransInvalidationUpdateDto,
   TransStatusUpdateDto,
   Transaction,
   TransactionCreationDto,
@@ -35,7 +36,7 @@ export class TransactionController {
     @Param('id') id: number,
     @Body() statusUpdateDto: TransStatusUpdateDto,
   ) {
-    this.transactionService.updateTransactionStatus(
+    this.transactionService.updateTransactionStatusByAction(
       id,
       statusUpdateDto.approvingUser,
       statusUpdateDto.decline,
@@ -69,6 +70,16 @@ export class TransactionController {
   async getAllTransactions(): Promise<OutTransaction[]> {
     return (await this.transactionService.getAllTransactions()).map(trans =>
       toOutTransaction(trans),
+    )
+  }
+  @Put('invalidate/:id')
+  async invalidateTransaction(
+    @Param('id') id: number,
+    @Body() invalidateTransactionDto: TransInvalidationUpdateDto,
+  ): Promise<void> {
+    return await this.transactionService.invalidateTransaction(
+      invalidateTransactionDto.user,
+      id,
     )
   }
 }

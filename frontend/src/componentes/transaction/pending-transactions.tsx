@@ -14,9 +14,9 @@ const isYourPendingTransactions = (user: User | null, t: Transaction) => {
   else return false
 
   if (t.status == Approver.ALL) return true
+  if (role == Approver.WITNESS) return true
   if (t.status == Approver.NON) return false
   if (role == Approver.BUYER && t.status % 2 != 0) return true
-  if (role == Approver.WITNESS && t.status >= 4) return true
   if (
     role == Approver.SELLER &&
     (t.status % 3 == 0 || t.status == Approver.SELLER)
@@ -35,9 +35,19 @@ export const PendingTransactions: React.FC = () => {
   useEffect(() => refreshTransactions(), [])
   return (
     <ProtectedPage reqScope={Role.USER}>
-      {pendingTransactionsList.length > 0 ? (
-        <TransactionsList user={true} pending={pendingTransactionsList} />
-      ) : null}
+      <div
+        className='container'
+        style={{ width: '1300px', backgroundColor: '#f8f9fa' }}
+      >
+        <div
+          className='container'
+          style={{ width: '1100px', backgroundColor: '#f8f9fa' }}
+        >
+          {pendingTransactionsList.length > 0 ? (
+            <TransactionsList user={true} pending={pendingTransactionsList} />
+          ) : null}
+        </div>
+      </div>
     </ProtectedPage>
   )
 }

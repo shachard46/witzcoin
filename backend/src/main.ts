@@ -72,9 +72,9 @@ async function bootstrap() {
   // await transactionService.createTransaction(t1, user1.username)
   // await transactionService.createTransaction(t2, user2.username)
   log(await transactionService.getAllTransactions())
-  await transactionService.updateTransactionStatus(2, user3)
-  await transactionService.updateTransactionStatus(2, user1)
-  await transactionService.updateTransactionStatus(1, user2)
-  await transactionService.updateTransactionStatus(1, user3)
+  await transactionService.updateTransactionStatusByAction(2, user3)
+  await transactionService.updateTransactionStatusByAction(2, user1)
+  await transactionService.updateTransactionStatusByAction(1, user2)
+  await transactionService.updateTransactionStatusByAction(1, user3)
 }
 bootstrap()

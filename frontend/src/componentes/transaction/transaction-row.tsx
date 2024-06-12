@@ -33,6 +33,23 @@ const approveTransaction = async (
     return undefined
   }
 }
+const invalidateTransaction = async (
+  api: AxiosInstance,
+  user: User | null,
+  tId: number,
+  refreshTransactions: () => void,
+) => {
+  try {
+    if (!user) return false
+    const data: { user: User } = { user: user }
+    const res = await api.put(`transactions/invalidate/${tId}`, data)
+    refreshTransactions()
+    return res
+  } catch (error) {
+    alert('False Creds')
+    return undefined
+  }
+}
 
 export const TransactionRow: React.FC<{
   transaction: Transaction
@@ -86,7 +103,7 @@ export const TransactionRow: React.FC<{
         <TableCell align='center'>{transaction.witnessUser}</TableCell>
         <TableCell align='center'>{transaction.price}</TableCell>
         <TableCell align='center'>{transaction.category}</TableCell>
-        {pending ? (
+        {pending && dealStatus != 'העסקה נסגרה' ? (
           <TableCell align='center'>
             <Button
               onClick={() =>
@@ -113,6 +130,21 @@ export const TransactionRow: React.FC<{
               }
             >
               דחה
+            </Button>
+          </TableCell>
+        ) : pending && dealStatus == 'העסקה נסגרה' ? (
+          <TableCell align='center'>
+            <Button
+              onClick={() =>
+                invalidateTransaction(
+                  api,
+                  user,
+                  transaction.id,
+                  refreshTransactions,
+                )
+              }
+            >
+              העסקה הופרה
             </Button>
           </TableCell>
         ) : null}
