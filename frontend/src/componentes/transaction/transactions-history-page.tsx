@@ -9,11 +9,11 @@ export const TransactionHistoryPage: React.FC = () => {
     <ProtectedPage reqScope={Role.USER}>
       <div
         className='container'
-        style={{ width: '1300px', backgroundColor: '#f8f9fa' }}
+        style={{ width: '1300px', backgroundColor: '#afaa96' }}
       >
         <div
           className='container'
-          style={{ width: '1100px', backgroundColor: '#f8f9fa' }}
+          style={{ width: '1100px', backgroundColor: '#afaa96' }}
         >
           <TransactionsList user={false} pending={[]} />
         </div>

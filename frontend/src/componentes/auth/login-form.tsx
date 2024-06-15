@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
 import { LoginUser } from './models'
 import { useToken } from './token-provider'
+import styled from '@emotion/styled'
 
 const login = async (api: AxiosInstance, loginUser: LoginUser) => {
   try {
@@ -57,62 +58,70 @@ const LoginForm: React.FC = () => {
     }
     navigate('/p/transaction')
   }
+  // Styled-components for styling
+  const LoginContainer = styled.div`
+    max-width: 800px;
+    margin: auto;
+    padding: 20px;
+    background: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  `
 
   return (
-    <div className='container'>
-      <Container component='main' maxWidth='xs' className='root'>
-        <div>
-          <Typography component='h1' variant='h5' align='center'>
-            Log In
-          </Typography>
-          <TextField
-            variant='outlined'
-            margin='normal'
+    <Container component='main' maxWidth='xs' className='root'>
+      <LoginContainer>
+        <Typography component='h1' variant='h5' align='center'>
+          Log In
+        </Typography>
+        <TextField
+          variant='outlined'
+          margin='normal'
+          className='textField'
+          id='username'
+          label='Username'
+          name='username'
+          autoComplete='username'
+          required
+          fullWidth
+          autoFocus
+          value={username}
+          onChange={handleUsernameChange}
+        />
+        <FormControl variant='outlined' margin='normal' required fullWidth>
+          <InputLabel htmlFor='password'>Password</InputLabel>
+          <OutlinedInput
+            id='password'
+            name='password'
             className='textField'
-            id='username'
-            label='Username'
-            name='username'
-            autoComplete='username'
+            type={showPassword ? 'text' : 'password'}
+            value={password}
             required
             fullWidth
             autoFocus
-            value={username}
-            onChange={handleUsernameChange}
+            onChange={handlePasswordChange}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton onClick={handleShowPasswordToggle} edge='end'>
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
           />
-          <FormControl variant='outlined' margin='normal' required fullWidth>
-            <InputLabel htmlFor='password'>Password</InputLabel>
-            <OutlinedInput
-              id='password'
-              name='password'
-              className='textField'
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              required
-              fullWidth
-              autoFocus
-              onChange={handlePasswordChange}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton onClick={handleShowPasswordToggle} edge='end'>
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className='submit'
-            onClick={handleSubmit}
-          >
-            Log In
-          </Button>
-        </div>
-      </Container>
-    </div>
+        </FormControl>
+        <Button
+          type='submit'
+          fullWidth
+          variant='contained'
+          color='primary'
+          className='submit'
+          onClick={handleSubmit}
+        >
+          Log In
+        </Button>
+        {/* </div> */}
+      </LoginContainer>
+    </Container>
   )
 }
 

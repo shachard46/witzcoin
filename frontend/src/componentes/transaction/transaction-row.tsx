@@ -3,8 +3,10 @@ import { Transaction, TransStatusUpdateDto, User } from './models'
 import {
   Box,
   Button,
+  Chip,
   Collapse,
   IconButton,
+  Stack,
   TableCell,
   TableRow,
   Typography,
@@ -111,7 +113,22 @@ export const TransactionRow: React.FC<{
         <TableCell align='center'>{transaction.sellerUser}</TableCell>
         <TableCell align='center'>{transaction.witnessUser}</TableCell>
         <TableCell align='center'>{transaction.price}</TableCell>
-        <TableCell align='center'>{transaction.category}</TableCell>
+        <TableCell align='center'>
+          <Stack direction='row' spacing={1}>
+            {Array.isArray(eval(transaction.category)) ? (
+              eval(transaction.category).map(c => (
+                <Chip label={c} color='primary' variant='outlined' />
+              ))
+            ) : (
+              <Chip
+                label={transaction.category}
+                color='primary'
+                variant='outlined'
+              />
+            )}
+          </Stack>
+          {transaction.category}
+        </TableCell>
         {pending && dealStatus != 'העסקה נסגרה' ? (
           <TableCell align='center'>
             <Button

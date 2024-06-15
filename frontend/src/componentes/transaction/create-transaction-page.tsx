@@ -7,7 +7,6 @@ import {
   ListItemText,
   MenuItem,
   TextField,
-  Typography,
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useNavigate } from 'react-router-dom'
@@ -18,6 +17,7 @@ import { Approver, Transaction } from './models'
 import { useToken } from '../auth/token-provider'
 import { ProtectedPage } from '../protected/protected-page'
 import { Role } from '../auth/models'
+import { Breadcrumb } from 'antd'
 
 const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
@@ -84,11 +84,18 @@ const CreateDealPage: React.FC = () => {
   return (
     <ProtectedPage reqScope={Role.USER}>
       <div className='deal-container'>
-        <Container component='main' maxWidth='md' >
+        <Container component='main' maxWidth='md'>
           <div>
-            <Typography component='h1' variant='h5' align='center'>
-              יצירת עסקה
-            </Typography>
+            <Breadcrumb
+              items={[
+                {
+                  title: 'Witzcoin Trading',
+                },
+                {
+                  title: <a href=''>Transactoins</a>,
+                },
+              ]}
+            />
             <TextField
               variant='outlined'
               margin='normal'
