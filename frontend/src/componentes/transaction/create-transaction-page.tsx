@@ -11,7 +11,7 @@ import {
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useNavigate } from 'react-router-dom'
 
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useApi } from '../api/api-provider'
 import { Approver, Transaction } from './models'
 import { useToken } from '../auth/token-provider'
@@ -19,12 +19,13 @@ import { ProtectedPage } from '../protected/protected-page'
 import { Role } from '../auth/models'
 import { Breadcrumb } from 'antd'
 
-const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
+// const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
 const CreateDealPage: React.FC = () => {
   const api = useApi()
   const navigate = useNavigate()
   const [token] = useToken()
+  const [categories, setCategories] = useState<[]>([])
   const [transaction, setTrasaction] = useState<Transaction>({
     id: 0,
     buyerUser: '',
@@ -36,6 +37,9 @@ const CreateDealPage: React.FC = () => {
     status: Approver.ALL,
     transactionName: '',
   })
+  useEffect(() => {
+    api.get<[]>('/categories').then(res => setCategories(res.data))
+  }, [])
   const handleInputChange = (fieldName: string) => {
     return (event: React.ChangeEvent<HTMLInputElement>) => {
       {

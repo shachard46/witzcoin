@@ -86,7 +86,7 @@ export class TransactionService {
       sellerUser,
       witnessUser,
       trans.price,
-      trans.category,
+      trans.category.toString(),
       trans.details,
       trans.status,
     )

@@ -1,14 +1,19 @@
 import React, { useEffect, useState } from 'react'
-import { Transaction, TransStatusUpdateDto, User } from './models'
+import {
+  CategoryColors,
+  Transaction,
+  TransStatusUpdateDto,
+  User,
+} from './models'
 import {
   Box,
   Button,
   Chip,
   Collapse,
   IconButton,
-  Stack,
   TableCell,
   TableRow,
+  Theme,
   Typography,
 } from '@mui/material'
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown'
@@ -16,6 +21,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp'
 import { AxiosInstance } from 'axios'
 import { useAuth } from '../auth/auth-hook'
 import { useApi } from '../api/api-provider'
+import { ThemeProvider } from '@mui/styles'
 
 const approveTransaction = async (
   api: AxiosInstance,
@@ -65,13 +71,14 @@ const invalidateTransaction = async (
 export const TransactionRow: React.FC<{
   transaction: Transaction
   pending: boolean
+  categoryColor: CategoryColors
+  theme: Theme
   refreshTransactions: () => void
-}> = ({ transaction, pending, refreshTransactions }) => {
+}> = ({ transaction, pending, categoryColor, theme, refreshTransactions }) => {
   const [open, setOpen] = React.useState(false)
   const { user } = useAuth()
   const api = useApi()
   const [dealStatus, setDealStatus] = useState('')
-
   useEffect(() => {
     const getDealStatus = async () => {
       try {
@@ -92,108 +99,104 @@ export const TransactionRow: React.FC<{
         setDealStatus(`Error: ${error}`)
       }
     }
-
     getDealStatus()
   }, [transaction.id])
-
   return (
     <React.Fragment>
-      <TableRow hover role='checkbox' tabIndex={-1}>
-        <TableCell>
-          <IconButton
-            aria-label='expand row'
-            size='small'
-            onClick={() => setOpen(!open)}
-          >
-            {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
-          </IconButton>
-        </TableCell>
-        <TableCell align='center'>{transaction.transactionName}</TableCell>
-        <TableCell align='center'>{transaction.buyerUser}</TableCell>
-        <TableCell align='center'>{transaction.sellerUser}</TableCell>
-        <TableCell align='center'>{transaction.witnessUser}</TableCell>
-        <TableCell align='center'>{transaction.price}</TableCell>
-        <TableCell align='center'>
-          <Stack direction='row' spacing={1}>
-            {Array.isArray(eval(transaction.category)) ? (
-              eval(transaction.category).map(c => (
-                <Chip label={c} color='primary' variant='outlined' />
-              ))
-            ) : (
+      <ThemeProvider theme={theme}>
+        <TableRow hover role='checkbox' tabIndex={-1}>
+          <TableCell>
+            <IconButton
+              aria-label='expand row'
+              size='small'
+              onClick={() => setOpen(!open)}
+            >
+              {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
+            </IconButton>
+          </TableCell>
+          <TableCell align='center'>{transaction.transactionName}</TableCell>
+          <TableCell align='center'>{transaction.buyerUser}</TableCell>
+          <TableCell align='center'>{transaction.sellerUser}</TableCell>
+          <TableCell align='center'>{transaction.witnessUser}</TableCell>
+          <TableCell align='center'>{transaction.price}</TableCell>
+          <TableCell align='center' className='category-cell'>
+            {/* <Stack direction='row' spacing={1} width={'fit-content'}> */}
+            {transaction.category.map(c => (
               <Chip
-                label={transaction.category}
-                color='primary'
-                variant='outlined'
+                className='category-chip'
+                label={c}
+                color={categoryColor[c]}
+                variant='filled'
               />
-            )}
-          </Stack>
-          {transaction.category}
+            ))}
+            {/* </Stack> */}
+          </TableCell>
+          {pending && dealStatus != 'העסקה נסגרה' ? (
+            <TableCell align='center'>
+              <Button
+                onClick={() =>
+                  approveTransaction(
+                    api,
+                    user,
+                    transaction.id,
+                    false,
+                    refreshTransactions,
+                  )
+                }
+              >
+                אשר
+              </Button>
+              <Button
+                onClick={() =>
+                  approveTransaction(
+                    api,
+                    user,
+                    transaction.id,
+                    true,
+                    refreshTransactions,
+                  )
+                }
+              >
+                דחה
+              </Button>
+            </TableCell>
+          ) : pending && dealStatus == 'העסקה נסגרה' ? (
+            <TableCell align='center'>
+              <Button
+                onClick={() =>
+                  invalidateTransaction(
+                    api,
+                    user,
+                    transaction.id,
+                    refreshTransactions,
+                  )
+                }
+              >
+                העסקה הופרה
+              </Button>
+            </TableCell>
+          ) : null}
+          {/*need to expand to list */}
+        </TableRow>
+        <TableCell
+          style={{ paddingBottom: 0, paddingTop: 0 }}
+          colSpan={7}
+          align='right'
+        >
+          <Collapse in={open} timeout='auto'>
+            <Box margin={1}>
+              <Typography variant='h6' gutterBottom component='div'>
+                פרטים נוספים
+              </Typography>
+              <div>{transaction.details}</div>
+              <Typography variant='h6' gutterBottom component='div'>
+                סטטוס עסקה
+              </Typography>
+              <div>{dealStatus}</div>
+            </Box>
+          </Collapse>
         </TableCell>
-        {pending && dealStatus != 'העסקה נסגרה' ? (
-          <TableCell align='center'>
-            <Button
-              onClick={() =>
-                approveTransaction(
-                  api,
-                  user,
-                  transaction.id,
-                  false,
-                  refreshTransactions,
-                )
-              }
-            >
-              אשר
-            </Button>
-            <Button
-              onClick={() =>
-                approveTransaction(
-                  api,
-                  user,
-                  transaction.id,
-                  true,
-                  refreshTransactions,
-                )
-              }
-            >
-              דחה
-            </Button>
-          </TableCell>
-        ) : pending && dealStatus == 'העסקה נסגרה' ? (
-          <TableCell align='center'>
-            <Button
-              onClick={() =>
-                invalidateTransaction(
-                  api,
-                  user,
-                  transaction.id,
-                  refreshTransactions,
-                )
-              }
-            >
-              העסקה הופרה
-            </Button>
-          </TableCell>
-        ) : null}
-        {/*need to expand to list */}
-      </TableRow>
-      <TableCell
-        style={{ paddingBottom: 0, paddingTop: 0 }}
-        colSpan={7}
-        align='right'
-      >
-        <Collapse in={open} timeout='auto'>
-          <Box margin={1}>
-            <Typography variant='h6' gutterBottom component='div'>
-              פרטים נוספים
-            </Typography>
-            <div>{transaction.details}</div>
-            <Typography variant='h6' gutterBottom component='div'>
-              סטטוס עסקה
-            </Typography>
-            <div>{dealStatus}</div>
-          </Box>
-        </Collapse>
-      </TableCell>
+      </ThemeProvider>
     </React.Fragment>
   )
 }

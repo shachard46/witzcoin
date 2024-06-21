@@ -5,6 +5,7 @@ import { ApproveTransactionGateway } from '../transaction/approveTransaction.gat
 import { APP_GUARD } from '@nestjs/core'
 import { AuthGuard } from '../auth/auth.guard'
 import { UserService } from '../user/user.service'
+import { CategoryService } from 'category/caterory.service'
 
 @Module({
   imports: [],
@@ -12,6 +13,7 @@ import { UserService } from '../user/user.service'
   providers: [
     TransactionService,
     UserService,
+    CategoryService,
     ApproveTransactionGateway,
     {
       provide: APP_GUARD,

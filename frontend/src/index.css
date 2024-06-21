@@ -53,6 +53,14 @@ code {
   border-radius: 10px;
   /* height: 100px; */
 }
+.category-cell {
+  display: flex !important;
+  justify-content: center;
+}
+.category-chip {
+  margin-left: 3% !important;
+  margin-right: 3% !important;
+}
 .header {
   /* padding: 10px; */
   margin-bottom: 20px;

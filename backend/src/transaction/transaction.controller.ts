@@ -11,10 +11,15 @@ import { TransactionService } from './transaction.service'
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
 import { OutUser, User, toOutUser } from '../user/user.interface'
 import { Public } from 'auth/auth.interfaces'
+import { Category } from 'category/category.interface'
+import { CategoryService } from 'category/caterory.service'
 
 @Controller('/api/transactions')
 export class TransactionController {
-  constructor(private transactionService: TransactionService) {}
+  constructor(
+    private transactionService: TransactionService,
+    private categoryService: CategoryService,
+  ) {}
   @Post()
   async createTransaction(
     @Body() transDto: TransactionCreationDto,
@@ -81,5 +86,9 @@ export class TransactionController {
       invalidateTransactionDto.user,
       id,
     )
+  }
+  @Get('categories')
+  async getAllCategories(): Promise<string[]> {
+    return await this.categoryService.getAllCategories()
   }
 }

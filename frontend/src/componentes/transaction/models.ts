@@ -32,3 +32,7 @@ export interface User {
   pending: number
   role: Role
 }
+
+export interface CategoryColors {
+  [key: string]: string
+}

@@ -95,7 +95,7 @@ export interface OutTransaction {
   sellerUser: string
   witnessUser: string
   price: number
-  category: string
+  category: []
   details: string
   status: number
 }
@@ -107,7 +107,7 @@ export const toOutTransaction = (trans: Transaction): OutTransaction => {
     sellerUser: trans.sellerUser.username,
     witnessUser: trans.witnessUser.username,
     price: trans.price,
-    category: trans.category,
+    category: eval(trans.category.replace('{', '[').replace('}', ']')),
     details: trans.details,
     status: trans.status,
     transactionName: trans.transactionName,
