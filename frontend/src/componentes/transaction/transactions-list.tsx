@@ -88,18 +88,29 @@ export const TransactionsList: React.FC<{
               </StyledTableRow>
             </TableHead>
             <TableBody>
-              {(pending.length > 0 ? pending : transactions).map(
-                transaction => (
-                  <TransactionRow
-                    key={transactions.indexOf(transaction)}
-                    transaction={transaction}
-                    pending={pending.length > 0 ? true : false}
-                    refreshTransactions={refreshTransactions}
-                    categoryColor={catColors}
-                    theme={theme}
-                  />
-                ),
-              )}
+              {(pending.length > 0
+                ? pending.slice(
+                    page * rowsPerPage,
+                    (page + 1) * rowsPerPage >= pending.length
+                      ? pending.length
+                      : (page + 1) * rowsPerPage,
+                  )
+                : transactions.slice(
+                    page * rowsPerPage,
+                    (page + 1) * rowsPerPage >= transactions.length
+                      ? transactions.length
+                      : (page + 1) * rowsPerPage,
+                  )
+              ).map(transaction => (
+                <TransactionRow
+                  key={transactions.indexOf(transaction)}
+                  transaction={transaction}
+                  pending={pending.length > 0 ? true : false}
+                  refreshTransactions={refreshTransactions}
+                  categoryColor={catColors}
+                  theme={theme}
+                />
+              ))}
             </TableBody>
           </Table>
         </TableContainer>

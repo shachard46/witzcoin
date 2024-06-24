@@ -95,19 +95,25 @@ export interface OutTransaction {
   sellerUser: string
   witnessUser: string
   price: number
-  category: []
+  category: string[]
   details: string
   status: number
 }
 
 export const toOutTransaction = (trans: Transaction): OutTransaction => {
+  let cat: string[] = []
+  try {
+    cat = eval(trans.category.replace('{', '[').replace('}', ']'))
+  } catch {
+    cat = trans.category.split(',')
+  }
   return {
     id: trans.id,
     buyerUser: trans.buyerUser.username,
     sellerUser: trans.sellerUser.username,
     witnessUser: trans.witnessUser.username,
     price: trans.price,
-    category: eval(trans.category.replace('{', '[').replace('}', ']')),
+    category: cat,
     details: trans.details,
     status: trans.status,
     transactionName: trans.transactionName,

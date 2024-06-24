@@ -29,7 +29,7 @@ export class UserService {
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      logging: true,
+      logging: false,
       entities: [User],
       synchronize: true,
     })

@@ -3,6 +3,7 @@ import {
   Checkbox,
   Container,
   FormControl,
+  Grid,
   InputLabel,
   ListItemText,
   MenuItem,
@@ -26,6 +27,8 @@ const CreateDealPage: React.FC = () => {
   const navigate = useNavigate()
   const [token] = useToken()
   const [categories, setCategories] = useState<[]>([])
+  const [currency, setCurrency] = React.useState('')
+
   const [transaction, setTrasaction] = useState<Transaction>({
     id: 0,
     buyerUser: '',
@@ -40,6 +43,9 @@ const CreateDealPage: React.FC = () => {
   useEffect(() => {
     api.get<[]>('/categories').then(res => setCategories(res.data))
   }, [])
+  const handleCurrencyChange = (event: SelectChangeEvent) => {
+    setCurrency(event.target.value as string)
+  }
   const handleInputChange = (fieldName: string) => {
     return (event: React.ChangeEvent<HTMLInputElement>) => {
       {
@@ -67,8 +73,9 @@ const CreateDealPage: React.FC = () => {
       category: typeof value === 'string' ? value.split(',') : value,
     }))
   }
-  const handleSubmit = async (event: React.FormEvent) => {
+  const handleSubmit = async (event: React.FormEvent, currency: number) => {
     event.preventDefault()
+    transaction.price = currency == 0 ? 0 : transaction.price / currency
     const res = await api.post('/transactions', {
       transaction: transaction,
       issuingUsername: token ? token.data.username : '',
@@ -173,20 +180,41 @@ const CreateDealPage: React.FC = () => {
                 {categories_items}
               </Select>
             </FormControl>
-            <TextField
-              variant='outlined'
-              margin='normal'
-              required
-              className='deal-notes row'
-              fullWidth
-              id='price'
-              label='מחיר'
-              name='price'
-              autoComplete='0'
-              autoFocus
-              value={transaction.price}
-              onChange={handlePriceChange}
-            />
+            <Grid container spacing={2} alignItems={'center'}>
+              <Grid item xs={10}>
+                <TextField
+                  variant='outlined'
+                  margin='normal'
+                  required
+                  className='deal-notes row'
+                  fullWidth
+                  id='price'
+                  label='מחיר'
+                  name='price'
+                  autoComplete='0'
+                  autoFocus
+                  value={transaction.price}
+                  onChange={handlePriceChange}
+                />
+              </Grid>
+              <Grid item xs={2}>
+                <Select
+                  labelId='currencylabel'
+                  variant='outlined'
+                  className='deal-notes'
+                  autoFocus
+                  fullWidth
+                  id='currency'
+                  value={currency}
+                  label='currency'
+                  onChange={handleCurrencyChange}
+                >
+                  <MenuItem value={1}>Witzcoin</MenuItem>
+                  <MenuItem value={1 / 30}>ShWitzcoin</MenuItem>
+                  <MenuItem value={0}>Adamium</MenuItem>
+                </Select>
+              </Grid>
+            </Grid>
             <TextField
               variant='outlined'
               margin='normal'
@@ -209,7 +237,9 @@ const CreateDealPage: React.FC = () => {
               variant='contained'
               color='primary'
               className='submit'
-              onClick={handleSubmit}
+              onClick={event =>
+                handleSubmit(event, Number.parseFloat(currency))
+              }
             >
               לחיצת ידיים
             </Button>

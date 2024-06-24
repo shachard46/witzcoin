@@ -55,7 +55,7 @@ export class TransactionService {
       username: DB_USERNAME,
       password: DB_PASSWORD,
       database: DB_NAME,
-      logging: true,
+      logging: false,
       entities: [Transaction, User],
       synchronize: true,
     })
@@ -178,7 +178,6 @@ export class TransactionService {
   ): Promise<Approver> {
     const transaction =
       typeof id === 'number' ? await this.getTransactionById(id) : id
-    console.log('transaction', transaction, 'user', user)
     if (transaction?.buyerUser.username === user.username) return Approver.BUYER
     if (transaction?.sellerUser.username === user.username)
       return Approver.SELLER
@@ -226,7 +225,6 @@ export class TransactionService {
   async getTransactionsByUser(username: string): Promise<Transaction[]> {
     const user = await this.userService.getUserByUsername(username)
     if (!user) throw new ValidationException('user doesnt exists')
-    console.log('user: ', user)
     return (await this.getAllTransactions()).filter(
       trans =>
         trans.buyerUser.username === username ||
