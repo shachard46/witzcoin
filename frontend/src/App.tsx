@@ -13,6 +13,7 @@ import RegisterPage from './componentes/auth/register-page'
 import { LogoutPage } from './componentes/auth/logout-page'
 import ProfilePage from './componentes/profile/your-profile'
 import { PendingTransactions } from './componentes/transaction/pending-transactions'
+import { ManagersPage } from './componentes/protected/manager-page'
 
 function App() {
   const router = createBrowserRouter(
@@ -25,6 +26,7 @@ function App() {
         <Route path='p/pending' element={<PendingTransactions />} />
         <Route path='p/history' element={<TransactionHistoryPage />} />
         <Route path='p/profile' element={<ProfilePage />} />
+        <Route path='p/manage' element={<ManagersPage />} />
       </Route>,
     ),
   )

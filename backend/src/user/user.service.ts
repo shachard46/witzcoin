@@ -57,12 +57,14 @@ export class UserService {
     price: number,
     income: number,
     decline: boolean,
+    noPending: boolean = false,
   ): Promise<void> {
     if (!decline) {
       await this.repository.update(username, {
         balance: () => `balance + ${price * income}`,
       })
     }
+    if (noPending) return
     await this.changePendingByUsername(username, price, income * -1, decline)
   }
 

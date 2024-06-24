@@ -9,103 +9,14 @@ import {
   TableBody,
   TableContainer,
   TableHead,
-  TableRow,
 } from '@mui/material'
-import TableCell, { tableCellClasses } from '@mui/material/TableCell'
-import {
-  lime,
-  purple,
-  indigo,
-  red,
-  teal,
-  pink,
-  cyan,
-  amber,
-  green,
-} from '@mui/material/colors'
 import { TransactionRow } from './transaction-row'
 import { useTransactions } from './transactions-hook'
-import { styled, createTheme, ThemeProvider } from '@mui/material/styles'
+import { styled, ThemeProvider } from '@mui/material/styles'
+import theme, { StyledTableCell, StyledTableRow } from '../theme'
 import { CategoryColors, Transaction } from './models'
 import { useApi } from '../api/api-provider'
 
-const StyledTableCell = styled(TableCell)(({ theme }) => ({
-  [`&.${tableCellClasses.head}`]: {
-    backgroundColor: '#776a37',
-    color: theme.palette.common.white,
-  },
-  [`&.${tableCellClasses.body}`]: {
-    fontSize: 14,
-  },
-}))
-
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
-  '&:nth-of-type(odd)': {
-    backgroundColor: '#776a37',
-  },
-  // hide last border
-  '&:last-child td, &:last-child th': {
-    border: 0,
-  },
-}))
-const theme = createTheme({
-  palette: {
-    primary: {
-      main: '#3F51B5', // Blue
-      light: '#757DE8',
-      dark: '#002984',
-      contrastText: '#FFFFFF',
-    },
-    secondary: {
-      main: '#F50057', // Pink
-      light: '#FF4081',
-      dark: '#C51162',
-      contrastText: '#FFFFFF',
-    },
-    third: {
-      main: '#4CAF50', // Green
-      light: '#80E27E',
-      dark: '#087F23',
-      contrastText: '#FFFFFF',
-    },
-    fo: {
-      main: '#FF9800', // Orange
-      light: '#FFC947',
-      dark: '#C66900',
-      contrastText: '#FFFFFF',
-    },
-    fi: {
-      main: '#9C27B0', // Purple
-      light: '#D05CE3',
-      dark: '#6A0080',
-      contrastText: '#FFFFFF',
-    },
-    si: {
-      main: '#00BCD4', // Cyan
-      light: '#62EFFF',
-      dark: '#008BA3',
-      contrastText: '#FFFFFF',
-    },
-    se: {
-      main: '#795548', // Brown
-      light: '#A98274',
-      dark: '#4B2C20',
-      contrastText: '#FFFFFF',
-    },
-    ei: {
-      main: '#607D8B', // Blue Grey
-      light: '#8EACBB',
-      dark: '#34515E',
-      contrastText: '#FFFFFF',
-    },
-    ni: {
-      main: '#E91E63', // Deep Pink
-      light: '#FF6090',
-      dark: '#B0003A',
-      contrastText: '#FFFFFF',
-    },
-  },
-})
 export const TransactionsList: React.FC<{
   user: boolean
   pending: Transaction[]
@@ -135,12 +46,12 @@ export const TransactionsList: React.FC<{
           'primary',
           'secondary',
           'third',
+          'ni',
           'fo',
-          'fi',
           'si',
+          'fi',
           'se',
           'ei',
-          'ni',
         ]
         const pair: CategoryColors = {}
         categories.forEach(
