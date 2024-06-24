@@ -53,9 +53,13 @@ code {
   border-radius: 10px;
   /* height: 100px; */
 }
+td {
+  /* border-bottom: 1px solid rgba(224, 224, 224, 1) !important; */
+}
 .category-cell {
   display: flex !important;
   justify-content: center;
+  border-bottom: 0 !important;
 }
 .category-chip {
   margin-left: 3% !important;

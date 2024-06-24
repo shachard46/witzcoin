@@ -180,7 +180,7 @@ export const TransactionRow: React.FC<{
         </TableRow>
         <TableCell
           style={{ paddingBottom: 0, paddingTop: 0 }}
-          colSpan={7}
+          colSpan={pending ? 9 : 7}
           align='right'
         >
           <Collapse in={open} timeout='auto'>
