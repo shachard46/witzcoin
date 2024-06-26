@@ -1,3 +1,4 @@
+import { extractTokenFromHeader } from 'auth/auth.guard'
 import { DataSource, Repository } from 'typeorm'
 import { AuthUserDto, User } from '../user/user.interface'
 import { Injectable, UnauthorizedException } from '@nestjs/common'
@@ -11,6 +12,7 @@ import { Transaction } from '../transaction/transaction.interface'
 import { JwtService } from '@nestjs/jwt'
 import { log } from 'console'
 import { UserService } from 'user/user.service'
+import { AuthGuard } from './auth.guard'
 
 @Injectable()
 export class AuthService {
@@ -55,5 +57,11 @@ export class AuthService {
     return {
       access_token: await this.jwtService.signAsync(payload),
     }
+  }
+}
+
+export function isCurrentUser(username: string, request) {
+  if (username != request.user['access_token']['sub']) {
+    throw new UnauthorizedException('Not your god damn user')
   }
 }

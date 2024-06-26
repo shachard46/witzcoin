@@ -3,7 +3,6 @@ import { TransactionsList } from '../transaction/transactions-list'
 import { ProtectedPage } from '../protected/protected-page'
 import { Role } from '../auth/models'
 import AccountDetails from './user-details'
-import { styled } from '@mui/styles'
 
 const ProfilePage: React.FC = () => {
   const { user } = useAuth()
@@ -15,7 +14,7 @@ const ProfilePage: React.FC = () => {
           <div>
             <AccountDetails user={user} />
 
-            <TransactionsList user={true} pending={[]} />
+            <TransactionsList user={true} pending={[]} className='' />
           </div>
         </div>
       </div>

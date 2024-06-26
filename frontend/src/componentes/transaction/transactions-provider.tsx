@@ -12,7 +12,6 @@ export const TransactionsProvider: React.FC<Provider> = ({ children }) => {
   const [userTransactions, setUserTransactions] = useState<Transaction[]>([])
   useEffect(() => {
     if (!isAutonticated || !user) return
-    console.log(user)
     refreshTransactions(api, setTransactions, setUserTransactions, user)
   }, [user, isAutonticated, api])
   

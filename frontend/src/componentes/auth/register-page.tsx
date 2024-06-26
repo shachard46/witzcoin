@@ -14,6 +14,7 @@ import { AxiosInstance } from 'axios'
 import React, { useState } from 'react'
 import { useApi } from '../api/api-provider'
 import { RegisterUser, Role } from './models'
+import styled from '@emotion/styled'
 
 const register = async (api: AxiosInstance, registerUser: RegisterUser) => {
   try {
@@ -24,7 +25,14 @@ const register = async (api: AxiosInstance, registerUser: RegisterUser) => {
     return undefined
   }
 }
-
+const LoginContainer = styled.div`
+  max-width: 800px;
+  margin: auto;
+  padding: 20px;
+  background: #f8f9fa !important;
+  border-radius: 8px;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+`
 const RegisterPage: React.FC = () => {
   const api = useApi()
   const [username, setUsername] = useState('')
@@ -65,71 +73,69 @@ const RegisterPage: React.FC = () => {
   }
 
   return (
-    <div className='container'>
-      <Container component='main' maxWidth='xs' className='root'>
-        <div>
-          <Typography component='h1' variant='h5' align='center'>
-            הירשם
-          </Typography>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
+    <Container component='main' maxWidth='xs' className='root'>
+      <LoginContainer>
+        <Typography component='h1' variant='h5' align='center'>
+          הירשם
+        </Typography>
+        <TextField
+          variant='outlined'
+          margin='normal'
+          required
+          className='textField'
+          fullWidth
+          id='username'
+          label='Username'
+          name='username'
+          autoComplete='username'
+          autoFocus
+          value={username}
+          onChange={handleUsernameChange}
+        />
+        <FormControl variant='outlined' margin='normal' required fullWidth>
+          <InputLabel htmlFor='password'>Password</InputLabel>
+          <OutlinedInput
+            id='password'
+            name='password'
             className='textField'
-            fullWidth
-            id='username'
-            label='Username'
-            name='username'
-            autoComplete='username'
-            autoFocus
-            value={username}
-            onChange={handleUsernameChange}
+            type={showPassword ? 'text' : 'password'}
+            value={password}
+            onChange={handlePasswordChange}
+            endAdornment={
+              <InputAdornment position='end'>
+                <IconButton onClick={handleShowPasswordToggle} edge='end'>
+                  {showPassword ? <Visibility /> : <VisibilityOff />}
+                </IconButton>
+              </InputAdornment>
+            }
           />
-          <FormControl variant='outlined' margin='normal' required fullWidth>
-            <InputLabel htmlFor='password'>Password</InputLabel>
-            <OutlinedInput
-              id='password'
-              name='password'
-              className='textField'
-              type={showPassword ? 'text' : 'password'}
-              value={password}
-              onChange={handlePasswordChange}
-              endAdornment={
-                <InputAdornment position='end'>
-                  <IconButton onClick={handleShowPasswordToggle} edge='end'>
-                    {showPassword ? <Visibility /> : <VisibilityOff />}
-                  </IconButton>
-                </InputAdornment>
-              }
-            />
-          </FormControl>
-          <TextField
-            variant='outlined'
-            margin='normal'
-            required
-            className='textField'
-            fullWidth
-            id='balance'
-            label='balance'
-            name='balance'
-            autoComplete='balance'
-            autoFocus
-            value={balance}
-            onChange={handleBalanceChange}
-          />
-          <Button
-            type='submit'
-            fullWidth
-            variant='contained'
-            color='primary'
-            className='submit'
-            onClick={handleSubmit}
-          >
-            הירשם
-          </Button>
-        </div>
-      </Container>
-    </div>
+        </FormControl>
+        <TextField
+          variant='outlined'
+          margin='normal'
+          required
+          className='textField'
+          fullWidth
+          id='balance'
+          label='balance'
+          name='balance'
+          autoComplete='balance'
+          autoFocus
+          value={balance}
+          onChange={handleBalanceChange}
+        />
+        <Button
+          type='submit'
+          fullWidth
+          variant='contained'
+          color='primary'
+          className='submit'
+          onClick={handleSubmit}
+        >
+          הירשם
+        </Button>
+      </LoginContainer>
+    </Container>
   )
 }
 

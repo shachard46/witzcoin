@@ -20,13 +20,14 @@ import { useApi } from '../api/api-provider'
 export const TransactionsList: React.FC<{
   user: boolean
   pending: Transaction[]
-}> = ({ user = false, pending = [] }) => {
+  className: string
+}> = ({ user = false, pending = [], className = '' }) => {
   const [transactions, refreshTransactions] = useTransactions(user)
 
   const [page, setPage] = React.useState(0)
   const api = useApi()
   const [catColors, setCatColors] = useState<CategoryColors>({})
-  const [rowsPerPage, setRowsPerPage] = React.useState(10)
+  const [rowsPerPage, setRowsPerPage] = React.useState(5)
   const handleChangePage = (event: unknown, newPage: number) => {
     setPage(newPage)
   }
@@ -67,7 +68,7 @@ export const TransactionsList: React.FC<{
     refreshTransactions()
   }, [])
   return (
-    <Paper>
+    <Paper className={className}>
       <ThemeProvider theme={theme}>
         <TableContainer component={Paper}>
           <Table stickyHeader aria-label='sticky collapsible table' dir='rtl'>

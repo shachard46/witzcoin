@@ -72,7 +72,7 @@ const LoginForm: React.FC = () => {
     <Container component='main' maxWidth='xs' className='root'>
       <LoginContainer>
         <Typography component='h1' variant='h5' align='center'>
-          Log In
+          התחבר
         </Typography>
         <TextField
           variant='outlined'

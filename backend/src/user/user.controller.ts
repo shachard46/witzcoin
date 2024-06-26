@@ -1,7 +1,7 @@
 import { OutUser, toOutUser, User } from '../user/user.interface'
 import { UserService } from './user.service'
 import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
-import { Public, Role, Roles } from '../auth/auth.interfaces'
+import { Public, Role, ROLES, Roles } from '../auth/auth.interfaces'
 import { Price } from 'transaction/transaction.interface'
 
 @Controller('/api/users')
@@ -24,6 +24,7 @@ export class UserController {
   async getAllUsers(): Promise<User[]> {
     return await this.userService.getAllUsers()
   }
+  @Roles([Role.ADMIN])
   @Put('balance/:username')
   async updateBalance(
     @Param('username') username: string,

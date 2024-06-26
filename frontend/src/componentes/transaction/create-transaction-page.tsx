@@ -95,18 +95,8 @@ const CreateDealPage: React.FC = () => {
   return (
     <ProtectedPage reqScope={Role.USER}>
       <div className='deal-container'>
-        <Container component='main' maxWidth='md'>
+        <Container component='main' maxWidth='md' className='table'>
           <div>
-            <Breadcrumb
-              items={[
-                {
-                  title: 'Witzcoin Trading',
-                },
-                {
-                  title: <a href=''>Transactoins</a>,
-                },
-              ]}
-            />
             <TextField
               variant='outlined'
               margin='normal'
@@ -118,6 +108,7 @@ const CreateDealPage: React.FC = () => {
               name='transaction_name'
               autoComplete='שם העסקה'
               autoFocus
+              // dir='rtl'
               value={transaction.transactionName}
               onChange={handleTransactionNameChange}
             />

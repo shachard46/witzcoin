@@ -97,8 +97,6 @@ export class TransactionService {
   ): Promise<Transaction> {
     const issueing_user =
       await this.userService.getUserByUsername(issueing_username)
-    console.log('balanceafter: ', issueing_user)
-
     const transaction = await this.createTransactionUsers(trans)
 
     if (
@@ -153,7 +151,6 @@ export class TransactionService {
     }
     const approvers: User[] = []
     const approver_codes = breakToBase2(trans.status)
-    console.log(approver_codes)
     approver_codes.forEach(approver => {
       switch (approver) {
         case Approver.BUYER:

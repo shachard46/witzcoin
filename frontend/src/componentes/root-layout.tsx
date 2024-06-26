@@ -1,10 +1,38 @@
-import React from 'react'
-import { NavLink, Outlet } from 'react-router-dom'
+import React, { useEffect, useState } from 'react'
+import { NavLink, Outlet, useLocation } from 'react-router-dom'
 import { Role } from './auth/models'
 import { ProtectedPage } from './protected/protected-page'
 import { Box, Typography } from '@mui/material'
+import { Breadcrumb } from 'antd'
 
 const RootLayout: React.FC = () => {
+  const [path, setPath] = useState('login')
+  const location = useLocation()
+  useEffect(() => {
+    switch (location.pathname) {
+      case '/login':
+        setPath('עמוד התחברות')
+        break
+      case '/p/history':
+        setPath('היסטוריית עסקאות')
+        break
+      case '/register':
+        setPath('עמוד הרשמה')
+        break
+      case '/p/profile':
+        setPath('הפרופיל שלך')
+        break
+      case '/p/pending':
+        setPath('עסקאות ממתינות')
+        break
+      case '/p/transaction':
+        setPath('יצירת עסקה')
+        break
+      case '/p/manage':
+        setPath('עמוד מנהל')
+        break
+    }
+  })
   return (
     <div>
       <div className='header-container'>
@@ -78,7 +106,8 @@ const RootLayout: React.FC = () => {
         </header>
       </div>
       <div className='container'>
-        <main>
+        <main className='main'>
+          <div className='page-header'>{path}</div>
           <Outlet />
         </main>
       </div>

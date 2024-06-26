@@ -1,4 +1,3 @@
-import { Request, Response } from 'express'
 import {
   OutTransaction,
   TransInvalidationUpdateDto,
@@ -8,11 +7,20 @@ import {
   toOutTransaction,
 } from '../transaction/transaction.interface'
 import { TransactionService } from './transaction.service'
-import { Body, Controller, Get, Param, Post, Put } from '@nestjs/common'
+import {
+  Body,
+  Controller,
+  Get,
+  Param,
+  Post,
+  Put,
+  Request,
+} from '@nestjs/common'
 import { OutUser, User, toOutUser } from '../user/user.interface'
 import { Public } from 'auth/auth.interfaces'
 import { Category } from 'category/category.interface'
 import { CategoryService } from 'category/caterory.service'
+import { isCurrentUser } from 'auth/auth.service'
 
 @Controller('/api/transactions')
 export class TransactionController {
@@ -40,7 +48,9 @@ export class TransactionController {
   async updateTransactionStatus(
     @Param('id') id: number,
     @Body() statusUpdateDto: TransStatusUpdateDto,
+    @Request() req,
   ) {
+    isCurrentUser(statusUpdateDto.approvingUser.username, req)
     this.transactionService.updateTransactionStatusByAction(
       id,
       statusUpdateDto.approvingUser,
@@ -81,7 +91,9 @@ export class TransactionController {
   async invalidateTransaction(
     @Param('id') id: number,
     @Body() invalidateTransactionDto: TransInvalidationUpdateDto,
+    @Request() req,
   ): Promise<void> {
+    isCurrentUser(invalidateTransactionDto.user.username, req)
     return await this.transactionService.invalidateTransaction(
       invalidateTransactionDto.user,
       id,

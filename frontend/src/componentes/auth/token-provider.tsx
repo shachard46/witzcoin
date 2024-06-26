@@ -61,8 +61,6 @@ const getTokenFromStorage = (): Token | undefined => {
     const verifiedTokenData: TokenData = jwtDecode<{
       access_token: TokenData
     }>(JSON.stringify(parsedToken.data.access_token)).access_token
-    console.log('verifiedTokenData: ', verifiedTokenData)
-
     return {
       data: verifiedTokenData,
       access_token: parsedToken.data.access_token,
@@ -85,13 +83,10 @@ export const useToken = (): [
       const verifiedTokenData: TokenData = jwtDecode<{
         access_token: TokenData
       }>(JSON.stringify(parsedToken.data.access_token)).access_token
-      console.log('verifiedTokenData: ', verifiedTokenData)
-
       const newToken: Token = {
         data: verifiedTokenData,
         access_token: parsedToken.data.access_token,
       }
-      console.log('token: ', newToken)
       setToken(newToken)
     } else {
       setToken(undefined)

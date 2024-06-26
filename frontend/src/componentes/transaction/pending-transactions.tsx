@@ -34,20 +34,10 @@ export const PendingTransactions: React.FC = () => {
 
   useEffect(() => refreshTransactions(), [])
   return (
-    <ProtectedPage reqScope={Role.USER}>
-      <div
-        className='container'
-        style={{ width: '1300px', backgroundColor: '#f8f9fa' }}
-      >
-        <div
-          className='container'
-          style={{ width: '1100px', backgroundColor: '#f8f9fa' }}
-        >
-          {pendingTransactionsList.length > 0 ? (
-            <TransactionsList user={true} pending={pendingTransactionsList} />
-          ) : null}
-        </div>
-      </div>
+    <ProtectedPage reqScope={Role.USER} className='table-container'>
+      {pendingTransactionsList.length > 0 ? (
+        <TransactionsList user={true} pending={pendingTransactionsList} className='table' />
+      ) : null}
     </ProtectedPage>
   )
 }
