@@ -27,25 +27,17 @@ const AccountDetails: React.FC<{ user: User }> = ({ user }) => {
       <Typography variant='body1'>
         עו"ש:{' '}
         {user.balance >= 0 ? (
-          <PositiveBalance component='span'>
-            ${user.balance.toFixed(2)}
-          </PositiveBalance>
+          <PositiveBalance>${user.balance.toFixed(2)}</PositiveBalance>
         ) : (
-          <NegativeBalance component='span'>
-            ${user.balance.toFixed(2)}
-          </NegativeBalance>
+          <NegativeBalance>${user.balance.toFixed(2)}</NegativeBalance>
         )}
       </Typography>
       <Typography variant='body1'>
         סכום מעסקאות ממתינות:{' '}
         {user.pending >= 0 ? (
-          <PositiveBalance component='span'>
-            ${user.pending.toFixed(2)}
-          </PositiveBalance>
+          <PositiveBalance>${user.pending.toFixed(2)}</PositiveBalance>
         ) : (
-          <NegativeBalance component='span'>
-            ${user.pending.toFixed(2)}
-          </NegativeBalance>
+          <NegativeBalance>${user.pending.toFixed(2)}</NegativeBalance>
         )}
       </Typography>
     </StyledPaper>

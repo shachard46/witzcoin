@@ -28,7 +28,7 @@ export const TransactionsList: React.FC<{
   const api = useApi()
   const [catColors, setCatColors] = useState<CategoryColors>({})
   const [rowsPerPage, setRowsPerPage] = React.useState(5)
-  const handleChangePage = (event: unknown, newPage: number) => {
+  const handleChangePage = (newPage: number) => {
     setPage(newPage)
   }
 
@@ -130,7 +130,7 @@ export const TransactionsList: React.FC<{
           count={transactions.length}
           rowsPerPage={rowsPerPage}
           page={page}
-          onPageChange={handleChangePage}
+          onPageChange={(_, page) => handleChangePage(page)}
           onRowsPerPageChange={handleChangeRowsPerPage}
         />
       </ThemeProvider>
