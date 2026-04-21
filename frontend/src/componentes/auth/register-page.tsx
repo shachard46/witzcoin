@@ -12,9 +12,9 @@ import {
 } from '@mui/material'
 import { AxiosInstance } from 'axios'
 import React, { useState } from 'react'
+import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
 import { RegisterUser, Role } from './models'
-import styled from '@emotion/styled'
 
 const register = async (api: AxiosInstance, registerUser: RegisterUser) => {
   try {
@@ -25,16 +25,9 @@ const register = async (api: AxiosInstance, registerUser: RegisterUser) => {
     return undefined
   }
 }
-const LoginContainer = styled.div`
-  max-width: 800px;
-  margin: auto;
-  padding: 20px;
-  background: #f8f9fa !important;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-`
 const RegisterPage: React.FC = () => {
   const api = useApi()
+  const navigate = useNavigate()
   const [username, setUsername] = useState('')
   const [password, setPassword] = useState('')
   const [balance, setBalance] = useState(0)
@@ -69,20 +62,28 @@ const RegisterPage: React.FC = () => {
       pending: 0,
       role: Role.USER,
     }
-    await register(api, registerUser)
+    const res = await register(api, registerUser)
+    if (res) {
+      navigate('/login')
+    }
   }
 
   return (
-    <Container component='main' maxWidth='xs' className='root'>
-      <LoginContainer>
-        <Typography component='h1' variant='h5' align='center'>
+    <Container
+      component='main'
+      maxWidth='xs'
+      className='mt-6 rounded-[10px] bg-[#d1c7a1] px-4 py-12 sm:mt-10 sm:py-20'
+    >
+      <div className='mx-auto max-w-[800px] rounded-lg bg-[#f8f9fa] p-6 shadow-[0_0_10px_rgba(0,0,0,0.1)] sm:p-8'>
+        <Typography component='h1' variant='h5' align='center' gutterBottom sx={{ mb: 3 }}>
           הירשם
         </Typography>
+        <form onSubmit={handleSubmit} noValidate className='flex flex-col gap-1'>
         <TextField
           variant='outlined'
           margin='normal'
           required
-          className='textField'
+          className='rounded-[10px] bg-white'
           fullWidth
           id='username'
           label='Username'
@@ -97,7 +98,7 @@ const RegisterPage: React.FC = () => {
           <OutlinedInput
             id='password'
             name='password'
-            className='textField'
+            className='rounded-[10px] bg-white'
             type={showPassword ? 'text' : 'password'}
             value={password}
             onChange={handlePasswordChange}
@@ -114,7 +115,7 @@ const RegisterPage: React.FC = () => {
           variant='outlined'
           margin='normal'
           required
-          className='textField'
+          className='rounded-[10px] bg-white'
           fullWidth
           id='balance'
           label='balance'
@@ -124,17 +125,11 @@ const RegisterPage: React.FC = () => {
           value={balance}
           onChange={handleBalanceChange}
         />
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          color='primary'
-          className='submit'
-          onClick={handleSubmit}
-        >
+        <Button type='submit' fullWidth variant='contained' color='primary' sx={{ mt: 3, mb: 1, py: 1.25 }}>
           הירשם
         </Button>
-      </LoginContainer>
+        </form>
+      </div>
     </Container>
   )
 }

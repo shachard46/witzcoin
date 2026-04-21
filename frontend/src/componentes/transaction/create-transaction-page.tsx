@@ -18,7 +18,6 @@ import { Approver, Transaction } from './models'
 import { useToken } from '../auth/token-provider'
 import { ProtectedPage } from '../protected/protected-page'
 import { Role } from '../auth/models'
-import { Breadcrumb } from 'antd'
 
 // const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
 
@@ -94,14 +93,14 @@ const CreateDealPage: React.FC = () => {
   })
   return (
     <ProtectedPage reqScope={Role.USER}>
-      <div className='deal-container'>
-        <Container component='main' maxWidth='md' className='table'>
+      <div className='mx-auto my-4 flex w-full max-w-4xl justify-center rounded-[10px] bg-white px-4 py-6 sm:px-6 sm:py-8'>
+        <Container component='main' maxWidth='md' className='w-full min-w-0'>
           <div>
             <TextField
               variant='outlined'
               margin='normal'
               required
-              className='textField'
+              className='mb-5 rounded-[10px] bg-white'
               fullWidth
               id='transaction_name'
               label='שם העסקה'
@@ -112,12 +111,12 @@ const CreateDealPage: React.FC = () => {
               value={transaction.transactionName}
               onChange={handleTransactionNameChange}
             />
-            <div className='usernames-row row'>
+            <div className='mb-5 flex w-full flex-col gap-4 md:flex-row md:flex-wrap md:items-start'>
               <TextField
                 variant='outlined'
                 margin='normal'
                 required
-                className='deal-username'
+                className='min-w-0 flex-1 rounded-[10px] bg-white md:min-w-[200px]'
                 fullWidth
                 id='buyer_username'
                 label='שם הקונה'
@@ -131,7 +130,7 @@ const CreateDealPage: React.FC = () => {
                 variant='outlined'
                 margin='normal'
                 required
-                className='deal-username'
+                className='min-w-0 flex-1 rounded-[10px] bg-white md:min-w-[200px]'
                 fullWidth
                 id='witness_username'
                 label='שם העד'
@@ -145,7 +144,7 @@ const CreateDealPage: React.FC = () => {
                 variant='outlined'
                 margin='normal'
                 required
-                className='deal-username'
+                className='min-w-0 flex-1 rounded-[10px] bg-white md:min-w-[200px]'
                 fullWidth
                 id='seller_username'
                 label='שם המוכר'
@@ -161,7 +160,7 @@ const CreateDealPage: React.FC = () => {
               <Select
                 labelId='category-label'
                 id='category-select'
-                className='row'
+                className='mb-5 bg-white'
                 value={transaction.category}
                 multiple
                 renderValue={selected => selected.join(', ')}
@@ -177,7 +176,7 @@ const CreateDealPage: React.FC = () => {
                   variant='outlined'
                   margin='normal'
                   required
-                  className='deal-notes row'
+                  className='mb-5 rounded-[10px] bg-white'
                   fullWidth
                   id='price'
                   label='מחיר'
@@ -192,7 +191,7 @@ const CreateDealPage: React.FC = () => {
                 <Select
                   labelId='currencylabel'
                   variant='outlined'
-                  className='deal-notes'
+                  className='rounded-[10px] bg-white'
                   autoFocus
                   fullWidth
                   id='currency'
@@ -210,7 +209,7 @@ const CreateDealPage: React.FC = () => {
               variant='outlined'
               margin='normal'
               required
-              className='deal-notes row'
+              className='mb-5 rounded-[10px] bg-white'
               fullWidth
               multiline
               minRows={5}
@@ -227,7 +226,7 @@ const CreateDealPage: React.FC = () => {
               fullWidth
               variant='contained'
               color='primary'
-              className='submit'
+              sx={{ mt: 3, mb: 1, py: 1.25 }}
               onClick={event =>
                 handleSubmit(event, Number.parseFloat(currency))
               }

@@ -16,13 +16,11 @@ import { useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
 import { LoginUser } from './models'
 import { useToken } from './token-provider'
-import styled from '@emotion/styled'
 
 const login = async (api: AxiosInstance, loginUser: LoginUser) => {
   try {
-    const res = await api.post('login', loginUser, {})
-    return res
-  } catch (error) {
+    return await api.post<{ access_token: string }>('login', loginUser)
+  } catch {
     alert('False Creds')
     return undefined
   }
@@ -54,30 +52,26 @@ const LoginForm: React.FC = () => {
     const loginUser: LoginUser = { username: username, password: password }
     const res = await login(api, loginUser)
     if (res) {
-      refreshToken(JSON.stringify(res))
+      refreshToken(JSON.stringify({ data: res.data }))
+      navigate('/p/transaction')
     }
-    navigate('/p/transaction')
   }
-  // Styled-components for styling
-  const LoginContainer = styled.div`
-    max-width: 800px;
-    margin: auto;
-    padding: 20px;
-    background: #f8f9fa;
-    border-radius: 8px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  `
 
   return (
-    <Container component='main' maxWidth='xs' className='root'>
-      <LoginContainer>
-        <Typography component='h1' variant='h5' align='center'>
+    <Container
+      component='main'
+      maxWidth='xs'
+      className='mt-6 rounded-[10px] bg-[#d1c7a1] px-4 py-12 sm:mt-10 sm:py-20'
+    >
+      <div className='mx-auto max-w-[800px] rounded-lg bg-[#f8f9fa] p-6 shadow-[0_0_10px_rgba(0,0,0,0.1)] sm:p-8'>
+        <Typography component='h1' variant='h5' align='center' gutterBottom sx={{ mb: 3 }}>
           התחבר
         </Typography>
+        <form onSubmit={handleSubmit} noValidate className='flex flex-col gap-1'>
         <TextField
           variant='outlined'
           margin='normal'
-          className='textField'
+          className='rounded-[10px] bg-white'
           id='username'
           label='Username'
           name='username'
@@ -93,12 +87,11 @@ const LoginForm: React.FC = () => {
           <OutlinedInput
             id='password'
             name='password'
-            className='textField'
+            className='rounded-[10px] bg-white'
             type={showPassword ? 'text' : 'password'}
             value={password}
             required
             fullWidth
-            autoFocus
             onChange={handlePasswordChange}
             endAdornment={
               <InputAdornment position='end'>
@@ -114,13 +107,12 @@ const LoginForm: React.FC = () => {
           fullWidth
           variant='contained'
           color='primary'
-          className='submit'
-          onClick={handleSubmit}
+          sx={{ mt: 3, mb: 1, py: 1.25 }}
         >
           Log In
         </Button>
-        {/* </div> */}
-      </LoginContainer>
+        </form>
+      </div>
     </Container>
   )
 }

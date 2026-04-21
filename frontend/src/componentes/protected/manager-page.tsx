@@ -38,13 +38,13 @@ export const ManagersPage: React.FC = () => {
   }, [])
 
   return (
-    <ProtectedPage reqScope='admin' className='table-container'>
-      <Paper className='table'>
+    <ProtectedPage reqScope='admin' className='mt-auto flex justify-center px-4 py-6 sm:px-6'>
+      <Paper className='w-full max-w-5xl min-w-0 overflow-x-auto'>
         <ThemeProvider theme={theme}>
           <TableContainer component={Paper}>
             <Table stickyHeader dir='rtl'>
               <TableHead style={{ backgroundColor: '#776a37' }}>
-                <StyledTableRow className='table-head'>
+                <StyledTableRow>
                   <StyledTableCell align='center'>שם משתמש</StyledTableCell>
                   <StyledTableCell align='center'>עו"ש</StyledTableCell>
                   <StyledTableCell align='center'>הוספת כסף</StyledTableCell>

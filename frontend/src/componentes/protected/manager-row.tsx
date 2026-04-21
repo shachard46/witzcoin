@@ -93,8 +93,8 @@ export const ManagerRow: React.FC<{
         >
           {change - user.balance}
         </TableCell>
-        <TableCell align='center'>
-          <Button onClick={() => changeBalance(api, user, change)}>
+        <TableCell align='center' sx={{ py: 1.5 }}>
+          <Button sx={{ my: 0.5, mx: 0.5 }} onClick={() => changeBalance(api, user, change)}>
             אישור
           </Button>
         </TableCell>

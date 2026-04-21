@@ -5,6 +5,7 @@ import { ProtectedPage } from '../protected/protected-page'
 import { Role } from '../auth/models'
 import { useAuth } from '../auth/auth-hook'
 import { TransactionsList } from './transactions-list'
+import { Typography } from '@mui/material'
 
 const isYourPendingTransactions = (user: User | null, t: Transaction) => {
   let role = Approver.NON
@@ -34,10 +35,18 @@ export const PendingTransactions: React.FC = () => {
 
   useEffect(() => refreshTransactions(), [])
   return (
-    <ProtectedPage reqScope={Role.USER} className='table-container'>
+    <ProtectedPage reqScope={Role.USER} className='mt-auto flex justify-center px-4 py-6 sm:px-6'>
       {pendingTransactionsList.length > 0 ? (
-        <TransactionsList user={true} pending={pendingTransactionsList} className='table' />
-      ) : null}
+        <TransactionsList user={true} pending={pendingTransactionsList} className='w-full max-w-5xl min-w-0' />
+      ) : (
+        <Typography
+          variant='body1'
+          align='center'
+          sx={{ px: 2, py: 4, color: 'text.secondary', maxWidth: 480 }}
+        >
+          אין עסקאות ממתינות כרגע.
+        </Typography>
+      )}
     </ProtectedPage>
   )
 }

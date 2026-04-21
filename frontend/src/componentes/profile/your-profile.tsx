@@ -9,12 +9,15 @@ const ProfilePage: React.FC = () => {
   if (!user) return null
   return (
     <ProtectedPage reqScope={Role.USER}>
-      <div className='container' dir='rtl'>
-        <div className='profile-container'>
-          <div>
+      <div
+        className='mx-auto my-4 min-h-[65vh] w-full max-w-6xl rounded-[10px] bg-[#d1c7a1] px-4 pb-6 sm:px-6'
+        dir='rtl'
+      >
+        <div className='mx-auto max-w-[800px] rounded-lg bg-[#f8f9fa] p-6 shadow-[0_0_10px_rgba(0,0,0,0.1)] sm:p-8'>
+          <div className='flex flex-col gap-6'>
             <AccountDetails user={user} />
 
-            <TransactionsList user={true} pending={[]} className='' />
+            <TransactionsList user={true} pending={[]} className='min-w-0' />
           </div>
         </div>
       </div>

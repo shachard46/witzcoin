@@ -12,6 +12,18 @@ import Provider from '../provider-model'
 import { Token, TokenData } from './models'
 import { deepEqual } from '../../utils'
 
+/** Stored shape matches Axios response body wrapper used after login. */
+const tokenFromStorageJson = (raw: string): Token => {
+  const parsed = JSON.parse(raw) as { data: { access_token: string } }
+  const decoded = jwtDecode<{ access_token: TokenData }>(
+    parsed.data.access_token,
+  )
+  return {
+    data: decoded.access_token,
+    access_token: parsed.data.access_token,
+  }
+}
+
 // Create a context to store the token state and updater function
 const TokenContext = createContext<
   [Token | undefined, (token: Token | undefined) => void]
@@ -56,17 +68,12 @@ export const TokenProvider: React.FC<Provider> = ({ children }) => {
 // Function to get token from local storage
 const getTokenFromStorage = (): Token | undefined => {
   const storageToken = localStorage.getItem('token')
-  if (storageToken) {
-    const parsedToken = JSON.parse(storageToken)
-    const verifiedTokenData: TokenData = jwtDecode<{
-      access_token: TokenData
-    }>(JSON.stringify(parsedToken.data.access_token)).access_token
-    return {
-      data: verifiedTokenData,
-      access_token: parsedToken.data.access_token,
-    }
+  if (!storageToken) return undefined
+  try {
+    return tokenFromStorageJson(storageToken)
+  } catch {
+    return undefined
   }
-  return undefined
 }
 
 // Custom hook to use the token context
@@ -79,14 +86,7 @@ export const useToken = (): [
   const updateToken = (value: string | undefined) => {
     if (value) {
       localStorage.setItem('token', value)
-      const parsedToken = JSON.parse(value)
-      const verifiedTokenData: TokenData = jwtDecode<{
-        access_token: TokenData
-      }>(JSON.stringify(parsedToken.data.access_token)).access_token
-      const newToken: Token = {
-        data: verifiedTokenData,
-        access_token: parsedToken.data.access_token,
-      }
+      const newToken = tokenFromStorageJson(value)
       setToken(newToken)
     } else {
       setToken(undefined)

@@ -119,11 +119,11 @@ export const TransactionRow: React.FC<{
           <TableCell align='center'>{transaction.sellerUser}</TableCell>
           <TableCell align='center'>{transaction.witnessUser}</TableCell>
           <TableCell align='center'>{transaction.price}</TableCell>
-          <TableCell align='center' className='category-cell'>
+          <TableCell align='center' className='flex justify-center border-b-0'>
             {/* <Stack direction='row' spacing={1} width={'fit-content'}> */}
             {transaction.category.map(c => (
               <Chip
-                className='category-chip'
+                className='mx-[3%]'
                 label={c}
                 color={categoryColor[c]}
                 variant='filled'
@@ -133,35 +133,45 @@ export const TransactionRow: React.FC<{
           </TableCell>
           {pending && dealStatus != 'העסקה נסגרה' ? (
             <TableCell align='center'>
-              <Button
-                onClick={() =>
-                  approveTransaction(
-                    api,
-                    user,
-                    transaction.id,
-                    false,
-                    refreshTransactions,
-                  )
-                }
+              <Box
+                sx={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: 1,
+                  justifyContent: 'center',
+                  py: 0.5,
+                }}
               >
-                אשר
-              </Button>
-              <Button
-                onClick={() =>
-                  approveTransaction(
-                    api,
-                    user,
-                    transaction.id,
-                    true,
-                    refreshTransactions,
-                  )
-                }
-              >
-                דחה
-              </Button>
+                <Button
+                  onClick={() =>
+                    approveTransaction(
+                      api,
+                      user,
+                      transaction.id,
+                      false,
+                      refreshTransactions,
+                    )
+                  }
+                >
+                  אשר
+                </Button>
+                <Button
+                  onClick={() =>
+                    approveTransaction(
+                      api,
+                      user,
+                      transaction.id,
+                      true,
+                      refreshTransactions,
+                    )
+                  }
+                >
+                  דחה
+                </Button>
+              </Box>
             </TableCell>
           ) : pending && dealStatus == 'העסקה נסגרה' ? (
-            <TableCell align='center'>
+            <TableCell align='center' sx={{ py: 1.5 }}>
               <Button
                 onClick={() =>
                   invalidateTransaction(
@@ -184,15 +194,23 @@ export const TransactionRow: React.FC<{
           align='right'
         >
           <Collapse in={open} timeout='auto'>
-            <Box margin={1}>
-              <Typography variant='h6' gutterBottom component='div'>
+            <Box sx={{ px: { xs: 2, sm: 3 }, py: 2 }}>
+              <Typography variant='subtitle1' component='div' sx={{ fontWeight: 600, mb: 1 }}>
                 פרטים נוספים
               </Typography>
-              <div>{transaction.details}</div>
-              <Typography variant='h6' gutterBottom component='div'>
+              <Typography
+                variant='body2'
+                component='div'
+                sx={{ mb: 3, whiteSpace: 'pre-wrap', lineHeight: 1.6, wordBreak: 'break-word' }}
+              >
+                {transaction.details}
+              </Typography>
+              <Typography variant='subtitle1' component='div' sx={{ fontWeight: 600, mb: 1 }}>
                 סטטוס עסקה
               </Typography>
-              <div>{dealStatus}</div>
+              <Typography variant='body2' sx={{ lineHeight: 1.6, wordBreak: 'break-word' }}>
+                {dealStatus}
+              </Typography>
             </Box>
           </Collapse>
         </TableCell>

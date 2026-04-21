@@ -1,3 +1,4 @@
+import type { ChipProps } from '@mui/material'
 import { Role } from '../auth/models'
 
 export interface Transaction {
@@ -34,5 +35,5 @@ export interface User {
 }
 
 export interface CategoryColors {
-  [key: string]: string
+  [key: string]: NonNullable<ChipProps['color']>
 }

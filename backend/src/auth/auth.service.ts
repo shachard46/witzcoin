@@ -41,11 +41,11 @@ export class AuthService {
   }
 
   async signIn(user: AuthUserDto): Promise<any> {
-    if (!user.username) return new UnauthorizedException()
+    if (!user.username) throw new UnauthorizedException()
     const authorized = await this.repository.findOne({
       where: { username: user.username, password: user.password },
     })
-    if (!authorized) return new UnauthorizedException()
+    if (!authorized) throw new UnauthorizedException()
     const exitsingUser = await this.userService.getUserByUsername(user.username)
     const payload = {
       access_token: {

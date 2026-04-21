@@ -63,10 +63,16 @@ const theme = createTheme({
 export const StyledTableCell = styled(TableCell)(() => ({
   [`&.${tableCellClasses.head}`]: {
     backgroundColor: '#776a37',
-    color:'white',
+    color: 'white',
+    padding: '14px 16px',
+    fontSize: '0.95rem',
+    fontWeight: 600,
+    whiteSpace: 'nowrap',
   },
   [`&.${tableCellClasses.body}`]: {
     fontSize: 14,
+    padding: '12px 16px',
+    verticalAlign: 'middle',
   },
 }))
 

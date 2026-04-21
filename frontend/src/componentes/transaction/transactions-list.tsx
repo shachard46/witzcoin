@@ -14,6 +14,7 @@ import { TransactionRow } from './transaction-row'
 import { useTransactions } from './transactions-hook'
 import { styled, ThemeProvider } from '@mui/material/styles'
 import theme, { StyledTableCell, StyledTableRow } from '../theme'
+import type { ChipProps } from '@mui/material'
 import { CategoryColors, Transaction } from './models'
 import { useApi } from '../api/api-provider'
 
@@ -43,7 +44,7 @@ export const TransactionsList: React.FC<{
     const getCategoriesColors = () => {
       api.get<[]>('/categories').then(res => {
         const categories = res.data
-        const options = [
+        const options: NonNullable<ChipProps['color']>[] = [
           'primary',
           'secondary',
           'third',
@@ -68,12 +69,12 @@ export const TransactionsList: React.FC<{
     refreshTransactions()
   }, [])
   return (
-    <Paper className={className}>
+    <Paper className={`${className} w-full max-w-full overflow-x-auto`.trim()}>
       <ThemeProvider theme={theme}>
         <TableContainer component={Paper}>
           <Table stickyHeader aria-label='sticky collapsible table' dir='rtl'>
             <TableHead style={{ backgroundColor: '#776a37' }}>
-              <StyledTableRow className='table-head'>
+              <StyledTableRow>
                 <StyledTableCell />
                 <StyledTableCell align='center'>שם העסקה</StyledTableCell>
                 <StyledTableCell align='center'>שם הקונה</StyledTableCell>
