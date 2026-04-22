@@ -10,27 +10,33 @@ import { Approver, Transaction } from '../src/transaction/transaction.interface'
 describe('AppController (e2e)', () => {
   require('iconv-lite').encodingExists('foo')
   let app: INestApplication
-  const user1: User = {
-    username: 'shachar',
-    password: 'gg',
-    balance: 30,
-    pending: 0,
-    role: Role.ADMIN,
-  }
-  const user2: User = {
-    username: 'genom',
-    password: 'gg',
-    balance: 2,
-    pending: 1,
-    role: Role.ADMIN,
-  }
-  const user3: User = {
-    username: 'norman',
-    password: 'gg',
-    balance: 12,
-    pending: 4,
-    role: Role.USER,
-  }
+  const user1 = new User(
+    'shachar',
+    'gg',
+    30,
+    0,
+    Role.ADMIN,
+    'shachar@witzcoin.local',
+    'Shachar',
+  )
+  const user2 = new User(
+    'genom',
+    'gg',
+    2,
+    1,
+    Role.ADMIN,
+    'genom@witzcoin.local',
+    'Genom',
+  )
+  const user3 = new User(
+    'norman',
+    'gg',
+    12,
+    4,
+    Role.USER,
+    'norman@witzcoin.local',
+    'Norman',
+  )
   const t1: Transaction = {
     transactionName: 'first',
     buyerUser: user1,
@@ -62,14 +68,21 @@ describe('AppController (e2e)', () => {
     await app.init()
   })
 
-  it('/api/users (POST)', async () => {
+  it('/api/users (POST) registers by email', async () => {
     const response = await request(app.getHttpServer())
       .post('/api/users')
-      .send(user1)
-      .expect(201) // Assuming you return status 201 for successful creation
+      .send({
+        email: `e2e-user-${Date.now()}@witzcoin.local`,
+        fullName: 'E2E User',
+        password: user1.password,
+        role: user1.role,
+      })
+      .expect(200)
 
-    // Assuming your API returns the created user in the response body
-    expect(response.body).toEqual(user1)
+    expect(response.body.email).toMatch(/^e2e-user-\d+@witzcoin\.local$/)
+    expect(response.body.fullName).toBe('E2E User')
+    expect(response.body.username).toBeDefined()
+    expect(response.body.role).toBe(user1.role)
   })
 
   afterAll(async () => {

@@ -6,8 +6,18 @@ import { TransactionsList } from './transactions-list'
 
 export const TransactionHistoryPage: React.FC = () => {
   return (
-    <ProtectedPage reqScope={Role.USER} className='mt-auto flex justify-center px-4 py-6 sm:px-6'>
-      <TransactionsList user={false} pending={[]} className='w-full max-w-5xl min-w-0' />
+    <ProtectedPage reqScope={Role.USER} className='w-full'>
+      <header className='mb-8'>
+        <h1 className='font-h2 text-h2 text-on-surface mb-2'>Transaction History</h1>
+        <p className='font-body-md text-body-md text-on-surface-variant'>
+          Review your complete ledger of escrow transactions.
+        </p>
+      </header>
+      <TransactionsList
+        user={false}
+        pending={[]}
+        className='w-full min-w-0'
+      />
     </ProtectedPage>
   )
 }

@@ -44,7 +44,9 @@ export const ManagerRow: React.FC<{
   return (
     <React.Fragment>
       <TableRow hover role='checkbox' tabIndex={-1}>
-        <TableCell align='center'>{user.username}</TableCell>
+        <TableCell align='center' title={`Account id: ${user.username}`}>
+          {user.fullName || user.email || user.username}
+        </TableCell>
         <TableCell
           align='center'
           className={

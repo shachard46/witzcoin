@@ -27,8 +27,11 @@ export enum Approver {
   ALL = 7,
 }
 
+/** `username` is the stable account id (legacy PK); prefer showing email/fullName when set. */
 export interface User {
   username: string
+  email: string | null
+  fullName: string | null
   balance: number
   pending: number
   role: Role

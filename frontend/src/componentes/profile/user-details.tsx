@@ -22,11 +22,16 @@ const NegativeBalance = styled('span')(({ theme }) => ({
   fontWeight: 600,
 }))
 const AccountDetails: React.FC<{ user: User }> = ({ user }) => {
+  const displayName =
+    user.fullName?.trim() || user.email?.trim() || user.username
   return (
     <StyledPaper>
       <Stack spacing={2} alignItems='center'>
         <Typography variant='h5' sx={{ mb: 0.5 }}>
-          הפרופיל של {user.username}
+          הפרופיל של {displayName}
+        </Typography>
+        <Typography variant='caption' color='text.secondary'>
+          Account id (legacy): {user.username}
         </Typography>
         <Typography variant='body1' sx={{ lineHeight: 1.7 }}>
           עו"ש:{' '}

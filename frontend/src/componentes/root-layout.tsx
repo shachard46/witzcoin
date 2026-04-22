@@ -1,141 +1,88 @@
-import React, { useEffect, useState } from 'react'
-import { NavLink, Outlet, useLocation } from 'react-router-dom'
+import React from 'react'
+import { NavLink, Outlet } from 'react-router-dom'
 import { Role } from './auth/models'
+import { ProfileIncompleteBanner } from './auth/profile-incomplete-banner'
 import { ProtectedPage } from './protected/protected-page'
-import { Box } from '@mui/material'
+
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  isActive
+    ? 'font-body-md text-body-md text-primary-container border-b-2 border-primary-container pb-1 font-medium'
+    : 'font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors'
 
 const RootLayout: React.FC = () => {
-  const [path, setPath] = useState('login')
-  const location = useLocation()
-  useEffect(() => {
-    switch (location.pathname) {
-      case '/login':
-        setPath('עמוד התחברות')
-        break
-      case '/p/history':
-        setPath('היסטוריית עסקאות')
-        break
-      case '/register':
-        setPath('עמוד הרשמה')
-        break
-      case '/p/profile':
-        setPath('הפרופיל שלך')
-        break
-      case '/p/pending':
-        setPath('עסקאות ממתינות')
-        break
-      case '/p/transaction':
-        setPath('יצירת עסקה')
-        break
-      case '/p/manage':
-        setPath('עמוד מנהל')
-        break
-    }
-  })
   return (
-    <div className='min-h-screen bg-[#d1c7a1] pb-5'>
-      <div className='mb-5 flex w-full justify-center'>
-        <header className='flex min-h-[100px] w-[min(96%,1400px)] flex-wrap items-center gap-4 bg-[#776a37] px-4 py-3 sm:px-6 sm:py-4 md:px-8'>
-          <div className='flex shrink-0 items-center gap-2 sm:gap-3'>
-            <Box
-              component='img'
-              sx={{
-                height: 90,
-                width: 90,
-              }}
-              src='/images/_9f163ebf-f030-493e-b45d-967380f4eb83-ai-brush-removebg-l9vzv47o.png'
-            />
-            <Box
-              component='img'
-              sx={{
-                height: 40,
-                width: 169,
-              }}
-              src='/images/logoname.png'
-            />
-          </div>
-          <nav className='min-w-0 flex-1'>
-            <ul className='m-0 flex w-full flex-col gap-2 p-0 list-none sm:flex-row sm:flex-wrap sm:items-center sm:justify-between'>
-              <div className='flex min-w-0 flex-1 flex-wrap items-center gap-1 sm:gap-2'>
-                <ProtectedPage
-                  className='rounded-lg px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.USER}
-                >
-                  <li>
-                    <NavLink to='/p/transaction'>צור עסקה</NavLink>
-                  </li>
-                </ProtectedPage>
-                <ProtectedPage
-                  className='rounded-lg px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.ADMIN}
-                >
-                  <li>
-                    <NavLink to='/p/manage'>מנהל</NavLink>
-                  </li>
-                </ProtectedPage>
-                <ProtectedPage
-                  className='rounded-lg px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.USER}
-                >
-                  <li>
-                    <NavLink to='/p/profile'>פרופיל</NavLink>
-                  </li>
-                </ProtectedPage>
-                <ProtectedPage
-                  className='rounded-lg px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.USER}
-                >
-                  <li>
-                    <NavLink to='/p/history'>הסטוריה</NavLink>
-                  </li>
-                </ProtectedPage>
-                <ProtectedPage
-                  className='rounded-lg px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.USER}
-                >
-                  <li>
-                    <NavLink to='/p/pending'>ממתינות</NavLink>
-                  </li>
-                </ProtectedPage>
-              </div>
-              <div className='flex flex-wrap items-center gap-2 sm:justify-end'>
-                <ProtectedPage
-                  className='rounded-lg bg-[#444] px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.OUT}
-                >
-                  <li>
-                    <NavLink to='/register'>הירשם</NavLink>
-                  </li>
-                </ProtectedPage>
-                <ProtectedPage
-                  className='rounded-lg bg-[#444] px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.OUT}
-                >
-                  <li>
-                    <NavLink to='/login'>התחבר</NavLink>
-                  </li>
-                </ProtectedPage>
-                <ProtectedPage
-                  className='rounded-lg bg-[#444] px-3 py-2 text-base text-white transition-colors duration-300 hover:font-bold hover:text-[#eaeaea] sm:text-lg'
-                  reqScope={Role.USER}
-                >
-                  <li>
-                    <NavLink to='/logout'>התנתק</NavLink>
-                  </li>
-                </ProtectedPage>
-              </div>
-            </ul>
-          </nav>
-        </header>
-      </div>
-      <div className='mx-auto my-4 min-h-[65vh] w-full max-w-6xl rounded-[10px] bg-[#d1c7a1] px-4 pb-6 sm:px-6'>
-        <main className='h-full min-w-0' dir='rtl'>
-          <div className='w-full rounded-[10px] bg-[#a59a71] px-4 py-3 text-base font-bold text-[#776a37] sm:px-6 sm:py-4 sm:text-lg'>
-            {path}
-          </div>
-          <Outlet />
-        </main>
-      </div>
+    <div
+      className='bg-surface text-on-surface flex min-h-screen flex-col font-body-md text-body-md'
+      dir='ltr'
+    >
+      <nav className='border-surface-variant z-50 mx-auto flex min-h-16 w-full max-w-[1280px] flex-wrap items-center justify-between gap-3 border-b bg-white px-4 py-2 shadow-sm sm:px-8 sm:py-0'>
+        <div className='font-h3 text-h3 text-on-surface flex items-center gap-2 font-bold'>
+          <span
+            className='material-symbols-outlined text-primary-container text-[1.5rem]'
+            style={{ fontVariationSettings: "'FILL' 1" }}
+          >
+            monetization_on
+          </span>
+          Witzcoin
+        </div>
+        <div className='flex flex-wrap items-center gap-x-6 gap-y-2'>
+          <ProtectedPage className='contents' reqScope={Role.USER}>
+            <NavLink to='/p/transaction' className={navLinkClass}>
+              Create Transaction
+            </NavLink>
+          </ProtectedPage>
+          <ProtectedPage className='contents' reqScope={Role.ADMIN}>
+            <NavLink to='/p/manage' className={navLinkClass}>
+              Manage
+            </NavLink>
+          </ProtectedPage>
+          <ProtectedPage className='contents' reqScope={Role.USER}>
+            <NavLink to='/p/profile' className={navLinkClass}>
+              Profile
+            </NavLink>
+          </ProtectedPage>
+          <ProtectedPage className='contents' reqScope={Role.USER}>
+            <NavLink to='/p/history' className={navLinkClass}>
+              History
+            </NavLink>
+          </ProtectedPage>
+          <ProtectedPage className='contents' reqScope={Role.USER}>
+            <NavLink to='/p/pending' className={navLinkClass}>
+              Pending
+            </NavLink>
+          </ProtectedPage>
+        </div>
+        <div className='flex items-center gap-4'>
+          <ProtectedPage className='contents' reqScope={Role.USER}>
+            <NavLink
+              to='/logout'
+              className='font-label-caps text-label-caps text-on-surface-variant hover:text-primary transition-colors uppercase'
+            >
+              Logout
+            </NavLink>
+          </ProtectedPage>
+          <ProtectedPage className='contents flex items-center gap-2' reqScope={Role.OUT}>
+            <NavLink
+              to='/register'
+              className='font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors'
+            >
+              Register
+            </NavLink>
+            <NavLink
+              to='/login'
+              className='font-body-md text-body-md text-on-surface-variant hover:text-primary transition-colors'
+            >
+              Login
+            </NavLink>
+          </ProtectedPage>
+        </div>
+      </nav>
+      <main className='mx-auto w-full max-w-[1280px] flex-1 px-margin-mobile py-8 md:px-margin-desktop md:py-12'>
+        <ProtectedPage reqScope={Role.USER}>
+          <ProfileIncompleteBanner />
+        </ProtectedPage>
+        <Outlet />
+      </main>
     </div>
   )
 }

@@ -18,27 +18,33 @@ async function bootstrap() {
   })
   app.useGlobalFilters(new AllExceptionsFilter())
   await app.listen(3001)
-  const user1: User = {
-    username: 'shachar',
-    password: 'gg',
-    balance: 30,
-    pending: 0,
-    role: Role.ADMIN,
-  }
-  const user2: User = {
-    username: 'genom',
-    password: 'gg',
-    balance: 2,
-    pending: 0,
-    role: Role.ADMIN,
-  }
-  const user3: User = {
-    username: 'norman',
-    password: 'gg',
-    balance: 12,
-    pending: 0,
-    role: Role.USER,
-  }
+  const user1 = new User(
+    'shachar',
+    'gg',
+    30,
+    0,
+    Role.ADMIN,
+    'shachar@witzcoin.local',
+    'Shachar',
+  )
+  const user2 = new User(
+    'genom',
+    'gg',
+    2,
+    0,
+    Role.ADMIN,
+    'genom@witzcoin.local',
+    'Genom',
+  )
+  const user3 = new User(
+    'norman',
+    'gg',
+    12,
+    0,
+    Role.USER,
+    'norman@witzcoin.local',
+    'Norman',
+  )
   const t1: Transaction = {
     transactionName: 'first',
     buyerUser: user1,

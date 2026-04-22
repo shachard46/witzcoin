@@ -1,13 +1,8 @@
 import {
-  Button,
   Checkbox,
-  Container,
   FormControl,
-  Grid,
-  InputLabel,
   ListItemText,
   MenuItem,
-  TextField,
 } from '@mui/material'
 import Select, { SelectChangeEvent } from '@mui/material/Select'
 import { useNavigate } from 'react-router-dom'
@@ -18,8 +13,12 @@ import { Approver, Transaction } from './models'
 import { useToken } from '../auth/token-provider'
 import { ProtectedPage } from '../protected/protected-page'
 import { Role } from '../auth/models'
-
-// const categories = ['אוכל', 'מטלה', 'חד פעמי', 'ממושך', 'מביך']
+import { EscrowFormHeader } from './create/escrow-form-header'
+import { HandshakeButton } from './create/handshake-button'
+import { IconTextInput } from './create/icon-text-input'
+import { LabeledField } from './create/labeled-field'
+import { formTextareaClass } from './create/form-input-classes'
+import { TextInput } from './create/text-input'
 
 const CreateDealPage: React.FC = () => {
   const api = useApi()
@@ -85,7 +84,7 @@ const CreateDealPage: React.FC = () => {
   }
   const categories_items = categories.map(item => {
     return (
-      <MenuItem value={item} id={categories.indexOf(item).toString()}>
+      <MenuItem key={String(item)} value={item} id={categories.indexOf(item).toString()}>
         <Checkbox checked={transaction.category.indexOf(item) > -1} />{' '}
         <ListItemText primary={item} />{' '}
       </MenuItem>
@@ -93,148 +92,166 @@ const CreateDealPage: React.FC = () => {
   })
   return (
     <ProtectedPage reqScope={Role.USER}>
-      <div className='mx-auto my-4 flex w-full max-w-4xl justify-center rounded-[10px] bg-white px-4 py-6 sm:px-6 sm:py-8'>
-        <Container component='main' maxWidth='md' className='w-full min-w-0'>
-          <div>
-            <TextField
-              variant='outlined'
-              margin='normal'
-              required
-              className='mb-5 rounded-[10px] bg-white'
-              fullWidth
-              id='transaction_name'
-              label='שם העסקה'
-              name='transaction_name'
-              autoComplete='שם העסקה'
-              autoFocus
-              // dir='rtl'
-              value={transaction.transactionName}
-              onChange={handleTransactionNameChange}
-            />
-            <div className='mb-5 flex w-full flex-col gap-4 md:flex-row md:flex-wrap md:items-start'>
-              <TextField
-                variant='outlined'
-                margin='normal'
-                required
-                className='min-w-0 flex-1 rounded-[10px] bg-white md:min-w-[200px]'
-                fullWidth
-                id='buyer_username'
-                label='שם הקונה'
-                name='buyer_username'
-                autoComplete='שם הקונה'
+      <div className='flex w-full justify-center'>
+        <div className='custom-shadow w-full max-w-3xl rounded-2xl bg-white p-card-padding'>
+          <EscrowFormHeader />
+          <div className='flex flex-col gap-gutter'>
+            <LabeledField label='Transaction Name' htmlFor='transaction_name'>
+              <TextInput
+                id='transaction_name'
+                name='transaction_name'
+                autoComplete='transaction name'
                 autoFocus
-                value={transaction.buyerUser}
-                onChange={handleBuyerUsernameChange}
+                placeholder='e.g., Domain Name Transfer'
+                value={transaction.transactionName}
+                onChange={handleTransactionNameChange}
               />
-              <TextField
-                variant='outlined'
-                margin='normal'
-                required
-                className='min-w-0 flex-1 rounded-[10px] bg-white md:min-w-[200px]'
-                fullWidth
-                id='witness_username'
-                label='שם העד'
-                name='witness_username'
-                autoComplete='שם העד'
-                autoFocus
-                value={transaction.witnessUser}
-                onChange={handleWitnessUsernameChange}
-              />
-              <TextField
-                variant='outlined'
-                margin='normal'
-                required
-                className='min-w-0 flex-1 rounded-[10px] bg-white md:min-w-[200px]'
-                fullWidth
-                id='seller_username'
-                label='שם המוכר'
-                name='seller_username'
-                autoComplete='שם המוכר'
-                autoFocus
-                value={transaction.sellerUser}
-                onChange={handleSellerUsernameChange}
-              />
-            </div>
-            <FormControl fullWidth>
-              <InputLabel id='category-label'>קטגוריה</InputLabel>
-              <Select
-                labelId='category-label'
-                id='category-select'
-                className='mb-5 bg-white'
-                value={transaction.category}
-                multiple
-                renderValue={selected => selected.join(', ')}
-                label='קטגוריה'
-                onChange={handleCategoryChange}
-              >
-                {categories_items}
-              </Select>
-            </FormControl>
-            <Grid container spacing={2} alignItems={'center'}>
-              <Grid item xs={10}>
-                <TextField
-                  variant='outlined'
-                  margin='normal'
-                  required
-                  className='mb-5 rounded-[10px] bg-white'
-                  fullWidth
-                  id='price'
-                  label='מחיר'
-                  name='price'
-                  autoComplete='0'
-                  autoFocus
-                  value={transaction.price}
-                  onChange={handlePriceChange}
+            </LabeledField>
+
+            <div className='grid grid-cols-1 gap-gutter md:grid-cols-3'>
+              <LabeledField label='Buyer account id' htmlFor='buyer_username'>
+                <IconTextInput
+                  id='buyer_username'
+                  name='buyer_username'
+                  autoComplete='username'
+                  placeholder='Username (account id)'
+                  value={transaction.buyerUser}
+                  onChange={handleBuyerUsernameChange}
+                  icon={
+                    <span className='material-symbols-outlined text-lg'>
+                      person
+                    </span>
+                  }
                 />
-              </Grid>
-              <Grid item xs={2}>
-                <Select
-                  labelId='currencylabel'
-                  variant='outlined'
-                  className='rounded-[10px] bg-white'
-                  autoFocus
-                  fullWidth
-                  id='currency'
-                  value={currency}
-                  label='currency'
-                  onChange={handleCurrencyChange}
+              </LabeledField>
+              <LabeledField label='Seller ID' htmlFor='seller_username'>
+                <IconTextInput
+                  id='seller_username'
+                  name='seller_username'
+                  autoComplete='username'
+                  placeholder='Wallet Address'
+                  value={transaction.sellerUser}
+                  onChange={handleSellerUsernameChange}
+                  icon={
+                    <span className='material-symbols-outlined text-lg'>
+                      storefront
+                    </span>
+                  }
+                />
+              </LabeledField>
+              <LabeledField
+                label='Witness account id (optional)'
+                htmlFor='witness_username'
+              >
+                <IconTextInput
+                  id='witness_username'
+                  name='witness_username'
+                  autoComplete='username'
+                  placeholder='Username (account id)'
+                  value={transaction.witnessUser}
+                  onChange={handleWitnessUsernameChange}
+                  icon={
+                    <span className='material-symbols-outlined text-lg'>
+                      gavel
+                    </span>
+                  }
+                />
+              </LabeledField>
+            </div>
+
+            <div className='grid grid-cols-1 gap-gutter md:grid-cols-2'>
+              <LabeledField label='Category' htmlFor='category-select'>
+                <FormControl fullWidth>
+                  <Select
+                    id='category-select'
+                    variant='outlined'
+                    className='rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface [&_.MuiOutlinedInput-notchedOutline]:border-outline-variant [&_.MuiSelect-icon]:text-tertiary'
+                    value={transaction.category}
+                    multiple
+                    displayEmpty
+                    renderValue={selected =>
+                      selected.length === 0
+                        ? 'Select Category'
+                        : (selected as string[]).join(', ')
+                    }
+                    onChange={handleCategoryChange}
+                    inputProps={{ 'aria-label': 'Category' }}
+                  >
+                    {categories_items}
+                  </Select>
+                </FormControl>
+              </LabeledField>
+
+              <div className='flex flex-col gap-2'>
+                <label
+                  className='font-label-caps text-label-caps text-on-surface-variant'
+                  htmlFor='price'
                 >
-                  <MenuItem value={1}>Witzcoin</MenuItem>
-                  <MenuItem value={1 / 30}>ShWitzcoin</MenuItem>
-                  <MenuItem value={0}>Adamium</MenuItem>
-                </Select>
-              </Grid>
-            </Grid>
-            <TextField
-              variant='outlined'
-              margin='normal'
-              required
-              className='mb-5 rounded-[10px] bg-white'
-              fullWidth
-              multiline
-              minRows={5}
-              id='details'
-              label='פירוט העסקה'
-              name='details'
-              autoComplete='פירוט העסקה'
-              autoFocus
-              value={transaction.details}
-              onChange={handleDetailsChange}
-            />
-            <Button
-              type='submit'
-              fullWidth
-              variant='contained'
-              color='primary'
-              sx={{ mt: 3, mb: 1, py: 1.25 }}
-              onClick={event =>
-                handleSubmit(event, Number.parseFloat(currency))
-              }
-            >
-              לחיצת ידיים
-            </Button>
+                  Escrow Amount
+                </label>
+                <div className='flex flex-col gap-2 sm:flex-row sm:items-stretch'>
+                  <div className='relative min-w-0 flex-1'>
+                    <span className='text-primary-container font-h3 pointer-events-none absolute inset-y-0 left-0 flex items-center pl-4 font-bold'>
+                      W
+                    </span>
+                    <input
+                      id='price'
+                      name='price'
+                      autoComplete='off'
+                      placeholder='0.00'
+                      step='0.01'
+                      type='number'
+                      value={transaction.price}
+                      onChange={handlePriceChange}
+                      className='font-data-mono text-data-mono h-12 w-full rounded-lg border border-outline-variant bg-surface-container-low pl-12 pr-4 text-on-surface transition-shadow outline-none focus-gold'
+                    />
+                  </div>
+                  <FormControl className='min-w-0 shrink-0 sm:w-40'>
+                    <Select
+                      variant='outlined'
+                      className='rounded-lg bg-surface-container-low font-body-md text-body-md text-on-surface [&_.MuiOutlinedInput-notchedOutline]:border-outline-variant'
+                      id='currency'
+                      value={currency}
+                      onChange={handleCurrencyChange}
+                      inputProps={{ 'aria-label': 'Currency' }}
+                    >
+                      <MenuItem value={1}>Witzcoin</MenuItem>
+                      <MenuItem value={1 / 30}>ShWitzcoin</MenuItem>
+                      <MenuItem value={0}>Adamium</MenuItem>
+                    </Select>
+                  </FormControl>
+                </div>
+              </div>
+            </div>
+
+            <LabeledField label='Terms & Conditions' htmlFor='details'>
+              <textarea
+                id='details'
+                name='details'
+                autoComplete='off'
+                rows={5}
+                placeholder='Describe the deliverables, timeline, and release conditions...'
+                value={transaction.details}
+                onChange={e =>
+                  handleDetailsChange(
+                    e as unknown as React.ChangeEvent<HTMLInputElement>,
+                  )
+                }
+                className={formTextareaClass}
+              />
+            </LabeledField>
+
+            <div className='pt-4'>
+              <HandshakeButton
+                onClick={event =>
+                  handleSubmit(event, Number.parseFloat(currency))
+                }
+              >
+                Handshake
+              </HandshakeButton>
+            </div>
           </div>
-        </Container>
+        </div>
       </div>
     </ProtectedPage>
   )

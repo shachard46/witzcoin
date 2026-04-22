@@ -38,12 +38,23 @@ export class AuthGuard extends NestAuthGuard('jwt') implements CanActivate {
     }
 
     try {
-      const payload = await this.jwtService.verifyAsync(token, {
+      const payload = await this.jwtService.verifyAsync<{
+        tokenType?: string
+        access_token?: unknown
+      }>(token, {
         secret: jwtConstants.secret,
       })
 
+      const isAccess =
+        payload.tokenType === 'access' ||
+        (!payload.tokenType && !!payload.access_token)
+      if (!isAccess || !payload.access_token) {
+        throw new UnauthorizedException('Invalid token type')
+      }
+
       request.user = payload
     } catch (err) {
+      if (err instanceof UnauthorizedException) throw err
       throw new UnauthorizedException('Invalid token')
     }
 
@@ -60,7 +71,8 @@ export class AuthGuard extends NestAuthGuard('jwt') implements CanActivate {
       context.getClass(),
     ]) ?? [Role.USER]
 
-    if (!roles.includes(user.role) && user.role !== Role.ADMIN) {
+    const userRole = user?.access_token?.sub?.role
+    if (!roles.includes(userRole) && userRole !== Role.ADMIN) {
       throw new UnauthorizedException('Insufficient role')
     }
 

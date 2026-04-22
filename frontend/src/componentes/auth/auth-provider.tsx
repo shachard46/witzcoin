@@ -10,6 +10,7 @@ export const AuthContext = createContext<Auth>({
   isAutonticated: false,
   user: null,
   isLoading: true,
+  refetchUser: async () => {},
 })
 
 export const AuthProvider: React.FC<Provider> = ({ children }) => {
@@ -18,14 +19,26 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
   const [isLoading, setIsLoading] = useState(true)
   const [user, setUser] = useState<User | null>(null)
 
-  const fetchUser = useCallback(
-    async (api: AxiosInstance, username: string | undefined) => {
-      if (!username) return null
-      const response = await api.get(`users/${username}`)
-      return response.data
+  const fetchCurrentUser = useCallback(
+    async (client: AxiosInstance): Promise<User | null> => {
+      try {
+        const response = await client.get<User>('users/me')
+        return response.data
+      } catch {
+        return null
+      }
     },
     [],
   )
+
+  const refetchUser = useCallback(async () => {
+    if (!token) {
+      setUser(null)
+      return
+    }
+    const userData = await fetchCurrentUser(api)
+    setUser(userData)
+  }, [token, api, fetchCurrentUser])
 
   useEffect(() => {
     const initializeUser = async () => {
@@ -35,13 +48,13 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
         setIsLoading(false)
         return
       }
-      const userData = await fetchUser(api, token?.data.username)
+      const userData = await fetchCurrentUser(api)
       setUser(userData)
       setIsLoading(false)
     }
-    
+
     initializeUser()
-  }, [token, fetchUser, api])
+  }, [token, fetchCurrentUser, api])
 
   return (
     <AuthContext.Provider
@@ -49,6 +62,7 @@ export const AuthProvider: React.FC<Provider> = ({ children }) => {
         isAutonticated: !!token,
         user,
         isLoading,
+        refetchUser,
       }}
     >
       {children}

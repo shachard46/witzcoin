@@ -12,4 +12,10 @@ export class AuthController {
   async signIn(@Body() user: AuthUserDto): Promise<any> {
     return await this.authService.signIn(user)
   }
+
+  @Public()
+  @Post('refresh')
+  async refresh(@Body() body: { refresh_token: string }) {
+    return this.authService.refresh(body?.refresh_token)
+  }
 }

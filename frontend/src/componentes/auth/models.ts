@@ -2,6 +2,8 @@ import { User } from "../transaction/models"
 
 export interface Token {
   access_token: string
+  /** Opaque refresh JWT; empty if session predates refresh support */
+  refresh_token: string
   data: TokenData
 }
 
@@ -17,6 +19,7 @@ export interface Auth {
   isAutonticated: boolean
   user: User | null
   isLoading: boolean
+  refetchUser: () => Promise<void>
 }
 
 export enum Role {
@@ -25,12 +28,13 @@ export enum Role {
   OUT = 'out',
 }
 export interface LoginUser {
-  username: string
+  email: string
   password: string
 }
 
 export interface RegisterUser {
-  username: string
+  email: string
+  fullName: string
   password: string
   balance: number
   pending: number

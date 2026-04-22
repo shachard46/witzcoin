@@ -1,55 +1,50 @@
-import { Visibility, VisibilityOff } from '@mui/icons-material'
+import { LockOutlined, Visibility, VisibilityOff } from '@mui/icons-material'
 import {
+  Box,
   Button,
-  Container,
-  FormControl,
   IconButton,
   InputAdornment,
-  InputLabel,
-  OutlinedInput,
+  Link,
+  Stack,
   TextField,
   Typography,
 } from '@mui/material'
 import { AxiosInstance } from 'axios'
 import React, { useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { NavLink, useNavigate } from 'react-router-dom'
 import { useApi } from '../api/api-provider'
+import {
+  authOutlinedFieldClassName,
+  authPrimarySubmitButtonClassName,
+} from './auth-form-classes'
+import { AuthPublicShell } from './auth-public-shell'
 import { LoginUser } from './models'
 import { useToken } from './token-provider'
 
 const login = async (api: AxiosInstance, loginUser: LoginUser) => {
   try {
-    return await api.post<{ access_token: string }>('login', loginUser)
+    return await api.post<{
+      access_token: string
+      refresh_token?: string
+      profileIncomplete?: boolean
+    }>('login', loginUser)
   } catch {
     alert('False Creds')
     return undefined
   }
 }
 
-const LoginForm: React.FC = () => {
+const SignInForm: React.FC = () => {
   const api = useApi()
   const [, refreshToken] = useToken()
-
   const navigate = useNavigate()
-  const [username, setUsername] = useState('')
+  const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [showPassword, setShowPassword] = useState(false)
 
-  const handleUsernameChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setUsername(event.target.value)
-  }
-
-  const handlePasswordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setPassword(event.target.value)
-  }
-
-  const handleShowPasswordToggle = () => {
-    setShowPassword(!showPassword)
-  }
-
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
-    const loginUser: LoginUser = { username: username, password: password }
+    const loginUser: LoginUser = { email: email.trim(), password }
     const res = await login(api, loginUser)
     if (res) {
       refreshToken(JSON.stringify({ data: res.data }))
@@ -58,62 +53,127 @@ const LoginForm: React.FC = () => {
   }
 
   return (
-    <Container
-      component='main'
-      maxWidth='xs'
-      className='mt-6 rounded-[10px] bg-[#d1c7a1] px-4 py-12 sm:mt-10 sm:py-20'
-    >
-      <div className='mx-auto max-w-[800px] rounded-lg bg-[#f8f9fa] p-6 shadow-[0_0_10px_rgba(0,0,0,0.1)] sm:p-8'>
-        <Typography component='h1' variant='h5' align='center' gutterBottom sx={{ mb: 3 }}>
-          התחבר
+    <Stack spacing={0}>
+      <Stack spacing={1} className='mb-gutter text-center'>
+        <Typography component='h1' className='font-h2 text-h2 text-on-surface'>
+          Welcome Back
         </Typography>
-        <form onSubmit={handleSubmit} noValidate className='flex flex-col gap-1'>
-        <TextField
-          variant='outlined'
-          margin='normal'
-          className='rounded-[10px] bg-white'
-          id='username'
-          label='Username'
-          name='username'
-          autoComplete='username'
-          required
-          fullWidth
-          autoFocus
-          value={username}
-          onChange={handleUsernameChange}
-        />
-        <FormControl variant='outlined' margin='normal' required fullWidth>
-          <InputLabel htmlFor='password'>Password</InputLabel>
-          <OutlinedInput
-            id='password'
-            name='password'
-            className='rounded-[10px] bg-white'
-            type={showPassword ? 'text' : 'password'}
-            value={password}
+        <Typography className='font-body-md text-body-md text-secondary mt-2'>
+          Access your secure escrow vault
+        </Typography>
+      </Stack>
+
+      <Box component='form' noValidate onSubmit={handleSubmit}>
+        <Stack spacing={3}>
+          <TextField
             required
             fullWidth
-            onChange={handlePasswordChange}
-            endAdornment={
-              <InputAdornment position='end'>
-                <IconButton onClick={handleShowPasswordToggle} edge='end'>
-                  {showPassword ? <Visibility /> : <VisibilityOff />}
-                </IconButton>
-              </InputAdornment>
-            }
+            id='email'
+            name='email'
+            label='Email Address'
+            type='email'
+            autoComplete='username'
+            placeholder='you@example.com or account id'
+            value={email}
+            onChange={e => setEmail(e.target.value)}
+            className={authOutlinedFieldClassName}
           />
-        </FormControl>
-        <Button
-          type='submit'
-          fullWidth
-          variant='contained'
-          color='primary'
-          sx={{ mt: 3, mb: 1, py: 1.25 }}
-        >
-          Log In
-        </Button>
-        </form>
-      </div>
-    </Container>
+
+          <Box>
+            <Stack
+              direction='row'
+              alignItems='center'
+              justifyContent='space-between'
+              className='mb-2'
+            >
+              <Box
+                component='label'
+                htmlFor='login-password'
+                className='font-label-caps text-label-caps text-secondary uppercase'
+              >
+                Password
+              </Box>
+              <Link
+                href='#'
+                underline='hover'
+                className='font-body-md text-primary hover:text-primary-container text-sm'
+              >
+                Forgot password?
+              </Link>
+            </Stack>
+            <TextField
+              required
+              fullWidth
+              hiddenLabel
+              id='login-password'
+              name='password'
+              type={showPassword ? 'text' : 'password'}
+              autoComplete='current-password'
+              placeholder='••••••••'
+              value={password}
+              onChange={e => setPassword(e.target.value)}
+              className={authOutlinedFieldClassName}
+              InputProps={{
+                endAdornment: (
+                  <InputAdornment position='end'>
+                    <IconButton
+                      aria-label='toggle password visibility'
+                      onClick={() => setShowPassword(v => !v)}
+                      edge='end'
+                    >
+                      {showPassword ? <VisibilityOff /> : <Visibility />}
+                    </IconButton>
+                  </InputAdornment>
+                ),
+              }}
+            />
+          </Box>
+
+          <Box className='pt-4'>
+            <Button
+              type='submit'
+              fullWidth
+              variant='contained'
+              disableElevation
+              endIcon={<LockOutlined />}
+              className={authPrimarySubmitButtonClassName}
+              sx={{
+                bgcolor: 'var(--color-primary-container)',
+                color: 'var(--color-on-primary)',
+                '&:hover': {
+                  bgcolor: 'var(--color-primary-fixed)',
+                  color: 'var(--color-on-primary-fixed)',
+                },
+              }}
+            >
+              Login
+            </Button>
+          </Box>
+        </Stack>
+      </Box>
+
+      <Box className='mt-8 text-center'>
+        <Typography className='font-body-md text-body-md text-secondary'>
+          New to Witzcoin?{' '}
+          <Link
+            component={NavLink}
+            to='/register'
+            className='text-primary hover:text-primary-container font-medium underline decoration-primary/30 underline-offset-4'
+            underline='hover'
+          >
+            Create an account
+          </Link>
+        </Typography>
+      </Box>
+    </Stack>
+  )
+}
+
+const LoginForm: React.FC = () => {
+  return (
+    <AuthPublicShell cardClassName='rounded-2xl shadow-layer'>
+      <SignInForm />
+    </AuthPublicShell>
   )
 }
 
